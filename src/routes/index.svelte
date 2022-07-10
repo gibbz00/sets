@@ -50,7 +50,8 @@
     ]
 </script>
 
-<sl-select on:sl-change={(event) => selectedDay = event.target.value}>
+<!-- BUG: monday not shown on load -->
+<sl-select value={selectedDay} on:sl-change={(event) => {selectedDay = event.target.value}}>
     {#each weekdays as weekday }
         <sl-menu-item value={weekday.index}>{weekday.name}</sl-menu-item>
     {/each}
