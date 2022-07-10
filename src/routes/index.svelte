@@ -7,14 +7,39 @@
 <script>
     import AutoComplete from "$lib/AutoComplete.svelte"
 
+    let selectedDay = 0
     let weekdays=[
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday'
+        {
+            index: 0, 
+            name: "Monday",
+            exercises: ["Bench press", "T-bar row"]
+        },
+        {
+            index: 1,
+            name: "Tuesday",
+            exercises: ["Squats"]
+        },
+        {
+            index: 2,
+            name: "Wednesday",
+            exercises: ["Barbell overhead press"]
+        },
+        {
+            index: 3,
+            name: "Thursday"
+        },
+        {
+            index: 4,
+            name: "Friday"
+        },
+        {
+            index: 5,
+            name: "Saturday"
+        },
+        {
+            index: 6,
+            name: "Sunday"
+        }
     ]
 
     let exercises=[
@@ -25,10 +50,14 @@
     ]
 </script>
 
-<sl-select>
+<sl-select on:sl-change={(event) => selectedDay = event.target.value}>
     {#each weekdays as weekday }
-        <sl-menu-item value={weekday}>{weekday}</sl-menu-item>
+        <sl-menu-item value={weekday.index}>{weekday.name}</sl-menu-item>
     {/each}
 </sl-select>
+
+{#each weekdays[selectedDay].exercises as exercise}
+    <p>{exercise}</p>
+{/each}
 
 <AutoComplete data={exercises} placeholder="Add exercise"/>
