@@ -45,21 +45,14 @@ import { Exercise } from "$lib/ExerciseList"
 
         <!-- groups -->
         {#each exercisePlan.exercise.groupTagMatrix as group}
-            <!-- 
-               1. place inside right column
-                
-               2. loop over each tag and decorate with right color name
-             -->
-             {#each group.tagIndexes as tagIndex }
-                {console.log(tagIndex)}
-                <!-- {groupList.groups[tagIndex].name} -->
-             {/each}
-
+            <!-- place inside right column -->
+            <div style:grid-column-start={3+group.groupIndex}>
+                <!-- loop over each tag and decorate with right color name -->
+                {#each group.tagIndexes as tagIndex }
+                    <span>{groupList.groups[group.groupIndex].tags[tagIndex]}</span>
+                {/each}
+            </div>
         {/each}
-        <!-- 
-            each groups as group
-                <Tags tags={group.tags}>
-        -->
    {/each}
 
 </div>

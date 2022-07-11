@@ -26,11 +26,19 @@ export class ExerciseList {
                 groupTagMatrix: [
                     {
                         groupIndex: 0, 
-                        tagIndexes: [9, 7]
+                        tagIndexes: [11, 8]
                     },
                     {
                         groupIndex: 1, 
                         tagIndexes: [6]
+                    },
+                    {
+                        groupIndex: 2, 
+                        tagIndexes: [1]
+                    },
+                    {
+                        groupIndex: 3, 
+                        tagIndexes: [0]
                     },
                 ]
             },
@@ -39,11 +47,19 @@ export class ExerciseList {
                 groupTagMatrix: [
                     {
                         groupIndex: 0, 
-                        tagIndexes: [8, 5]
+                        tagIndexes: [10, 7]
                     },
                     {
                         groupIndex: 1, 
-                        tagIndexes: [7, 4]
+                        tagIndexes: [11, 4]
+                    },
+                    {
+                        groupIndex: 2, 
+                        tagIndexes: [1]
+                    },
+                    {
+                        groupIndex: 3, 
+                        tagIndexes: [0]
                     },
                 ]
             },
@@ -52,11 +68,11 @@ export class ExerciseList {
                 groupTagMatrix: [
                     {
                         groupIndex: 0, 
-                        tagIndexes: [0, 1, 3, 7]
+                        tagIndexes: [0, 1, 3, 9]
                     },
                     {
                         groupIndex: 1, 
-                        tagIndexes: [11]
+                        tagIndexes: [13]
                     },
                 ]
             },
@@ -65,11 +81,11 @@ export class ExerciseList {
                 groupTagMatrix: [
                     {
                         groupIndex: 0, 
-                        tagIndexes: [1, 3, 7]
+                        tagIndexes: [1, 3, 9]
                     },
                     {
                         groupIndex: 1, 
-                        tagIndexes: [11]
+                        tagIndexes: [0, 13]
                     },
                 ]
             },
