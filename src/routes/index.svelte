@@ -19,6 +19,9 @@
 
 {#each program[selectedDay].exercisePlans as exercisePlan}
     <p>{exercisePlan.name}</p>
+    {#each exercisePlan.sets as set}
+        {set}
+    {/each}
 {/each}
 
 <AutoComplete data={exercises.map(exercise => exercise.name)} placeholder="Add exercise"/>
