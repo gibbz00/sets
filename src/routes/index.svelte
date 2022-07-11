@@ -6,62 +6,19 @@
 
 <script>
     import AutoComplete from "$lib/AutoComplete.svelte"
+    import {program, exercises} from "$lib/Data"
 
     let selectedDay = 0
-    let weekdays=[
-        {
-            index: 0, 
-            name: "Monday",
-            exercises: ["Bench press", "T-bar row"]
-        },
-        {
-            index: 1,
-            name: "Tuesday",
-            exercises: ["Squats"]
-        },
-        {
-            index: 2,
-            name: "Wednesday",
-            exercises: ["Barbell overhead press"]
-        },
-        {
-            index: 3,
-            name: "Thursday",
-            exercises: ["Barbell overhead press"]
-        },
-        {
-            index: 4,
-            name: "Friday",
-            exercises: ["Barbell overhead press"]
-        },
-        {
-            index: 5,
-            name: "Saturday",
-            exercises: ["Barbell overhead press"]
-        },
-        {
-            index: 6,
-            name: "Sunday",
-            exercises: ["Barbell overhead press"]
-        }
-    ]
-
-    let exercises=[
-        "Bench press",
-        "Dips",
-        "Deadlift",
-        "Squat"
-    ]
 </script>
 
 <select bind:value={selectedDay}>
-    {#each weekdays as weekday }
-        <option value={weekday.index}>{weekday.name}</option>
+    {#each program as day, index}
+        <option value={index}>{day.name}</option>
     {/each}
 </select>
 
-{#each weekdays[selectedDay].exercises as exercise}
-    <p>{exercise}</p>
+{#each program[selectedDay].exercisePlans as exercisePlan}
+    <p>{exercisePlan.name}</p>
 {/each}
 
-<AutoComplete data={exercises} placeholder="Add exercise"/>
+<AutoComplete data={exercises.map(exercise => exercise.name)} placeholder="Add exercise"/>
