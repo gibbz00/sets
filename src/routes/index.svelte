@@ -26,19 +26,23 @@
         },
         {
             index: 3,
-            name: "Thursday"
+            name: "Thursday",
+            exercises: ["Barbell overhead press"]
         },
         {
             index: 4,
-            name: "Friday"
+            name: "Friday",
+            exercises: ["Barbell overhead press"]
         },
         {
             index: 5,
-            name: "Saturday"
+            name: "Saturday",
+            exercises: ["Barbell overhead press"]
         },
         {
             index: 6,
-            name: "Sunday"
+            name: "Sunday",
+            exercises: ["Barbell overhead press"]
         }
     ]
 
@@ -50,12 +54,11 @@
     ]
 </script>
 
-<!-- BUG: monday not shown on load -->
-<sl-select value={selectedDay} on:sl-change={(event) => {selectedDay = event.target.value}}>
+<select bind:value={selectedDay}>
     {#each weekdays as weekday }
-        <sl-menu-item value={weekday.index}>{weekday.name}</sl-menu-item>
+        <option value={weekday.index}>{weekday.name}</option>
     {/each}
-</sl-select>
+</select>
 
 {#each weekdays[selectedDay].exercises as exercise}
     <p>{exercise}</p>
