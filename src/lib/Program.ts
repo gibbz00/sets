@@ -1,5 +1,8 @@
 import type { Exercise } from "./ExerciseList"
 import { ExerciseList } from "./ExerciseList"
+// REMOVE: for non-demo
+import { seededExerciseList } from "./ExercisListSeed"
+
 
 type workoutDay = {
     name: string,
@@ -13,7 +16,11 @@ type workoutDay = {
 
 //Build this is the future by reading a JSON or something
 export class Program { 
-    readonly exerciseList = new ExerciseList()
+    // REPLACE: for non-demo
+    // readonly exerciseList = new ExerciseList()
+    // REMOVE: for non-demo
+    readonly exerciseList = seededExerciseList
+
     workoutDays = [
         {
             name: "Monday",

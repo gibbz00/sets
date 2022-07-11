@@ -14,7 +14,7 @@
         Replaces:
     */
     import { seededGroupList } from "$lib/GroupListSeed"
-    let groupList = seededGroupList()
+    let groupList = seededGroupList
 
     let program = new Program()
     let selectedDay = 0

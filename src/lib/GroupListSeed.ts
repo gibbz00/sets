@@ -37,7 +37,7 @@ const groupsSeed: Group[] = [
     },
 ]
 
-export let seededGroupList = (): GroupList => {
+export let seededGroupList = ((): GroupList => {
     let groupList = new GroupList()
     //Populate list
     //TEMP: maybe do this be reading a json in the future
@@ -45,4 +45,4 @@ export let seededGroupList = (): GroupList => {
         groupList.add(group)
     }
     return groupList
-}
+})()
