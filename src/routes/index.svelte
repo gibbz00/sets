@@ -5,13 +5,18 @@
 </svelte:head>
 
 <script>
-    import AutoComplete from "$lib/AutoComplete.svelte"
-import { Exercise } from "$lib/ExerciseList"
-    import { GroupList } from "$lib/GroupList"
     import { Program } from "$lib/Program"
 
+    /* 
+        Non-demo verion:
+        import { GroupList } from "$lib/GroupList"
+        let groupList = new GroupList()
+        Replaces:
+    */
+    import { seededGroupList } from "$lib/GroupListSeed"
+    let groupList = seededGroupList()
+
     let program = new Program()
-    let groupList = new GroupList()
     let selectedDay = 0
 </script>
 
@@ -23,9 +28,9 @@ import { Exercise } from "$lib/ExerciseList"
 
 <hr>
 
-<div class="grid" style:--group-columns={program.groupList.groups.length}>
+<div class="grid" style:--group-columns={groupList.groups.length}>
     <!-- group names -->
-    {#each program.groupList.groups as group}
+    {#each groupList.groups as group}
         <div class=group-name>{group.name}</div>
     {/each}
 
@@ -61,7 +66,7 @@ import { Exercise } from "$lib/ExerciseList"
 <style>
     .grid {
         display: grid;
-        /* grid-template-columns: calc(2 + var(--group-columns)); */
+        grid-template-columns: calc(2 + var(--group-columns));
         grid-template-columns: repeat(calc(2 + var(--group-columns)), 1fr);
         grid-auto-rows: 50px;
     }

@@ -1,6 +1,5 @@
 import type { Exercise } from "./ExerciseList"
 import { ExerciseList } from "./ExerciseList"
-import { GroupList } from "./GroupList"
 
 type workoutDay = {
     name: string,
@@ -15,7 +14,6 @@ type workoutDay = {
 //Build this is the future by reading a JSON or something
 export class Program { 
     readonly exerciseList = new ExerciseList()
-    readonly groupList =  new GroupList()
     workoutDays = [
         {
             name: "Monday",
