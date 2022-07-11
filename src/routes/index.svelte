@@ -6,6 +6,7 @@
 
 <script>
     import { Program } from "$lib/Program"
+    let program = new Program()
 
     /* 
         Non-demo verion:
@@ -16,7 +17,6 @@
     import { seededGroupList } from "$lib/GroupListSeed"
     let groupList = seededGroupList
 
-    let program = new Program()
     let selectedDay = 0
 </script>
 
@@ -75,7 +75,7 @@
         grid-column-start: 3;
     }
 
-    /* TODO: should not be required once the tags loaded dynamically  */
+    /* TODO: required if the tags are loaded dynamically?  */
     .exercise-names {
         grid-column-start: 1;
     }
