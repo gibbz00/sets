@@ -1,7 +1,6 @@
+<!-- TODO: title automatically added all pages, apart from those where something else is appropriate -->
 <svelte:head>
-    <!-- HACK -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.77/dist/themes/light.css" />
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.0.0-beta.77/dist/shoelace.js"></script>
+    <title>Sets</title>
 </svelte:head>
 
 <script>
@@ -26,9 +25,17 @@
     {/each}
 </select>
 
+<a href="/analysis">Set analysis</a>
+
 <hr>
 
 <div class="grid" style:--group-columns={groupList.groups.length}>
+    <div class="weeks">
+        {#each program.weekNames as weekName}
+            {weekName}
+        {/each}
+    </div>
+
     <!-- group names -->
     {#each groupList.groups as group}
         <div class=group-name>{group.name}</div>
@@ -36,7 +43,6 @@
 
     <!-- Render exercise names, their sets, and their tags for the selected day -->
     {#each program.workoutDays[selectedDay].exercisePlans as exercisePlan}
-        <!-- names -->
         <div class="exercise-names">
             {exercisePlan.exercise.name}
         </div>
@@ -71,8 +77,8 @@
         grid-auto-rows: 50px;
     }
 
-    .group-name:first-child {
-        grid-column-start: 3;
+    .weeks {
+        grid-column-start: 2;
     }
 
     /* TODO: required if the tags are loaded dynamically?  */

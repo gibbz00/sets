@@ -20,6 +20,9 @@ export class Program {
     // readonly exerciseList = new ExerciseList()
     // REMOVE: for non-demo
     readonly exerciseList = seededExerciseList
+    //TODO: prevent duplicate nameing (using sets?)
+    //TODO: add Weeknames CRUD
+    readonly weekNames = ["Deload", "W1", "W2", "W3", "W4"]
 
     workoutDays = [
         {
