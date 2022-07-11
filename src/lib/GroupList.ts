@@ -1,5 +1,6 @@
 export type Group = {
     name: string
+    //TODO: should not be possible to add duplicates
     tags: string[]
 }
 
@@ -10,6 +11,7 @@ const muscleGroups: string[] = [
     "Glutes",
     "Delts Posterior",
     "Delts Medial",
+    "Delts Anterior",
     "Biceps",
     "Triceps",
     "Lower Back",
@@ -19,7 +21,7 @@ const muscleGroups: string[] = [
     "Abdominals"
    ]
    
-export let groupsSeed: Group[] = [
+const groupsSeed: Group[] = [
     {
         name: "Primary",
         tags: muscleGroups

@@ -6,10 +6,12 @@
 
 <script>
     import AutoComplete from "$lib/AutoComplete.svelte"
-import { GroupList, groupsSeed } from "$lib/GroupList"
+import { Exercise } from "$lib/ExerciseList"
+    import { GroupList } from "$lib/GroupList"
     import { Program } from "$lib/Program"
 
     let program = new Program()
+    let groupList = new GroupList()
     let selectedDay = 0
 </script>
 
@@ -36,10 +38,28 @@ import { GroupList, groupsSeed } from "$lib/GroupList"
 
         <!-- sets -->
         <div class="sets">
-            {#each exercisePlan.sets as set, index}
+            {#each exercisePlan.sets as set}
                 {set}
             {/each}
         </div>
+
+        <!-- groups -->
+        {#each exercisePlan.exercise.groupTagMatrix as group}
+            <!-- 
+               1. place inside right column
+                
+               2. loop over each tag and decorate with right color name
+             -->
+             {#each group.tagIndexes as tagIndex }
+                {console.log(tagIndex)}
+                <!-- {groupList.groups[tagIndex].name} -->
+             {/each}
+
+        {/each}
+        <!-- 
+            each groups as group
+                <Tags tags={group.tags}>
+        -->
    {/each}
 
 </div>
@@ -57,7 +77,7 @@ import { GroupList, groupsSeed } from "$lib/GroupList"
         grid-column-start: 3;
     }
 
-    /* TODO: should not be required one the tags loaded dynamically  */
+    /* TODO: should not be required once the tags loaded dynamically  */
     .exercise-names {
         grid-column-start: 1;
     }
