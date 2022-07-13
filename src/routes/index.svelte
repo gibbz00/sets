@@ -8,7 +8,8 @@
     import Toggle from "$lib/Toggle.svelte";
     import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
     import { SetMap } from "$lib/utils/SetMap"
-    import type { ExercisePlan } from "$lib/utils/Types"
+    import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
+import { ThrowSet } from "$lib/utils/ThowSet";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
@@ -41,16 +42,52 @@
                 return setmap
             })
         }
-        hideAutoCompleteSelectorsKeyRefreshor = new Object()
+        reset()
     }
 
     //TODO:
-    function addExerciseTag(desiredName :string) {
+    function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
+        if(desiredName != "") {
+            // Check that tag is not a present exercise property 
+            if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
+                //TODO: proper error handling
+                // should show a modal explaining why
+                // user should be able to return to properly typing a valid entry
+                
+                //return in order to skip reset()
+                return
+            }
 
+            // Check that tag does not aleady exists in group. If so; add it to the groups registry
+            if (!$groups.get(groupName)?.has(desiredName)) {
+                $groups.get(groupName)?.add(desiredName)
+            }
+
+
+            // Link tag to exercise
+            exercises.update(setmap => {
+                let exerciseProperties = setmap.get(exerciseName)
+                // check if group exists
+                // if not create groupName entry
+                if(!exerciseProperties?.has(groupName)) {
+                    exerciseProperties?.set(groupName, new ThrowSet())
+                }
+                exerciseProperties?.get(groupName)?.add(desiredName)
+                return setmap.update(exerciseName, exerciseProperties as ExerciseProperties)
+            })
+        }
+        reset()
     }
 
     function addWeekName( desiredName: string) {
+        if(desiredName != "") {
 
+        }
+        reset()
+    }
+
+    function reset() {
+        hideAutoCompleteSelectorsKeyRefreshor = new Object()
     }
 
     let grid: number[][] = new Array($workoutProgram.get(selectedDay)!.length).fill(new Array(2+$groups.size))
@@ -111,7 +148,7 @@
                 {#key hideAutoCompleteSelectorsKeyRefreshor}
                     <Toggle>
                         <button slot="first">+</button>
-                        <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail)}/>
+                        <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
                     </Toggle>
                 {/key}
             </div>
