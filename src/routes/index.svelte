@@ -3,25 +3,31 @@
     <title>Sets</title>
 </svelte:head>
 
-<script>
-    import { Program } from "$lib/Program"
-    let program = new Program()
+<script lang="ts">
+    import { weekNames, groups, workoutProgram } from "$lib/SeededStores"
+    import { SetMap } from "$lib/utils/SetMap";
+    import type { ExercisePlan } from "$lib/utils/Types";
 
-    /* 
-        Non-demo verion:
-        import { GroupList } from "$lib/GroupList"
-        let groupList = new GroupList()
-        Replaces:
-    */
-    import { seededGroupList } from "$lib/GroupListSeed"
-    let groupList = seededGroupList
+    // Automatically pick first day from workout program
+    let selectedDay: string = $workoutProgram.keys().next().value
+    // Should not be able to be undefined given the current program logic, fingers crossed
+    $: selectedExercisePlans = $workoutProgram.get(selectedDay) as ExercisePlan[]
 
-    let selectedDay = 0
+    // create a key-value map where the key is the name of the group and the value is column line start without offset
+    let groupColumnStart = new SetMap<string, number>()
+    groups.subscribe(value => {
+        let keys = Array.from(value.keys())
+        for (let index = 0; index < value.size; index++) {
+            groupColumnStart.set(keys[index], index)
+        }
+
+    })
+
 </script>
 
 <select bind:value={selectedDay}>
-    {#each program.workoutDays as day, index}
-        <option value={index}>{day.name}</option>
+    {#each Array.from($workoutProgram.keys()) as weekday}
+        <option value={weekday}>{weekday}</option>
     {/each}
 </select>
 
@@ -29,22 +35,23 @@
 
 <hr>
 
-<div class="grid" style:--group-columns={groupList.groups.length}>
+<div class="grid" style:--group-columns={$groups.size}>
     <div class="weeks">
-        {#each program.weekNames as weekName}
+        {#each Array.from($weekNames.values()) as weekName}
             {weekName}
         {/each}
     </div>
 
     <!-- group names -->
-    {#each groupList.groups as group}
-        <div class=group-name>{group.name}</div>
+    {#each Array.from($groups.keys()) as groupName}
+        <div>{groupName}</div>
     {/each}
 
     <!-- Render exercise names, their sets, and their tags for the selected day -->
-    {#each program.workoutDays[selectedDay].exercisePlans as exercisePlan}
+    <!-- iterates over ExercisePlan[] -->
+    {#each selectedExercisePlans as exercisePlan}
         <div class="exercise-names">
-            {exercisePlan.exercise.name}
+            {exercisePlan.exercise[0]}
         </div>
 
         <!-- sets -->
@@ -55,12 +62,12 @@
         </div>
 
         <!-- groups -->
-        {#each exercisePlan.exercise.groupTagMatrix as group}
+        {#each exercisePlan.exercise[1] as groupReference}
             <!-- place inside right column -->
-            <div style:grid-column-start={3+group.groupIndex}>
+            <div style:grid-column-start={3+groupColumnStart.getEntry(groupReference.group[0])[1]}>
                 <!-- loop over each tag and decorate with right color name -->
-                {#each group.tagIndexes as tagIndex }
-                    <span>{groupList.groups[group.groupIndex].tags[tagIndex]}</span>
+                {#each Array.from(groupReference.tags.values()) as tag }
+                    <span>{tag}</span>
                 {/each}
             </div>
         {/each}
