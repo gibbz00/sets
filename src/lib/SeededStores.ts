@@ -2,7 +2,7 @@ import { SetMap } from "./utils/SetMap"
 import { ThrowSet } from "./utils/ThowSet"
 import { writable, type Writable, get} from "svelte/store"
 import { KeyAlreadyExistsError } from "./utils/SetErrors"
-import type { ExercisePlan, GroupReference } from "./utils/Types"
+import type { ExercisePlan, Exercises, Groups, ExerciseProperties, WeekNames, WorkoutProgram } from "./utils/Types"
 
 
 const muscleGroups = [
@@ -29,12 +29,12 @@ const seed = {
             name: "Bench press",
             groupReferences: [
                 { 
-                    group: "Primary",
+                    groupName: "Primary",
                     tags: ["Upper Chest"]
                 },
                 {
-                    group: "Secondary",
-                    tags: ["Triceps"]
+                    groupName: "Secondary",
+                    tags: ["Triceps", "Abdominals"]
                 }
             ]
         },
@@ -42,15 +42,15 @@ const seed = {
             name: "T-bar row",
             groupReferences: [
                 { 
-                    group: "Primary",
+                    groupName: "Primary",
                     tags: ["Upper Back"]
                 },
                 {
-                    group: "Secondary",
-                    tags: ["Biceps", "Delts Posterior"]
+                    groupName: "Secondary",
+                    tags: ["Biceps", "Delts Posterior", "Abdominals"]
                 },
                 {
-                    group: "Phase",
+                    groupName: "Phase",
                     tags: ["Main"]
                 }
             ]
@@ -58,21 +58,21 @@ const seed = {
         {
             name: "Deadlift",
             groupReferences: [{
-                    group: "Phase",
+                    groupName: "Phase",
                     tags: ["Main"]
             }]
         },
         {
             name: "Squat",
             groupReferences: [{
-                    group: "Primary",
+                    groupName: "Primary",
                     tags: ["Quad"]
             }]
         },
         {
             name: "Overhead press",
             groupReferences: [{
-                    group: "Secondary",
+                    groupName: "Secondary",
                     tags: ["Triceps"]
             }]
         }
@@ -126,25 +126,25 @@ const seed = {
     ]
 }
 
-export const exercises = writable(new SetMap<string, GroupReference[]>())
-export const groups = writable(new SetMap<string, ThrowSet<string>>())
-export const weekNames = writable(new ThrowSet<string>())
-export const workoutProgram = writable(new SetMap<string, ExercisePlan[]>())
+export const exercises: Writable<Exercises> = writable(new SetMap())
+export const groups: Writable<Groups> = writable(new SetMap())
+export const weekNames: Writable<WeekNames> = writable(new ThrowSet())
+export const workoutProgram: Writable<WorkoutProgram> = writable(new SetMap())
 
 
 function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
     // SetMap.set() checks for duplicates, no need to loop over them twice
     try {
-        exercises.update( setmap => setmap.set(exerciseName, []))
+        exercises.update( setmap => setmap.set(exerciseName, new SetMap()))
         return {
-            exercise: get(exercises).getEntry(exerciseName)!,
-            sets: (sets? sets : new Array(get(weekNames).size))
+            exerciseName,
+            sets: (sets? sets : new Array(get(weekNames).size).fill(0))
         }
     }
     catch (error) {
         if (error instanceof KeyAlreadyExistsError) return {
-            exercise: get(exercises).getEntry(exerciseName)!,
-            sets: (sets? sets : new Array(get(weekNames).size))
+            exerciseName,
+            sets: (sets? sets : new Array(get(weekNames).size).fill(0))
         }
         throw new Error("Failed to create Exercise Plan")
     }
@@ -159,25 +159,17 @@ for (let groupSeed of seed.groups) {
     groups.update((setmap) => setmap.set(groupSeed.name, tempThrowSet))
 }
 
-//TODO: make exercises reference tags by refernce
-// Seed exerciseSetMap
+// Seed exercises
 for (let exercise of seed.exercises) {
-    let tempGroupReferences: GroupReference[] = []
-    for (let groupReference of  exercise.groupReferences) {
-        let tempGroupReference: GroupReference  = {
-            group: get(groups).getEntry(groupReference.group),
-            // should be refernces to the groups tags
-            tags: new ThrowSet<string>()
+    let tempProperties: ExerciseProperties = new SetMap()
+    for (let exerciseProperty of  exercise.groupReferences) {
+        let tempTags: ThrowSet<string> = new ThrowSet()
+        for (let tag of exerciseProperty.tags){
+            tempTags.add(tag)
         }
-
-        for (let tag of (get(groups).get(groupReference.group) as ThrowSet<string>)){
-            if (groupReference.tags.includes(tag)){
-                tempGroupReference.tags.add(tag)
-            }
-        }
-        tempGroupReferences.push(tempGroupReference)
+        tempProperties.set(exerciseProperty.groupName, tempTags) as ExerciseProperties
     }
-    exercises.update((setmap) => setmap.set(exercise.name, tempGroupReferences))
+    exercises.update((setmap) => setmap.set(exercise.name, tempProperties))
 }
 
 // Seed weeknames

@@ -6,12 +6,7 @@
             * Updates are done with the update() method
                 * Throws error if key does not exist
         * Throws error when attempting to delete a element that does not exist in the set
-        * get() returns a reference to both the key and the value
-            * makes easier to create references to the entire entry
-        * BUG: not possible to override function return types in TS 
-        *   I can't find the source code for a Map implementation.
-        *   Instead I'll use a different method name and an looping over each entry in the map.
-        *   Far from ideal but works for now.
+        * BUG: not possible to override function return types in TS, hence the getDefined
 */
 
 import { KeyAlreadyExistsError, NoKeyInSetError } from "./SetErrors";
@@ -21,11 +16,9 @@ export class SetMap<K, V> extends Map<K, V>{
         super()
     }
 
-    getEntry(searchKey: K): [K, V] {
-        for (let [key, value] of this.entries()) {
-            if (key === searchKey) return [key, value]
-        }
-        throw new NoKeyInSetError(searchKey);
+    getDefined(key: K): V {
+        if(!this.has(key)) throw new NoKeyInSetError(key);
+        return super.get(key) as V
     }
 
     override set(key: K, value: V): this {

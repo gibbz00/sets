@@ -19,12 +19,14 @@ export class ThrowSet<V> extends Set<V>{
         return this
     }
 
-    //TODO: 
-    // * preserves set order
+    //TODO: preserve set order and reference
     update(oldValue: V, newValue: V): this {
         if (!this.has(oldValue)) throw new NoKeyInSetError(oldValue) 
-        super.delete(oldValue)
-        super.add(newValue)
+        for (let value of super.values()) {
+           if(oldValue === value) {
+                value = newValue
+           }
+        }
         return this
     }
 

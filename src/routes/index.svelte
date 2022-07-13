@@ -4,7 +4,9 @@
 </svelte:head>
 
 <script lang="ts">
-    import { weekNames, groups, workoutProgram } from "$lib/SeededStores"
+import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte";
+
+    import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
     import { SetMap } from "$lib/utils/SetMap";
     import type { ExercisePlan } from "$lib/utils/Types";
 
@@ -23,6 +25,21 @@
 
     })
 
+    function createExercisePlan(desiredName: string){
+        if (!$exercises.has(desiredName)) {
+            $exercises.set(desiredName, new SetMap())
+        }
+        const newExercisePlan: ExercisePlan = {
+            exerciseName: desiredName,
+            sets: new Array($weekNames.size).fill(0)
+        }
+        workoutProgram.update(setmap => { 
+            setmap.get(selectedDay)!.push(newExercisePlan)
+            return setmap
+        })
+    }
+
+
 </script>
 
 <select bind:value={selectedDay}>
@@ -30,8 +47,6 @@
         <option value={weekday}>{weekday}</option>
     {/each}
 </select>
-
-<a href="/analysis">Set analysis</a>
 
 <hr>
 
@@ -51,7 +66,7 @@
     <!-- iterates over ExercisePlan[] -->
     {#each selectedExercisePlans as exercisePlan}
         <div class="exercise-names">
-            {exercisePlan.exercise[0]}
+            {exercisePlan.exerciseName}
         </div>
 
         <!-- sets -->
@@ -62,11 +77,11 @@
         </div>
 
         <!-- groups -->
-        {#each exercisePlan.exercise[1] as groupReference}
+        {#each Array.from($exercises.getDefined(exercisePlan.exerciseName)) as property}
             <!-- place inside right column -->
-            <div style:grid-column-start={3+groupColumnStart.getEntry(groupReference.group[0])[1]}>
-                <!-- loop over each tag and decorate with right color name -->
-                {#each Array.from(groupReference.tags.values()) as tag }
+            <div style:grid-column-start={3+groupColumnStart.get(property[0])}>
+                <!-- TODO: tag color decoraiton -->
+                {#each Array.from(property[1].values()) as tag }
                     <span>{tag}</span>
                 {/each}
             </div>
@@ -74,7 +89,6 @@
    {/each}
 
 </div>
-
 
 <style>
     .grid {
@@ -94,4 +108,6 @@
     }
 </style>
 
-<!-- <AutoComplete data={exerciseList.exercises.map(exercise => exercise.name)} placeholder="Add exercise"/> -->
+<AutoCompleteSelector data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
+
+<!-- <a href="/analysis">Set analysis</a> -->

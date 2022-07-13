@@ -1,12 +1,15 @@
-import type { Readable } from "svelte/store";
+import type { SetMap } from "./SetMap";
 import type { ThrowSet } from "./ThowSet";
 
-export type GroupReference = {
-        group: [string, ThrowSet<string>] 
-        tags: ThrowSet<string>
-}
+export type WeekNames = ThrowSet<string>
+
+export type ExerciseProperties = SetMap<string,ThrowSet<string>>
+export type Exercises = SetMap<string, ExerciseProperties>
+
+export type Groups = SetMap<string, ThrowSet<string>>
 
 export type ExercisePlan = {
-    exercise: [string, GroupReference[]],
-    sets: any[];
+    exerciseName: string,
+    sets: number[];
 }
+export type WorkoutProgram = SetMap<string, ExercisePlan[]>
