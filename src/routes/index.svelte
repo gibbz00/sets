@@ -4,11 +4,13 @@
 </svelte:head>
 
 <script lang="ts">
-import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte";
-
+    import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte"
+    import Toggle from "$lib/Toggle.svelte";
     import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
-    import { SetMap } from "$lib/utils/SetMap";
-    import type { ExercisePlan } from "$lib/utils/Types";
+    import { SetMap } from "$lib/utils/SetMap"
+    import type { ExercisePlan } from "$lib/utils/Types"
+
+    let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
     // Automatically pick first day from workout program
     let selectedDay: string = $workoutProgram.keys().next().value
@@ -26,20 +28,21 @@ import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte";
     })
 
     function createExercisePlan(desiredName: string){
-        if (!$exercises.has(desiredName)) {
-            $exercises.set(desiredName, new SetMap())
+        if(desiredName != "") {
+            if (!$exercises.has(desiredName)) {
+                $exercises.set(desiredName, new SetMap())
+            }
+            const newExercisePlan: ExercisePlan = {
+                exerciseName: desiredName,
+                sets: new Array($weekNames.size).fill(0)
+            }
+            workoutProgram.update(setmap => { 
+                setmap.get(selectedDay)!.push(newExercisePlan)
+                return setmap
+            })
         }
-        const newExercisePlan: ExercisePlan = {
-            exerciseName: desiredName,
-            sets: new Array($weekNames.size).fill(0)
-        }
-        workoutProgram.update(setmap => { 
-            setmap.get(selectedDay)!.push(newExercisePlan)
-            return setmap
-        })
+        hideAutoCompleteSelectorsKeyRefreshor = new Object()
     }
-
-
 </script>
 
 <select bind:value={selectedDay}>
@@ -108,6 +111,10 @@ import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte";
     }
 </style>
 
-<AutoCompleteSelector data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
-
+{#key hideAutoCompleteSelectorsKeyRefreshor}
+    <Toggle>
+        <button slot="first">+</button>
+        <AutoCompleteSelector slot="second" data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
+    </Toggle>
+{/key}
 <!-- <a href="/analysis">Set analysis</a> -->

@@ -55,7 +55,6 @@
         }
     }
 
-    //TEST:
     function checkSubmit(event: InputEvent){
         if (event.inputType == "insertLineBreak") {
             dispatch("selected", input)
