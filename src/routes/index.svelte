@@ -9,7 +9,6 @@
     import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan } from "$lib/utils/Types"
-import { hasContext } from "svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
@@ -45,6 +44,15 @@ import { hasContext } from "svelte";
         hideAutoCompleteSelectorsKeyRefreshor = new Object()
     }
 
+    //TODO:
+    function addExerciseTag(desiredName :string) {
+
+    }
+
+    function addWeekName( desiredName: string) {
+
+    }
+
     let grid: number[][] = new Array($workoutProgram.get(selectedDay)!.length).fill(new Array(2+$groups.size))
 </script>
 
@@ -58,8 +66,16 @@ import { hasContext } from "svelte";
 
 <div class="grid" style:--group-columns={$groups.size}>
     <div class="weeks">
-        {#each Array.from($weekNames.values()) as weekName}
+        {#each Array.from($weekNames.values()) as weekName, index}
             {weekName}
+            {#if index + 1 == Array.from($weekNames.values()).length}
+                {#key hideAutoCompleteSelectorsKeyRefreshor}
+                    <Toggle>
+                        <button slot="first">+</button>
+                        <AutoCompleteSelector slot="second" placeholder="Add week" on:selected={(event) => addWeekName(event.detail)}/>
+                    </Toggle>
+                {/key}
+            {/if}
         {/each}
     </div>
 
@@ -95,23 +111,21 @@ import { hasContext } from "svelte";
                 {#key hideAutoCompleteSelectorsKeyRefreshor}
                     <Toggle>
                         <button slot="first">+</button>
-                        <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => createExerciseTag(event.detail)}/>
+                        <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail)}/>
                     </Toggle>
                 {/key}
             </div>
         {/each}
-        <!-- groups -->
-        <!-- {#each Array.from($exercises.getDefined(exercisePlan.exerciseName)) as property} -->
-            <!-- place inside right column -->
-            <!-- <div style:grid-column-start={3+groupColumnStart.get(property[0])}> -->
-                <!-- TODO: tag color decoraiton -->
-                <!-- {#each Array.from(property[1].values()) as tag } -->
-                    <!-- <span>{tag}</span> -->
-                <!-- {/each} -->
-            <!-- </div> -->
-        <!-- {/each} -->
    {/each}
 </div>
+
+{#key hideAutoCompleteSelectorsKeyRefreshor}
+    <Toggle>
+        <button slot="first">+</button>
+        <AutoCompleteSelector slot="second" data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
+    </Toggle>
+{/key}
+<!-- <a href="/analysis">Set analysis</a> -->
 
 <style>
     .grid {
@@ -130,11 +144,3 @@ import { hasContext } from "svelte";
         grid-column-start: 1;
     }
 </style>
-
-{#key hideAutoCompleteSelectorsKeyRefreshor}
-    <Toggle>
-        <button slot="first">+</button>
-        <AutoCompleteSelector slot="second" data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
-    </Toggle>
-{/key}
-<!-- <a href="/analysis">Set analysis</a> -->

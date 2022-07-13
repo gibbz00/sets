@@ -11,7 +11,7 @@
     type element = string
 
     // data - array of matches to compare input with
-    export let data: element[];
+    export let data: element[] = []
     export let placeholder: string | undefined
 
     // Text-area live value
