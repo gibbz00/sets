@@ -9,6 +9,7 @@
     import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan } from "$lib/utils/Types"
+import { hasContext } from "svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
@@ -43,6 +44,8 @@
         }
         hideAutoCompleteSelectorsKeyRefreshor = new Object()
     }
+
+    let grid: number[][] = new Array($workoutProgram.get(selectedDay)!.length).fill(new Array(2+$groups.size))
 </script>
 
 <select bind:value={selectedDay}>
@@ -79,18 +82,35 @@
             {/each}
         </div>
 
-        <!-- groups -->
-        {#each Array.from($exercises.getDefined(exercisePlan.exerciseName)) as property}
-            <!-- place inside right column -->
-            <div style:grid-column-start={3+groupColumnStart.get(property[0])}>
+        {#each Array.from(groupColumnStart.keys()) as groupName, index}
+            <div style:grid-column-start={3+index}>
                 <!-- TODO: tag color decoraiton -->
-                {#each Array.from(property[1].values()) as tag }
-                    <span>{tag}</span>
-                {/each}
+                {#if $exercises.get(exercisePlan.exerciseName).has(groupName) }
+                    {#each Array.from($exercises.get(exercisePlan.exerciseName).get(groupName)) as tag }
+                        <span>{tag}</span>
+                    {/each}
+                    
+                {/if}
+
+                {#key hideAutoCompleteSelectorsKeyRefreshor}
+                    <Toggle>
+                        <button slot="first">+</button>
+                        <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => createExerciseTag(event.detail)}/>
+                    </Toggle>
+                {/key}
             </div>
         {/each}
+        <!-- groups -->
+        <!-- {#each Array.from($exercises.getDefined(exercisePlan.exerciseName)) as property} -->
+            <!-- place inside right column -->
+            <!-- <div style:grid-column-start={3+groupColumnStart.get(property[0])}> -->
+                <!-- TODO: tag color decoraiton -->
+                <!-- {#each Array.from(property[1].values()) as tag } -->
+                    <!-- <span>{tag}</span> -->
+                <!-- {/each} -->
+            <!-- </div> -->
+        <!-- {/each} -->
    {/each}
-
 </div>
 
 <style>
