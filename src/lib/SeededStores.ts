@@ -84,11 +84,11 @@ const seed = {
             exercisePlans: [
                 {
                     exerciseName: "Bench press",
-                    sets: [2,3,3,4]
+                    sets: [1,2,3,3,4]
                 },
                 {
                     exerciseName: "T-bar row",
-                    sets: [1,3,2,4]
+                    sets: [1,1,3,2,4]
                 }
             ]
         },
@@ -97,11 +97,11 @@ const seed = {
             exercisePlans: [
                 {
                     exerciseName: "Squat",
-                    sets: [2,3,3,4]
+                    sets: [1,2,3,3,4]
                 },
                 {
                     exerciseName: "Deadlift",
-                    sets: [1,1,2,4]
+                    sets: [1,2,1,2,4]
                 }
             ]
         }
@@ -136,17 +136,15 @@ function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
     // SetMap.set() checks for duplicates, no need to loop over them twice
     try {
         exercises.update( setmap => setmap.set(exerciseName, new SetMap()))
-        return {
-            exerciseName,
-            sets: (sets? sets : new Array(get(weekNames).size).fill(0))
-        }
     }
     catch (error) {
-        if (error instanceof KeyAlreadyExistsError) return {
-            exerciseName,
-            sets: (sets? sets : new Array(get(weekNames).size).fill(0))
+        if (!(error instanceof KeyAlreadyExistsError)) {
+            throw new Error("Failed to create Exercise Plan")
         }
-        throw new Error("Failed to create Exercise Plan")
+    }
+    return {
+        exerciseName,
+        sets: (sets? sets : new Array(get(weekNames).size).fill(0))
     }
 }
 

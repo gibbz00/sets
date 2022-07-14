@@ -3,9 +3,9 @@
 </script>
 
 {#if hidden}
-    <div on:click={() => hidden = !hidden}>
+    <span on:click={() => hidden = !hidden}>
         <slot name="first"></slot>
-    </div>
+    </span>
 {:else}
     <slot name="second"></slot>
 {/if}

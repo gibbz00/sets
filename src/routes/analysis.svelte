@@ -3,4 +3,13 @@
     <title>Sets</title>
 </svelte:head>
 
-<p> Hello World!  </p>
+<script lang="ts">
+    import  WeekNames from "$lib/WeekNames.svelte"
+    import { groups } from "$lib/SeededStores"
+
+    //TODO: This logic is quite similar to that of select weekdays in index, check if it can be modularised.
+    let selectedGroup: string = $groups.keys().next().value
+</script>
+
+
+<WeekNames />
