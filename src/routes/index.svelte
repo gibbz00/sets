@@ -117,7 +117,7 @@
         <!-- sets -->
         {#each exercisePlan.sets as set}
             <div class="sets">
-                {set}
+                <input type="number" bind:value={set}>
             </div>
         {/each}
    {/each}
