@@ -11,5 +11,10 @@
     let selectedGroup: string = $groups.keys().next().value
 </script>
 
+<select bind:value={selectedGroup}>
+    {#each Array.from($groups.keys()) as groupName}
+       <option value={groupName}>{groupName}</option>
+    {/each}
+</select>
 
 <WeekNames />
