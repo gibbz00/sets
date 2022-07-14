@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { weekNames } from "./SeededStores";
+    import { weekNames } from "./Stores";
 </script>
 
 {#each Array.from($weekNames.values()) as weekName}

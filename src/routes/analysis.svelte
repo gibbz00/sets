@@ -7,13 +7,10 @@
 <script lang="ts">
     import  WeekNames from "$lib/WeekNames.svelte"
     import SummedSetsMatrix from "$lib/SummedSetsMatrix.svelte"
-    import { groups, weekNames } from "$lib/SeededStores"
-
-    let selectedGroup: string = $groups.keys().next().value
-
+    import { groups, weekNames, selectedGroup } from "$lib/Stores"
 </script>
 
-<select bind:value={selectedGroup}>
+<select bind:value={$selectedGroup}>
     {#each Array.from($groups.keys()) as groupName}
        <option value={groupName}>{groupName}</option>
     {/each}
@@ -26,7 +23,7 @@
 <div class="grid" style:--numberWeeks={$weekNames.size}>
     <div>Tags</div>
     <WeekNames />
-    <SummedSetsMatrix {selectedGroup}/>
+    <SummedSetsMatrix/>
 </div>
 
 <style>

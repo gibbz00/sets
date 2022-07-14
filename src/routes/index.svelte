@@ -7,18 +7,17 @@
     import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte"
     import Toggle from "$lib/Toggle.svelte";
     import WeekNames from "$lib/WeekNames.svelte"; 
-    import { weekNames, groups, workoutPrograms, exercises } from "$lib/SeededStores"
+    import { weekNames, groups, workoutPrograms, exercises, selectedDay } from "$lib/Stores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import ClickableTooltip from "$lib/ClickableTooltip.svelte";
+import { onMount } from "svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
-    // Automatically pick first day from workout program
-    let selectedDay: string = $workoutPrograms.keys().next().value
     // Should not be able to be undefined given the current program logic, fingers crossed
-    $: selectedExercisePlans = $workoutPrograms.get(selectedDay) as ExercisePlan[]
+    $: selectedExercisePlans = $workoutPrograms.get($selectedDay) as ExercisePlan[]
 
     function createExercisePlan(desiredName: string){
         if(desiredName != "") {
@@ -30,7 +29,7 @@
                 sets: new Array($weekNames.size).fill(0)
             }
             workoutPrograms.update(setmap => { 
-                setmap.get(selectedDay)!.push(newExercisePlan)
+                setmap.get($selectedDay)!.push(newExercisePlan)
                 return setmap
             })
         }
@@ -75,7 +74,7 @@
     }
 </script>
 
-<select bind:value={selectedDay}>
+<select bind:value={$selectedDay}>
     {#each Array.from($workoutPrograms.keys()) as weekday}
         <option value={weekday}>{weekday}</option>
     {/each}

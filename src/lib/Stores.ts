@@ -183,3 +183,6 @@ for (let day of seed.program) {
     }
     workoutPrograms.update((setmap) => setmap.set(day.name, tempExercisePlans))
 }
+
+export const selectedDay: Writable<string> = writable(get(workoutPrograms).keys().next().value)
+export const selectedGroup: Writable<string> = writable(get(groups).keys().next().value)
