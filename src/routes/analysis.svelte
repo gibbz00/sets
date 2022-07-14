@@ -5,6 +5,7 @@
 
 <script lang="ts">
     import  WeekNames from "$lib/WeekNames.svelte"
+    import { weekNames } from "$lib/SeededStores"
     import { groups } from "$lib/SeededStores"
 
     //TODO: This logic is quite similar to that of select weekdays in index, check if it can be modularised.
@@ -17,4 +18,15 @@
     {/each}
 </select>
 
-<WeekNames />
+<div class="grid" style:--numberWeeks={$weekNames.size}>
+    <div>Tags</div>
+    <WeekNames />
+</div>
+
+<style>
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(calc(1 + var(--numberWeeks)), 1fr);
+    }
+
+</style>
