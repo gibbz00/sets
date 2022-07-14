@@ -4,15 +4,13 @@
 </svelte:head>
 
 <script lang="ts">
-    import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte"
-    import Toggle from "$lib/Toggle.svelte";
+    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
     import WeekNames from "$lib/WeekNames.svelte"; 
     import { weekNames, groups, workoutPrograms, exercises, selectedDay } from "$lib/Stores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import ClickableTooltip from "$lib/ClickableTooltip.svelte";
-import { onMount } from "svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
@@ -103,10 +101,7 @@ import { onMount } from "svelte";
                         {/each}
                     {/if}
                     {#key hideAutoCompleteSelectorsKeyRefreshor}
-                        <Toggle>
-                            <span slot="first">+</span>
-                            <AutoCompleteSelector slot="second" data={Array.from($groups.getDefined(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
-                        </Toggle>
+                        <HiddenAutoCompleteSelector placeholder="Add tag" data={Array.from($groups.getDefined(groupName).values())} on:selected={(event) => createExercisePlan(event.detail)}/>
                     {/key}
                     </div>
                 {/each}
@@ -123,10 +118,7 @@ import { onMount } from "svelte";
 </div>
 
 {#key hideAutoCompleteSelectorsKeyRefreshor}
-    <Toggle>
-        <span slot="first">+</span>
-        <AutoCompleteSelector slot="second" data={Array.from($exercises.keys())} placeholder="Add exercise" on:selected={(event) => createExercisePlan(event.detail)}/>
-    </Toggle>
+    <HiddenAutoCompleteSelector placeholder="Add exercise" data={Array.from($exercises.keys())} on:selected={(event) => createExercisePlan(event.detail)}/>
 {/key}
 
 <style>

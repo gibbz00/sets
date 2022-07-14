@@ -104,7 +104,27 @@ const seed = {
                     sets: [1,2,1,2,4]
                 }
             ]
-        }
+        },
+        {
+            name: "Wednesday",
+            exercisePlans: []
+        },
+        {
+            name: "Thursday",
+            exercisePlans: []
+        },
+        {
+            name: "Friday",
+            exercisePlans: []
+        },
+        {
+            name: "Saturday",
+            exercisePlans: []
+        },
+        {
+            name: "Sunday",
+            exercisePlans: []
+        },
     ],
     groups: [
         {
