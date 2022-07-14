@@ -7,7 +7,7 @@
     import AutoCompleteSelector from "$lib/AutoCompleteSelector.svelte"
     import Toggle from "$lib/Toggle.svelte";
     import WeekNames from "$lib/WeekNames.svelte"; 
-    import { weekNames, groups, workoutProgram, exercises } from "$lib/SeededStores"
+    import { weekNames, groups, workoutPrograms, exercises } from "$lib/SeededStores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet";
@@ -16,9 +16,9 @@
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
     // Automatically pick first day from workout program
-    let selectedDay: string = $workoutProgram.keys().next().value
+    let selectedDay: string = $workoutPrograms.keys().next().value
     // Should not be able to be undefined given the current program logic, fingers crossed
-    $: selectedExercisePlans = $workoutProgram.get(selectedDay) as ExercisePlan[]
+    $: selectedExercisePlans = $workoutPrograms.get(selectedDay) as ExercisePlan[]
 
     function createExercisePlan(desiredName: string){
         if(desiredName != "") {
@@ -29,7 +29,7 @@
                 exerciseName: desiredName,
                 sets: new Array($weekNames.size).fill(0)
             }
-            workoutProgram.update(setmap => { 
+            workoutPrograms.update(setmap => { 
                 setmap.get(selectedDay)!.push(newExercisePlan)
                 return setmap
             })
@@ -76,7 +76,7 @@
 </script>
 
 <select bind:value={selectedDay}>
-    {#each Array.from($workoutProgram.keys()) as weekday}
+    {#each Array.from($workoutPrograms.keys()) as weekday}
         <option value={weekday}>{weekday}</option>
     {/each}
 </select>
@@ -87,9 +87,7 @@
 
 <div class="grid" style:--numberWeeks={$weekNames.size}>
 
-    <!-- HACK: give week names style of group-column-start = 2 -->
-    <div></div>
-    <!-- Weeknames -->
+    <div>Exercise</div>
     <WeekNames/>
 
     <!-- iterates over ExercisePlan[] -->
@@ -100,15 +98,15 @@
                 <!-- group names -->
                 {#each Array.from($groups.keys()) as groupName}
                     <div>{groupName}:
-                    {#if $exercises.get(exercisePlan.exerciseName).has(groupName) }
-                        {#each Array.from($exercises.get(exercisePlan.exerciseName).get(groupName)) as tag }
+                    {#if $exercises.getDefined(exercisePlan.exerciseName).has(groupName) }
+                        {#each Array.from($exercises.getDefined(exercisePlan.exerciseName).getDefined(groupName)) as tag }
                             <span>{tag}</span>
                         {/each}
                     {/if}
                     {#key hideAutoCompleteSelectorsKeyRefreshor}
                         <Toggle>
                             <span slot="first">+</span>
-                            <AutoCompleteSelector slot="second" data={Array.from($groups.get(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
+                            <AutoCompleteSelector slot="second" data={Array.from($groups.getDefined(groupName).values())} placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
                         </Toggle>
                     {/key}
                     </div>
@@ -136,6 +134,5 @@
     .grid {
         display: grid;
         grid-template-columns: repeat(calc(1 + var(--numberWeeks)), 1fr);
-        grid-auto-rows: 50px;
     }
 </style>

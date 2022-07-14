@@ -2,7 +2,7 @@ import { SetMap } from "./utils/SetMap"
 import { ThrowSet } from "./utils/ThowSet"
 import { writable, type Writable, get} from "svelte/store"
 import { KeyAlreadyExistsError } from "./utils/SetErrors"
-import type { ExercisePlan, Exercises, Groups, ExerciseProperties, WeekNames, WorkoutProgram } from "./utils/Types"
+import type { ExercisePlan, Exercises, Groups, ExerciseProperties, WeekNames, WorkoutPrograms } from "./utils/Types"
 
 
 const muscleGroups = [
@@ -129,7 +129,7 @@ const seed = {
 export const exercises: Writable<Exercises> = writable(new SetMap())
 export const groups: Writable<Groups> = writable(new SetMap())
 export const weekNames: Writable<WeekNames> = writable(new ThrowSet())
-export const workoutProgram: Writable<WorkoutProgram> = writable(new SetMap())
+export const workoutPrograms: Writable<WorkoutPrograms> = writable(new SetMap())
 
 
 function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
@@ -181,5 +181,5 @@ for (let day of seed.program) {
     for (let exercisePlan of day.exercisePlans) {
         tempExercisePlans.push(newExercisePlan(exercisePlan.exerciseName, exercisePlan.sets))
     }
-    workoutProgram.update((setmap) => setmap.set(day.name, tempExercisePlans))
+    workoutPrograms.update((setmap) => setmap.set(day.name, tempExercisePlans))
 }

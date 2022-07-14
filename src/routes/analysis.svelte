@@ -3,13 +3,14 @@
     <title>Sets</title>
 </svelte:head>
 
+<!-- TODO: this route shows many similarities with idex, see how it can be modularied -->
 <script lang="ts">
     import  WeekNames from "$lib/WeekNames.svelte"
-    import { weekNames } from "$lib/SeededStores"
-    import { groups } from "$lib/SeededStores"
+    import SummedSetsMatrix from "$lib/SummedSetsMatrix.svelte"
+    import { groups, weekNames } from "$lib/SeededStores"
 
-    //TODO: This logic is quite similar to that of select weekdays in index, check if it can be modularised.
     let selectedGroup: string = $groups.keys().next().value
+
 </script>
 
 <select bind:value={selectedGroup}>
@@ -18,9 +19,14 @@
     {/each}
 </select>
 
+<a href="/">Set planner</a>
+
+<hr>
+
 <div class="grid" style:--numberWeeks={$weekNames.size}>
     <div>Tags</div>
     <WeekNames />
+    <SummedSetsMatrix {selectedGroup}/>
 </div>
 
 <style>
@@ -28,5 +34,4 @@
         display: grid;
         grid-template-columns: repeat(calc(1 + var(--numberWeeks)), 1fr);
     }
-
 </style>

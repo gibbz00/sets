@@ -12,4 +12,4 @@ export type ExercisePlan = {
     exerciseName: string,
     sets: number[];
 }
-export type WorkoutProgram = SetMap<string, ExercisePlan[]>
+export type WorkoutPrograms = SetMap<string, ExercisePlan[]>
