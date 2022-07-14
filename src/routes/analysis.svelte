@@ -10,13 +10,12 @@
     import { groups, weekNames, selectedGroup } from "$lib/Stores"
 </script>
 
-<select bind:value={$selectedGroup}>
+<nav>
     {#each Array.from($groups.keys()) as groupName}
-       <option value={groupName}>{groupName}</option>
+        <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
     {/each}
-</select>
-
-<a href="/">Set planner</a>
+    <a href="/">Set planner</a>
+</nav>
 
 <hr>
 

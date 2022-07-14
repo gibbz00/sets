@@ -72,13 +72,12 @@
     }
 </script>
 
-<select bind:value={$selectedDay}>
+<nav>
     {#each Array.from($workoutPrograms.keys()) as weekday}
-        <option value={weekday}>{weekday}</option>
+        <span style:text-decoration={$selectedDay == weekday ? "underline" : ""} on:click={() => {$selectedDay = weekday}}>{weekday}</span>
     {/each}
-</select>
-
-<a href="/analysis">Set analysis</a>
+    <a href="/analysis">Set analysis</a>
+</nav>
 
 <hr>
 
