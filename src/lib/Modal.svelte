@@ -1,6 +1,6 @@
 <script lang="ts">
     let message: string = ""
-    let visible: boolean = true
+    export let visible: boolean = true
 
     export function show(incomingMessage: string){
         message = incomingMessage
@@ -45,8 +45,8 @@
         justify-content: center;
         margin: auto;
         background-color: white;
-        width: 30rem;
-        height: 30rem;
+        width: 20rem;
+        height: 15rem;
         z-index: 2;
     }
 </style>

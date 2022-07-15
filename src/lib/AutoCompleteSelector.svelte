@@ -33,6 +33,10 @@
                 4.1 pressing key-down when ul length is 0 does not shift focus
                 4.2 pressing enter on a focused li invokes 2.
     */
+
+
+    let inputElement: HTMLInputElement
+
     function filterData(event: InputEvent){
         input = (event as any).target.value
        
@@ -54,6 +58,7 @@
 
     function checkSubmit(event: InputEvent){
         if (event.inputType == "insertLineBreak") {
+            inputElement.blur()
             dispatch("selected", input)
         }
     }
@@ -61,7 +66,7 @@
 
 <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
 <!-- beforeinput event is used in order to capture line-break keypress, which are captured by on:input-->
-<input type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => checkSubmit(event)} on:input={(event) => filterData(event)} value={input}>
+<input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => checkSubmit(event)} on:input={(event) => filterData(event)} value={input}>
 {#if remaining.length > 0}
     <ul>
         {#each remaining as element}

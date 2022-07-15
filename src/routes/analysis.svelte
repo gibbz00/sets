@@ -10,10 +10,13 @@
     import { groups, weekNames, selectedGroup } from "$lib/Stores"
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
     import { ThrowSet } from "$lib/utils/ThowSet";
+    import Modal from "$lib/Modal.svelte";
+
+    let modal: Modal
 
     function createGroup(groupName: string){
         if($groups.has(groupName))  {
-            //TODO: show error modal and let user continue typing the group
+            modal.show(`${groupName} group already exists!`)
         }
         else {
            $groups = $groups.set(groupName, new ThrowSet())
@@ -22,6 +25,7 @@
 
 </script>
 
+<Modal bind:this={modal} visible={false}/>
 
 <nav>
     {#each Array.from($groups.keys()) as groupName}
