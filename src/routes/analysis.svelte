@@ -11,6 +11,7 @@
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
     import { ThrowSet } from "$lib/utils/ThowSet";
     import Modal from "$lib/Modal.svelte";
+import HoverDelete from "$lib/HoverDelete.svelte";
 
     let modal: Modal
 
@@ -23,13 +24,19 @@
         }
     }
 
+    function deleteGroup(groupName: string) {
+        console.log("removing", groupName)
+    }
+
 </script>
 
 <Modal bind:this={modal} visible={false}/>
 
 <nav>
     {#each Array.from($groups.keys()) as groupName}
-        <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
+        <HoverDelete on:remove={() => deleteGroup(groupName)}>
+            <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
+        </HoverDelete>
     {/each}
 
     <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => createGroup(event.detail)}/>
