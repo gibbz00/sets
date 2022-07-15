@@ -22,6 +22,7 @@
 
 </script>
 
+
 <nav>
     {#each Array.from($groups.keys()) as groupName}
         <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>

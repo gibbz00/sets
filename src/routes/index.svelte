@@ -11,6 +11,7 @@
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import ClickableTooltip from "$lib/ClickableTooltip.svelte";
+    import Modal from "$lib/Modal.svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
 
@@ -70,7 +71,10 @@
     function reset() {
         hideAutoCompleteSelectorsKeyRefreshor = new Object()
     }
+
 </script>
+
+<Modal />
 
 <nav>
     {#each Array.from($workoutPrograms.keys()) as weekday}
