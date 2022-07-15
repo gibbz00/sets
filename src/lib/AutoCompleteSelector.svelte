@@ -33,9 +33,6 @@
                 4.1 pressing key-down when ul length is 0 does not shift focus
                 4.2 pressing enter on a focused li invokes 2.
     */
-
-
-
     function filterData(event: InputEvent){
         input = (event as any).target.value
        
@@ -58,8 +55,6 @@
     function checkSubmit(event: InputEvent){
         if (event.inputType == "insertLineBreak") {
             dispatch("selected", input)
-            input = ""
-            remaining = []
         }
     }
 </script>

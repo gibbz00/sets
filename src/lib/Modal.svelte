@@ -1,5 +1,11 @@
 <script lang="ts">
+    let message: string = ""
     let visible: boolean = true
+
+    export function show(incomingMessage: string){
+        message = incomingMessage
+        visible = true
+    }
 
     function hide() {
         visible = false
@@ -15,7 +21,7 @@
 {#if visible}
     <div on:click={hide}>
         <div on:click|stopPropagation={undefined}>
-            Test
+            {message}
             <button on:click={hide}>Close</button>
         </div>
     </div>

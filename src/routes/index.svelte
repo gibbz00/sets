@@ -14,6 +14,7 @@
     import Modal from "$lib/Modal.svelte";
 
     let hideAutoCompleteSelectorsKeyRefreshor = new Object()
+    let modal: Modal;
 
     // Should not be able to be undefined given the current program logic, fingers crossed
     $: selectedExercisePlans = $workoutPrograms.get($selectedDay) as ExercisePlan[]
@@ -40,12 +41,8 @@
         if(desiredName != "") {
             // Check that tag is not present exercise property 
             if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
-                //TODO: proper error handling
-                // should show a modal explaining why
-                // user should be able to return to properly typing a valid entry
-                
-                //return here in order to skip reset()
-                return
+                reset()
+                modal.show(`The tag ${desiredName} already exists in ${groupName}`)
             }
 
             // Check that tag does not aleady exists in group. If so; add it to the groups registry
@@ -74,7 +71,7 @@
 
 </script>
 
-<Modal />
+<Modal bind:this={modal} />
 
 <nav>
     {#each Array.from($workoutPrograms.keys()) as weekday}
@@ -104,7 +101,7 @@
                         {/each}
                     {/if}
                     {#key hideAutoCompleteSelectorsKeyRefreshor}
-                        <HiddenAutoCompleteSelector placeholder="Add tag" data={Array.from($groups.getDefined(groupName).values())} on:selected={(event) => createExercisePlan(event.detail)}/>
+                        <HiddenAutoCompleteSelector placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
                     {/key}
                     </div>
                 {/each}
