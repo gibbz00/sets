@@ -14,6 +14,7 @@
         }
         else {
             $groups = $groups.set(groupName, new ThrowSet())
+            $selectedGroup = groupName
         }
     }
 
