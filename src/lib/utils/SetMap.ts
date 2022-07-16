@@ -33,9 +33,9 @@ export class SetMap<K, V> extends Map<K, V>{
         return this
     }
 
-    override delete(key: K): boolean {
+    deleteThisReturn(key: K): this {
         if (!this.has(key)) throw new NoKeyInSetError(key)
         super.delete(key) 
-        return true
+        return this
     }
 }

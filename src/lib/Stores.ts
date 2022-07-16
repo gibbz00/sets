@@ -205,4 +205,5 @@ for (let day of seed.program) {
 }
 
 export const selectedDay: Writable<string> = writable(get(workoutPrograms).keys().next().value)
-export const selectedGroup: Writable<string> = writable(get(groups).keys().next().value)
+export const selectedGroup: Writable<string | null> = writable(get(groups).keys().next().value)
+export const refresh: Writable<Object> = writable(new Object())

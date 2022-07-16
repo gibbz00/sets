@@ -8,56 +8,41 @@
     import  WeekNames from "$lib/WeekNames.svelte"
     import SummedSetsMatrix from "$lib/SummedSetsMatrix.svelte"
     import { groups, weekNames, selectedGroup } from "$lib/Stores"
-    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
-    import { ThrowSet } from "$lib/utils/ThowSet";
-    import Modal from "$lib/Modal.svelte";
-import HoverDelete from "$lib/HoverDelete.svelte";
+    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
+    import HoverDelete from "$lib/HoverDelete.svelte"
+    import Model from "$lib/Model.svelte"
 
-    let modal: Modal
-
-    function createGroup(groupName: string){
-        if($groups.has(groupName))  {
-            modal.show(`${groupName} group already exists!`)
-        }
-        else {
-           $groups = $groups.set(groupName, new ThrowSet())
-        }
-    }
-
-    let confirmDeleteModal: Modal
-    function deleteGroup(groupName: string) {
-        confirmDeleteModal.show(`Delete ${groupName} group?`)
-    }
-
-    function confirmedGroupDelete() {
-        confirmDeleteModal.hide()
-    }
-
+    let model: Model
 </script>
 
-<Modal bind:this={modal} visible={false}/>
-
-<Modal bind:this={confirmDeleteModal} visible={false}><button on:click={confirmedGroupDelete}>Delete</button></Modal>   
+<Model bind:this={model}/>
 
 <nav>
-    {#each Array.from($groups.keys()) as groupName}
-        <HoverDelete on:remove={() => deleteGroup(groupName)}>
-            <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
-        </HoverDelete>
-    {/each}
+    {#key $groups }
+        {#each Array.from($groups.keys()) as groupName}
+            <HoverDelete on:remove={() => model.deleteGroup(groupName)}>
+                <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
+            </HoverDelete>
+        {/each}
+    {/key}
 
-    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => createGroup(event.detail)}/>
+    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
 
     <a href="/">Set planner</a>
 </nav>
 
 <hr>
 
-<div class="grid" style:--numberWeeks={$weekNames.size}>
-    <div>Tags</div>
-    <WeekNames />
-    <SummedSetsMatrix/>
-</div>
+{#if $selectedGroup == null }
+    <p>Begin by adding a new group!</p>
+{:else}
+    <div class="grid" style:--numberWeeks={$weekNames.size}>
+        <div>Tags</div>
+        <WeekNames />
+        <SummedSetsMatrix/>
+    </div>
+{/if}
+
 
 <style>
     .grid {

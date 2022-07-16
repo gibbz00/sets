@@ -1,0 +1,39 @@
+<script lang="ts">
+    import { groups, selectedGroup } from "$lib/Stores"
+    import { ThrowSet } from "$lib/utils/ThowSet";
+    import Modal from "$lib/Modal.svelte"
+
+    let modal: Modal
+    // TODO: improve this god-awful API
+    let confirmDeleteModal: Modal
+    let toDelete: string | null = null
+
+    export function createGroup(groupName: string){
+        if($groups.has(groupName))  {
+            modal.show(`${groupName} group already exists!`)
+        }
+        else {
+        $groups = $groups.set(groupName, new ThrowSet())
+        }
+    }
+
+    export function deleteGroup(groupName: string) {
+        toDelete = groupName
+        confirmDeleteModal.show(`Delete ${groupName} group?`)
+    }
+
+    export function confirmedGroupDelete() {
+        confirmDeleteModal.hide()
+        $groups = $groups.deleteThisReturn(toDelete!)
+        // select next group
+        if ($groups.size == 0) $selectedGroup = null
+        else {
+            //TODO: improve next group to be selected logic
+                // selects the nearest neighbor group, if there are one on each side: select the last
+            $selectedGroup = $groups.keys().next().value
+        }
+    }
+</script>
+
+<Modal bind:this={modal} visible={false}/>
+<Modal bind:this={confirmDeleteModal} visible={false}><button on:click={confirmedGroupDelete}>Delete</button></Modal>
