@@ -20,6 +20,10 @@
     // Array of objects that match the input 
     let remaining: element[] = [];
 
+    // TODO: typeset to whole numbers greater than -1 and always less than remaining.length
+    // -1 symbolises unset
+    let selectedIndex: number = -1
+
     // Event dispatcher setup
     import { createEventDispatcher } from "svelte"
     // Detail should be input value
@@ -28,9 +32,7 @@
 
     let inputElement: HTMLInputElement
 
-    function filterData(event: Event){
-        input = (event as any).target.value
-       
+    function filterData(){
         if (input.length == 0){
             remaining = data;
         }
@@ -47,21 +49,47 @@
         }
     }
 
-    function checkSubmit(event: InputEvent){
-        if (event.inputType == "insertLineBreak") {
-            inputElement.blur()
-            dispatch("selected", input)
+    // BUG: svelte bug: can't use "as" keyword in anonymous callback functions witten outside of script tag
+    function filterDataPrepare(event: Event) {
+        input = (event.target as HTMLInputElement).value
+        filterData()
+    }
+
+    // 
+    function checkSubmit(event: KeyboardEvent){
+        switch (event.key) {
+            case "Enter":
+                inputElement.blur()
+                dispatch("selected", input)
+                break
+            case "ArrowUp":
+                if (selectedIndex > 0 ) input = remaining[--selectedIndex]
+                break
+            case "ArrowDown":
+                if (selectedIndex == -1) {
+                    filterData()
+                    selectedIndex = 0
+                    input = remaining[selectedIndex]
+                } 
+                else if (selectedIndex < remaining.length - 1) input = remaining[++selectedIndex]
+                break
         }
     }
 </script>
 
 <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
 <!-- beforeinput event is used in order to capture line-break keypress, which are captured by on:input-->
-<input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => checkSubmit(event)} on:input={(event) => filterData(event)} value={input}>
+<input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
 {#if remaining.length > 0}
     <ul>
-        {#each remaining as element}
-            <li on:click={() => dispatch("selected", element)}>{element}</li>
+        {#each remaining as element, index}
+            <li class={index == selectedIndex ? "selected" : undefined} on:click={() => dispatch("selected", element)}>{element}</li>
         {/each}
     </ul>
 {/if}
+
+<style>
+    .selected {
+        color: red;
+    }
+</style>
