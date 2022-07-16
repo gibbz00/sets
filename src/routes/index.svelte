@@ -4,17 +4,18 @@
 </svelte:head>
 
 <script lang="ts">
-    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
-    import WeekNames from "$lib/WeekNames.svelte"; 
-    import { weekNames, groups, workoutPrograms, exercises, selectedDay } from "$lib/Stores"
+    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
+    import WeekNames from "$lib/WeekNames.svelte"
+    import { weekNames, groups, workoutPrograms, exercises, selectedDay, refresh } from "$lib/Stores"
     import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
-    import { ThrowSet } from "$lib/utils/ThowSet";
-    import ClickableTooltip from "$lib/ClickableTooltip.svelte";
-    import Modal from "$lib/Modal.svelte";
+    import { ThrowSet } from "$lib/utils/ThowSet"
+    import ClickableTooltip from "$lib/ClickableTooltip.svelte"
+    import Modal from "$lib/Modal.svelte"
+    import Model from "$lib/Model.svelte"
 
-    let hideAutoCompleteSelectorsKeyRefreshor = new Object()
-    let modal: Modal;
+    let modal: Modal
+    let model: Model
 
     // Should not be able to be undefined given the current program logic, fingers crossed
     $: selectedExercisePlans = $workoutPrograms.get($selectedDay) as ExercisePlan[]
@@ -85,12 +86,12 @@
     }
 
     function reset() {
-        hideAutoCompleteSelectorsKeyRefreshor = new Object()
+        $refresh = new Object()
     }
 
 </script>
 
-<!-- Might move to __layout -->
+<Model bind:this={model} />
 <Modal bind:this={modal} visible={false}/>
 
 <nav>
@@ -120,11 +121,13 @@
                                 <span>{tag}</span>
                             {/each}
                         {/if}
-                        {#key hideAutoCompleteSelectorsKeyRefreshor}
+                        {#key $refresh}
                             <HiddenAutoCompleteSelector placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
                         {/key}
                         </div>
                     {/each}
+                    Add group
+                    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
                 </div>
             </ClickableTooltip>
 
@@ -136,12 +139,12 @@
             {/each}
         {/each}
 
-        {#key hideAutoCompleteSelectorsKeyRefreshor}
+        {#key $refresh}
             <HiddenAutoCompleteSelector placeholder="Add exercise" data={Array.from($exercises.keys())} on:selected={(event) => createExercisePlan(event.detail)}/>
         {/key}
     </div>
 
-    {#key hideAutoCompleteSelectorsKeyRefreshor}
+    {#key $refresh}
         <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => addWeek(event.detail)}/>
     {/key}
 </main>
