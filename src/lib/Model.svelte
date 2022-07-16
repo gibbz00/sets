@@ -10,6 +10,10 @@
     let confirmDeleteModal: Modal
     let toDelete: string
 
+
+    /*
+        GROUPS
+    */
     export function createGroup(groupName: string){
         if($groups.has(groupName))  {
             modal.show(`${groupName} group already exists!`)
@@ -43,7 +47,10 @@
         }
     }
 
-    export function addWeek(weekName: string){
+    /*
+        WEEK
+    */
+    export function createWeek(weekName: string){
         // Check that week names does not already exist
         if ($weekNames.has(weekName)) {
                 modal.show(`${weekName} already exists!`)
@@ -61,6 +68,9 @@
         }
     }
 
+    /*
+        EXERCISE PLAN
+    */
     export function createExercisePlan(desiredName: string){
         if (!$exercises.has(desiredName)) {
             $exercises.set(desiredName, new SetMap())
@@ -76,7 +86,10 @@
         resetUI()
     }
 
-    export function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
+    /*
+        EXERCISE TAG
+    */
+    export function createExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
             // Check that tag is not present exercise property 
             if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
                 // BUG: Inputs that are only shown during hover are not disabled when modal is shown

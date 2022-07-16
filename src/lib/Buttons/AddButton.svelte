@@ -30,13 +30,13 @@
     {#if scenario == "exercisePlan"}
         <HiddenAutoCompleteSelector placeholder="Add exercise plan" data={Array.from($exercises.keys())} on:selected={(event) => model.createExercisePlan(event.detail)}/>
     {:else if scenario == "week"}
-        <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.addWeek(event.detail)}/>
+        <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}/>
     {:else if scenario == "group"}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
     {:else if scenario == "tag"}
         <HiddenAutoCompleteSelector 
             data={Array.from($groups.getDefined((groupName)).values())} 
-            placeholder="Add tag" on:selected={(event) => model.addExerciseTag(event.detail, groupName, exerciseName)}
+            placeholder="Add tag" on:selected={(event) => model.createExerciseTag(event.detail, groupName, exerciseName)}
         />
     {/if}
 {/key}
