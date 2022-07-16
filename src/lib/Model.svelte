@@ -1,7 +1,9 @@
 <script lang="ts">
-    import { exercises, groups, selectedGroup, weekNames, workoutPrograms, refresh } from "$lib/Stores"
+    import { exercises, selectedDay, groups, selectedGroup, weekNames, workoutPrograms, refresh } from "$lib/Stores"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import Modal from "$lib/Modal.svelte"
+    import { SetMap } from "./utils/SetMap";
+    import type { ExercisePlan } from "./utils/Types";
 
     let modal: Modal
     // TODO: improve this god-awful API
@@ -54,9 +56,31 @@
                 }
                 $workoutPrograms = $workoutPrograms.update(weekName, exercisePlans)
             }
-            $refresh = new Object()
+            resetUI()
         }
     }
+
+    export function createExercisePlan(desiredName: string){
+        if(desiredName != "") {
+            if (!$exercises.has(desiredName)) {
+                $exercises.set(desiredName, new SetMap())
+            }
+            const newExercisePlan: ExercisePlan = {
+                exerciseName: desiredName,
+                sets: new Array($weekNames.size).fill(0)
+            }
+            workoutPrograms.update(setmap => { 
+                setmap.get($selectedDay)!.push(newExercisePlan)
+                return setmap
+            })
+        }
+        resetUI()
+    }
+
+    function resetUI(){
+        $refresh = new Object()
+    }
+
 </script>
 
 <Modal bind:this={modal} visible={false}/>

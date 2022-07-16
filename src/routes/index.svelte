@@ -7,36 +7,18 @@
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
     import WeekNames from "$lib/WeekNames.svelte"
     import { weekNames, groups, workoutPrograms, exercises, selectedDay, refresh } from "$lib/Stores"
-    import { SetMap } from "$lib/utils/SetMap"
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet"
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
     import Modal from "$lib/Modal.svelte"
     import Model from "$lib/Model.svelte"
-import AddWeek from "$lib/Buttons/AddWeek.svelte"
+    import AddButton from "$lib/Buttons/AddButton.svelte";
 
     let modal: Modal
     let model: Model
 
     // Should not be able to be undefined given the current program logic, fingers crossed
     $: selectedExercisePlans = $workoutPrograms.get($selectedDay) as ExercisePlan[]
-
-    function createExercisePlan(desiredName: string){
-        if(desiredName != "") {
-            if (!$exercises.has(desiredName)) {
-                $exercises.set(desiredName, new SetMap())
-            }
-            const newExercisePlan: ExercisePlan = {
-                exerciseName: desiredName,
-                sets: new Array($weekNames.size).fill(0)
-            }
-            workoutPrograms.update(setmap => { 
-                setmap.get($selectedDay)!.push(newExercisePlan)
-                return setmap
-            })
-        }
-        reset()
-    }
 
     //TODO:
     function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
@@ -122,12 +104,10 @@ import AddWeek from "$lib/Buttons/AddWeek.svelte"
             {/each}
         {/each}
 
-        {#key $refresh}
-            <HiddenAutoCompleteSelector placeholder="Add exercise" data={Array.from($exercises.keys())} on:selected={(event) => createExercisePlan(event.detail)}/>
-        {/key}
+        <AddButton scenario="exercise"/>
     </div>
 
-    <AddWeek />
+    <AddButton scenario="week"/>
 </main>
 
 <style>

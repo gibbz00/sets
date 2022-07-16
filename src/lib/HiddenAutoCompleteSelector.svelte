@@ -39,6 +39,7 @@
     function filterData(){
         if (input.length == 0){
             remaining = data;
+            selectedIndex = -1
         }
         else {
             let tempRemaining = data
@@ -59,7 +60,12 @@
         filterData()
     }
 
-    // 
+    function inputResetCheck(event: InputEvent) {
+        if (event.inputType == "deleteWordBackward" || "deleteContentBackward") {
+            selectedIndex = -1
+        }
+    }
+
     function checkSubmit(event: KeyboardEvent){
         switch (event.key) {
             case "Enter":
@@ -94,8 +100,7 @@
 {:else}
     <span on:click|stopPropagation={() => {}}>
         <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
-        <!-- beforeinput event is used in order to capture line-break keypress, which are captured by on:input-->
-        <input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
+        <input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => inputResetCheck(event)} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
         {#if remaining.length > 0}
             <ul>
                 {#each remaining as element, index}
