@@ -17,6 +17,7 @@
         else {
             $groups = $groups.set(groupName, new ThrowSet())
             $selectedGroup = groupName
+            resetUI()
         }
     }
 
@@ -75,7 +76,7 @@
         resetUI()
     }
 
-        export function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
+    export function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
             // Check that tag is not present exercise property 
             if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
                 // BUG: Inputs that are only shown during hover are not disabled when modal is shown

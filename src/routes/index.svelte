@@ -4,11 +4,8 @@
 </svelte:head>
 
 <script lang="ts">
-    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
     import WeekNames from "$lib/WeekNames.svelte"
     import { weekNames, groups, workoutPrograms, exercises, selectedDay, refresh } from "$lib/Stores"
-    import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
-    import { ThrowSet } from "$lib/utils/ThowSet"
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
@@ -46,13 +43,11 @@
                                 <span>{tag}</span>
                             {/each}
                         {/if}
-                        {#key $refresh}
-                            <HiddenAutoCompleteSelector placeholder="Add tag" on:selected={(event) => model.addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
-                        {/key}
+                        <AddButton scenario="tag" parameters={{groupName, exerciseName: exercisePlan.exerciseName}}/>
                         </div>
                     {/each}
                     Add group
-                    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
+                    <AddButton scenario="group"/>
                 </div>
             </ClickableTooltip>
 
@@ -64,7 +59,7 @@
             {/each}
         {/each}
 
-        <AddButton scenario="exercise"/>
+        <AddButton scenario="exercisePlan"/>
     </div>
 
     <AddButton scenario="week"/>
