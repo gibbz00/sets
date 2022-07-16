@@ -43,7 +43,6 @@
     </div>
 {/if}
 
-
 <style>
     .grid {
         display: grid;

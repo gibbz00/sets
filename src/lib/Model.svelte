@@ -1,12 +1,12 @@
 <script lang="ts">
-    import { groups, selectedGroup } from "$lib/Stores"
+    import { exercises, groups, selectedGroup } from "$lib/Stores"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import Modal from "$lib/Modal.svelte"
 
     let modal: Modal
     // TODO: improve this god-awful API
     let confirmDeleteModal: Modal
-    let toDelete: string | null = null
+    let toDelete: string
 
     export function createGroup(groupName: string){
         if($groups.has(groupName))  {
@@ -24,7 +24,12 @@
 
     export function confirmedGroupDelete() {
         confirmDeleteModal.hide()
-        $groups = $groups.deleteThisReturn(toDelete!)
+        $groups = $groups.deleteThisReturn(toDelete)
+        // Must also delete the "references" in $exercises.
+        for (let properties of $exercises.values()) {
+            if (properties.has(toDelete)) properties.delete(toDelete)
+        }
+
         // select next group
         if ($groups.size == 0) $selectedGroup = null
         else {
