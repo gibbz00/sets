@@ -13,7 +13,7 @@
             modal.show(`${groupName} group already exists!`)
         }
         else {
-        $groups = $groups.set(groupName, new ThrowSet())
+            $groups = $groups.set(groupName, new ThrowSet())
         }
     }
 
