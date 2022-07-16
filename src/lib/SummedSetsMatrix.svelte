@@ -1,7 +1,8 @@
 <script lang="ts">
     import { weekNames, workoutPrograms, groups, exercises, selectedGroup } from "$lib/Stores"
     import { SetMap } from "$lib/utils/SetMap";
-    import Model from "./Model.svelte";
+    import HoverDelete from "$lib/HoverDelete.svelte";
+    import Model from "$lib/Model.svelte";
     let model: Model
 
     /* sumSetsByTag:
@@ -45,9 +46,9 @@
 {#if tagSets != undefined}
     {#each Array.from(tagSets.entries()) as [tagName, sets]}
         <!-- Tag name -->
-        <!-- <HoverDelete on:remove={() => model.deleteTag(tagName)}>
-            <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
-        </HoverDelete> -->
+        <!-- <HoverDelete on:remove={() => model.deleteTag(tagName)}> -->
+            <!-- <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span> -->
+        <!-- </HoverDelete> -->
         <div>{tagName}</div>
         {#each sets as setCount}
             <div>{setCount}</div>        

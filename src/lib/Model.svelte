@@ -6,9 +6,7 @@
     import type { ExercisePlan } from "./utils/Types";
 
     let modal: Modal
-    // TODO: improve this god-awful API
     let confirmDeleteModal: Modal
-    let toDelete: string
 
 
     /*
@@ -25,17 +23,25 @@
         }
     }
 
+    //TODO: fix this awful API
+    let deleteProcess: Generator
     export function deleteGroup(groupName: string) {
-        toDelete = groupName
-        confirmDeleteModal.show(`Delete ${groupName} group?`)
+        deleteProcess = deleteGroupGenerator(groupName)
+        deleteProcess.next()
+    }
+    
+    function* deleteGroupGenerator(groupName?: string) {
+        let savedGroupName = groupName
+        yield confirmDeleteModal.show(`Delete ${groupName} group?`)
+        yield confirmedGroupDelete(savedGroupName!) 
     }
 
-    export function confirmedGroupDelete() {
+    function confirmedGroupDelete(groupName: string) {
         confirmDeleteModal.hide()
-        $groups = $groups.deleteThisReturn(toDelete)
+        $groups = $groups.deleteThisReturn(groupName)
         // Must also delete the "references" in $exercises.
         for (let properties of $exercises.values()) {
-            if (properties.has(toDelete)) properties.delete(toDelete)
+            if (properties.has(groupName)) properties.delete(groupName)
         }
 
         // select next group
@@ -66,8 +72,11 @@
         }
     }
 
-    export function deleteTag() {
+    export function deleteTag(tagName: string) {
 
+        // remove from $groups
+
+        // remove $exercises 
     }
 
     /*
@@ -140,6 +149,8 @@
         resetUI()
     }
 
+    export function deleteExerciseTag() {}
+
     function resetUI(){
         $refresh = new Object()
     }
@@ -147,4 +158,4 @@
 </script>
 
 <Modal bind:this={modal} visible={false}/>
-<Modal bind:this={confirmDeleteModal} visible={false}><button on:click={confirmedGroupDelete}>Delete</button></Modal>
+<Modal bind:this={confirmDeleteModal} visible={false}><button on:click={() => {deleteProcess.next()}}>Delete</button></Modal>
