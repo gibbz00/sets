@@ -81,7 +81,7 @@
                 if (selectedIndex > 0 ) input = remaining[--selectedIndex]
                 break
             case "ArrowDown":
-                if (data == undefined && selectedIndex == -1) {
+                if (data != undefined && selectedIndex == -1) {
                     filterData()
                     selectedIndex = 0
                     input = remaining[selectedIndex]
