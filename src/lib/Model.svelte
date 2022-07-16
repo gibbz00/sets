@@ -61,19 +61,45 @@
     }
 
     export function createExercisePlan(desiredName: string){
-        if(desiredName != "") {
-            if (!$exercises.has(desiredName)) {
-                $exercises.set(desiredName, new SetMap())
-            }
-            const newExercisePlan: ExercisePlan = {
-                exerciseName: desiredName,
-                sets: new Array($weekNames.size).fill(0)
-            }
-            workoutPrograms.update(setmap => { 
-                setmap.get($selectedDay)!.push(newExercisePlan)
-                return setmap
-            })
+        if (!$exercises.has(desiredName)) {
+            $exercises.set(desiredName, new SetMap())
         }
+        const newExercisePlan: ExercisePlan = {
+            exerciseName: desiredName,
+            sets: new Array($weekNames.size).fill(0)
+        }
+        workoutPrograms.update(setmap => { 
+            setmap.get($selectedDay)!.push(newExercisePlan)
+            return setmap
+        })
+        resetUI()
+    }
+
+        export function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
+            // Check that tag is not present exercise property 
+            if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
+                // BUG: Inputs that are only shown during hover are not disabled when modal is shown
+                    // Possible solution would be to either hide the clickable tooltip, or move mouse cursor to modal
+                modal.show(`The tag ${desiredName} already exists in ${groupName}!`)
+                return
+            }
+
+            // Check that tag does not aleady exists in group. If so; add it to the groups registry
+            if (!$groups.get(groupName)?.has(desiredName)) {
+                $groups.get(groupName)?.add(desiredName)
+            }
+
+            // Link tag to exercise
+            exercises.update(setmap => {
+                let exerciseProperties = setmap.getDefined(exerciseName)
+                // check if group exists
+                // if not create groupName entry
+                if(!exerciseProperties.has(groupName)) {
+                    exerciseProperties.set(groupName, new ThrowSet())
+                }
+                exerciseProperties.getDefined(groupName).add(desiredName)
+                return setmap.update(exerciseName, exerciseProperties)
+            })
         resetUI()
     }
 

@@ -10,54 +10,14 @@
     import type { ExercisePlan, ExerciseProperties } from "$lib/utils/Types"
     import { ThrowSet } from "$lib/utils/ThowSet"
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
-    import Modal from "$lib/Modal.svelte"
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
 
-    let modal: Modal
     let model: Model
-
-    // Should not be able to be undefined given the current program logic, fingers crossed
-    $: selectedExercisePlans = $workoutPrograms.get($selectedDay) as ExercisePlan[]
-
-    //TODO:
-    function addExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
-        if(desiredName != "") {
-            // Check that tag is not present exercise property 
-            if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
-                // BUG: Inputs that are only shown during hover are not disabled. 
-                modal.show(`The tag ${desiredName} already exists in ${groupName}!`)
-                return
-            }
-
-            // Check that tag does not aleady exists in group. If so; add it to the groups registry
-            if (!$groups.get(groupName)?.has(desiredName)) {
-                $groups.get(groupName)?.add(desiredName)
-            }
-
-            // Link tag to exercise
-            exercises.update(setmap => {
-                let exerciseProperties = setmap.get(exerciseName)
-                // check if group exists
-                // if not create groupName entry
-                if(!exerciseProperties?.has(groupName)) {
-                    exerciseProperties?.set(groupName, new ThrowSet())
-                }
-                exerciseProperties?.get(groupName)?.add(desiredName)
-                return setmap.update(exerciseName, exerciseProperties as ExerciseProperties)
-            })
-        }
-        reset()
-    }
-
-    function reset() {
-        $refresh = new Object()
-    }
 
 </script>
 
 <Model bind:this={model} />
-<Modal bind:this={modal} visible={false}/>
 
 <nav>
     {#each Array.from($workoutPrograms.keys()) as weekday}
@@ -74,7 +34,7 @@
         <WeekNames/>
 
         <!-- iterates over ExercisePlan[] -->
-        {#each selectedExercisePlans as exercisePlan}
+        {#each $workoutPrograms.getDefined($selectedDay) as exercisePlan}
             <ClickableTooltip>
                 <span slot="shown">{exercisePlan.exerciseName}</span>
                 <div slot="content">
@@ -87,7 +47,7 @@
                             {/each}
                         {/if}
                         {#key $refresh}
-                            <HiddenAutoCompleteSelector placeholder="Add tag" on:selected={(event) => addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
+                            <HiddenAutoCompleteSelector placeholder="Add tag" on:selected={(event) => model.addExerciseTag(event.detail, groupName, exercisePlan.exerciseName)}/>
                         {/key}
                         </div>
                     {/each}
