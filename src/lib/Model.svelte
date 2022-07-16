@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { exercises, groups, selectedGroup } from "$lib/Stores"
+    import { exercises, groups, selectedGroup, weekNames, workoutPrograms, refresh } from "$lib/Stores"
     import { ThrowSet } from "$lib/utils/ThowSet";
     import Modal from "$lib/Modal.svelte"
 
@@ -37,6 +37,24 @@
             //TODO: improve next group to be selected logic
                 // selects the nearest neighbor group, if there are one on each side: select the last
             $selectedGroup = $groups.keys().next().value
+        }
+    }
+
+    export function addWeek(weekName: string){
+        // Check that week names does not already exist
+        if ($weekNames.has(weekName)) {
+                modal.show(`${weekName} already exists!`)
+        }
+        else {
+            $weekNames = $weekNames.add(weekName)
+            // numbers of sets in exercise plans must also be updated
+            for (let [weekName, exercisePlans] of  $workoutPrograms.entries()){
+                for (let index = 0; index < exercisePlans.length; index++) {
+                    exercisePlans[index].sets.push(0)
+                }
+                $workoutPrograms = $workoutPrograms.update(weekName, exercisePlans)
+            }
+            $refresh = new Object()
         }
     }
 </script>
