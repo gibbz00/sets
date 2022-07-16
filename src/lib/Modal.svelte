@@ -7,7 +7,7 @@
         visible = true
     }
 
-    function hide() {
+    export function hide() {
         visible = false
     }
 
@@ -22,6 +22,7 @@
     <div on:click={hide}>
         <div on:click|stopPropagation={undefined}>
             {message}
+            <slot></slot>
             <button on:click={hide}>Close</button>
         </div>
     </div>
@@ -49,4 +50,5 @@
         height: 15rem;
         z-index: 2;
     }
+
 </style>

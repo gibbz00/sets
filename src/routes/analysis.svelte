@@ -24,13 +24,20 @@ import HoverDelete from "$lib/HoverDelete.svelte";
         }
     }
 
+    let confirmDeleteModal: Modal
     function deleteGroup(groupName: string) {
-        console.log("removing", groupName)
+        confirmDeleteModal.show(`Delete ${groupName} group?`)
+    }
+
+    function confirmedGroupDelete() {
+        confirmDeleteModal.hide()
     }
 
 </script>
 
 <Modal bind:this={modal} visible={false}/>
+
+<Modal bind:this={confirmDeleteModal} visible={false}><button on:click={confirmedGroupDelete}>Delete</button></Modal>   
 
 <nav>
     {#each Array.from($groups.keys()) as groupName}
