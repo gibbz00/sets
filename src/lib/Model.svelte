@@ -7,6 +7,8 @@
 
     let modal: Modal
     let confirmDeleteModal: Modal
+    //TODO: fix this awful API
+    let deleteProcess: Generator
 
 
     /*
@@ -23,35 +25,35 @@
         }
     }
 
-    //TODO: fix this awful API
-    let deleteProcess: Generator
     export function deleteGroup(groupName: string) {
         deleteProcess = deleteGroupGenerator(groupName)
         deleteProcess.next()
+
+        function* deleteGroupGenerator(groupName?: string) {
+            let savedGroupName = groupName
+            yield confirmDeleteModal.show(`Delete ${groupName} group?`)
+            yield confirmedGroupDelete(savedGroupName!) 
+        }
+
+        function confirmedGroupDelete(groupName: string) {
+            confirmDeleteModal.hide()
+            $groups = $groups.deleteThisReturn(groupName)
+            // Must also delete the "references" in $exercises.
+            for (let properties of $exercises.values()) {
+                if (properties.has(groupName)) properties.delete(groupName)
+            }
+
+            // select next group
+            if ($groups.size == 0) $selectedGroup = null
+            else {
+                //TODO: improve next group to be selected logic
+                    // selects the nearest neighbor group, if there are one on each side: select the last
+                $selectedGroup = $groups.keys().next().value
+            }
+        }
     }
     
-    function* deleteGroupGenerator(groupName?: string) {
-        let savedGroupName = groupName
-        yield confirmDeleteModal.show(`Delete ${groupName} group?`)
-        yield confirmedGroupDelete(savedGroupName!) 
-    }
 
-    function confirmedGroupDelete(groupName: string) {
-        confirmDeleteModal.hide()
-        $groups = $groups.deleteThisReturn(groupName)
-        // Must also delete the "references" in $exercises.
-        for (let properties of $exercises.values()) {
-            if (properties.has(groupName)) properties.delete(groupName)
-        }
-
-        // select next group
-        if ($groups.size == 0) $selectedGroup = null
-        else {
-            //TODO: improve next group to be selected logic
-                // selects the nearest neighbor group, if there are one on each side: select the last
-            $selectedGroup = $groups.keys().next().value
-        }
-    }
 
     /*
         TAG
@@ -73,11 +75,12 @@
     }
 
     export function deleteTag(tagName: string) {
-
+        // deleteProcess = deleteTagGenerator()
         // remove from $groups
 
         // remove $exercises 
     }
+
 
     /*
         WEEK
