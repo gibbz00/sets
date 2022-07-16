@@ -12,6 +12,7 @@
 
     // data - array of matches to compare input with
     export let data: element[] = []
+
     export let placeholder: string | undefined
 
     // Text-area live value
@@ -60,8 +61,7 @@
 {#if remaining.length > 0}
     <ul>
         {#each remaining as element}
-            <li>{element}</li>
+            <li on:click={() => dispatch("selected", element)}>{element}</li>
         {/each}
     </ul>
 {/if}
-
