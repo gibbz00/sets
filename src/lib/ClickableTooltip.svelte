@@ -20,7 +20,8 @@
 
         /* Position the tooltip text */
         position: absolute;
-        right: 0%;
+        left: 0%;
+        top: 100%;
         z-index: 1;
     }
 
