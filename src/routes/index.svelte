@@ -13,6 +13,7 @@
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
     import Modal from "$lib/Modal.svelte"
     import Model from "$lib/Model.svelte"
+import AddWeek from "$lib/Buttons/AddWeek.svelte"
 
     let modal: Modal
     let model: Model
@@ -126,9 +127,7 @@
         {/key}
     </div>
 
-    {#key $refresh}
-        <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.addWeek(event.detail)}/>
-    {/key}
+    <AddWeek />
 </main>
 
 <style>
