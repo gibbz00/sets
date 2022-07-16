@@ -37,7 +37,7 @@
 
     let inputElement: HTMLInputElement
 
-    function filterData(event: InputEvent){
+    function filterData(event: Event){
         input = (event as any).target.value
        
         if (input.length == 0){
