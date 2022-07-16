@@ -74,11 +74,11 @@
         else {
             $weekNames = $weekNames.add(weekName)
             // numbers of sets in exercise plans must also be updated
-            for (let workoutProgram of  $workoutPrograms.entries()){
-                for (let index = 0; index < workoutProgram[1].length; index++) {
-                    workoutProgram[1][index].sets.push(0)
+            for (let [weekName, exercisePlans] of  $workoutPrograms.entries()){
+                for (let index = 0; index < exercisePlans.length; index++) {
+                    exercisePlans[index].sets.push(0)
                 }
-                $workoutPrograms = $workoutPrograms.update(workoutProgram[0], workoutProgram[1])
+                $workoutPrograms = $workoutPrograms.update(weekName, exercisePlans)
             }
             reset()
         }

@@ -25,16 +25,6 @@
     // TODO: use typesetting to program this in
     const dispatch: (type: "selected", detail: string) => boolean = createEventDispatcher()
 
-    /*
-        TODO:
-            1. pressing enter should invoke 2.
-            3. clicking on a li invokes 2.
-            4. pressing key/up or down should focus on a list-item
-                4.1 pressing key-down when ul length is 0 does not shift focus
-                4.2 pressing enter on a focused li invokes 2.
-    */
-
-
     let inputElement: HTMLInputElement
 
     function filterData(event: Event){

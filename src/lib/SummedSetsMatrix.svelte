@@ -36,10 +36,10 @@
     })()
 </script>
 
-{#each Array.from(tagSets.entries()) as tagSet}
+{#each Array.from(tagSets.entries()) as [tagName, sets]}
     <!-- Tag name -->
-    <div>{tagSet[0]}</div>
-    {#each tagSet[1] as setCount}
+    <div>{tagName}</div>
+    {#each sets as setCount}
         <div>{setCount}</div>        
     {/each} 
 {/each}
