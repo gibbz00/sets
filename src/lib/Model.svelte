@@ -48,6 +48,29 @@
     }
 
     /*
+        TAG
+    */
+
+    //TODO: Very similar to createGroup, could probably be refactored
+    export function createTag(tagName: string) {
+        if ($selectedGroup != null) {
+            if($groups.getDefined($selectedGroup).has(tagName)) {
+                modal.show(`${tagName} tag already exists!`)
+            }
+            else {
+                $groups.getDefined($selectedGroup).add(tagName) 
+                //HACK: to force reactivity
+                $groups = $groups
+                resetUI()
+            }
+        }
+    }
+
+    export function deleteTag() {
+
+    }
+
+    /*
         WEEK
     */
     export function createWeek(weekName: string){

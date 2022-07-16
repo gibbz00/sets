@@ -4,7 +4,7 @@
     import Model from "$lib/Model.svelte"
     import { onMount } from "svelte";
 
-    export let scenario: "week" | "exercisePlan" | "tag" | "group"
+    export let scenario: "week" | "exercisePlan" | "exerciseTag" | "group" | "tag"
     type addTagParameters = {
         groupName: string,
         exerciseName: string
@@ -20,7 +20,7 @@
 
     onMount(() => {
         if (scenario == null) throw new Error("Prop scenario must be instansiated.")
-        else if (scenario == "tag" && parameters == null) throw new Error(`Add tag scenario must be passed with parameter props`)
+        else if (scenario == "exerciseTag" && parameters == null) throw new Error(`Add tag scenario must be passed with parameter props`)
     })
 </script>
 
@@ -33,7 +33,9 @@
         <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}/>
     {:else if scenario == "group"}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
-    {:else if scenario == "tag"}
+    {:else if scenario == "tag"} 
+        <HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)}/>
+    {:else if scenario == "exerciseTag"}
         <HiddenAutoCompleteSelector 
             data={Array.from($groups.getDefined((groupName)).values())} 
             placeholder="Add tag" on:selected={(event) => model.createExerciseTag(event.detail, groupName, exerciseName)}

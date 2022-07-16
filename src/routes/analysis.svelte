@@ -11,6 +11,7 @@
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
     import HoverDelete from "$lib/HoverDelete.svelte"
     import Model from "$lib/Model.svelte"
+import AddButton from "$lib/Buttons/AddButton.svelte";
 
     let model: Model
 </script>
@@ -39,6 +40,7 @@
         <div>Tags</div>
         <WeekNames />
         <SummedSetsMatrix/>
+        <AddButton scenario="tag" /> 
     </div>
 {/if}
 

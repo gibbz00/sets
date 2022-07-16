@@ -43,7 +43,7 @@
                                 <span>{tag}</span>
                             {/each}
                         {/if}
-                        <AddButton scenario="tag" parameters={{groupName, exerciseName: exercisePlan.exerciseName}}/>
+                        <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName: exercisePlan.exerciseName}}/>
                         </div>
                     {/each}
                     Add group
