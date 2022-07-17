@@ -16,7 +16,10 @@
 <nav>
     {#key $groups }
         {#each Array.from($groups.keys()) as groupName}
-            <HoverChange on:delete={() => model.deleteGroup(groupName)}>
+            <HoverChange 
+                updatePlaceholder="New group name"
+                on:delete={() => model.deleteGroup(groupName)}
+            >
                 <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
             </HoverChange>
         {/each}

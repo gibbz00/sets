@@ -29,7 +29,12 @@
         <!-- iterates over ExercisePlan[] -->
         {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
             <ClickableTooltip>
-                <HoverChange slot="shown" on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} on:update={() => console.log("udpate!")}>
+                <HoverChange
+                    slot="shown"
+                    updatePlaceholder="New exercise name"
+                    on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} 
+                    on:update={() => console.log("udpate!")}
+                >
                     <span>{exerciseName}</span>
                 </HoverChange>
                 <div slot="content">
@@ -38,7 +43,10 @@
                         <div>{groupName}:
                         {#if $exercises.getDefined(exerciseName).has(groupName) }
                             {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
-                                <HoverChange on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} on:update={() => console.log("pls add")}>
+                                <HoverChange updatePlaceholder="New exercise tag name"
+                                    on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} 
+                                    on:update={() => console.log("pls add")}
+                                >
                                     <span>{tag}</span>
                                 </HoverChange>
                             {/each}

@@ -46,7 +46,10 @@
 {#if tagSets != undefined}
     {#each Array.from(tagSets.entries()) as [tagName, sets]}
         <!-- Tag name -->
-        <HoverChange on:delete={() => model.deleteTag(tagName)}>
+        <HoverChange 
+            updatePlaceholder="New tag name"
+            on:delete={() => model.deleteTag(tagName)}
+        >
             <span>{tagName}</span>
         </HoverChange>
         {#each sets as setCount}

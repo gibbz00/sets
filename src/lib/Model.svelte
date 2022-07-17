@@ -117,6 +117,10 @@
         }
     }
 
+    export function editWeek(weekName: string) {
+
+    }
+
     export function deleteWeek(weekName: string, index: number) {
         deleteProcess = deleteWeekGenerator()
         confirmDeleteModal.show(`Delete ${weekName}?`)

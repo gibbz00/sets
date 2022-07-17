@@ -9,7 +9,11 @@
 <Model bind:this={model} />
 
 {#each Array.from($weekNames.values()) as weekName, index}
-    <HoverChange on:delete={() => model.deleteWeek(weekName, index)}>
+    <HoverChange 
+        updatePlaceholder="New week name" 
+        on:update={(newValue) => console.log("updated", newValue)}
+        on:delete={() => model.deleteWeek(weekName, index)}
+    >
             <div>{weekName}</div>
     </HoverChange>
 {/each}
