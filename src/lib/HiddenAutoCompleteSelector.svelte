@@ -102,7 +102,7 @@
         <input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => inputResetCheck(event)} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
         {#if remaining.length > 0}
             <ul>
-                {#each remaining as element, index}
+                {#each remaining as element, index (element)}
                     <li class={index == selectedIndex ? "selected" : undefined} on:click={() => dispatch("selected", element)}>{element}</li>
                 {/each}
             </ul>

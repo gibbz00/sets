@@ -137,6 +137,7 @@
         resetUI()
     }
 
+
     /*
         EXERCISE TAG
     */
@@ -168,7 +169,21 @@
         resetUI()
     }
 
-    export function deleteExerciseTag() {}
+    export function deleteExerciseTag(exerciseName: string, groupName: string, tagName: string) {
+        deleteProcess = deleteExerciseTagGenerator()
+        confirmDeleteModal.show(`Delete ${tagName} tag of ${groupName} in ${exerciseName}?`)
+
+        function* deleteExerciseTagGenerator(){
+            yield confirmedExerciseTagDelete()
+        }
+
+        function confirmedExerciseTagDelete(){
+            confirmDeleteModal.hide()
+            // remove tag from $exercises
+            $exercises.getDefined(exerciseName).getDefined(groupName).delete(tagName)
+            $exercises = $exercises
+        }
+    }
 
     function resetUI(){
         $refresh = new Object()

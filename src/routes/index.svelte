@@ -5,10 +5,11 @@
 
 <script lang="ts">
     import WeekNames from "$lib/WeekNames.svelte"
-    import { weekNames, groups, workoutPrograms, exercises, selectedDay, refresh } from "$lib/Stores"
+    import { weekNames, groups, workoutPrograms, exercises, selectedDay } from "$lib/Stores"
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
+    import HoverDelete from "$lib/HoverDelete.svelte"
 
     let model: Model
 
@@ -31,19 +32,21 @@
         <WeekNames/>
 
         <!-- iterates over ExercisePlan[] -->
-        {#each $workoutPrograms.getDefined($selectedDay) as exercisePlan}
+        {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}}
             <ClickableTooltip>
-                <span slot="shown">{exercisePlan.exerciseName}</span>
+                <span slot="shown">{exerciseName}</span>
                 <div slot="content">
                     <!-- group names -->
                     {#each Array.from($groups.keys()) as groupName}
                         <div>{groupName}:
-                        {#if $exercises.getDefined(exercisePlan.exerciseName).has(groupName) }
-                            {#each Array.from($exercises.getDefined(exercisePlan.exerciseName).getDefined(groupName)) as tag }
-                                <span>{tag}</span>
+                        {#if $exercises.getDefined(exerciseName).has(groupName) }
+                            {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
+                                <HoverDelete on:remove={() => model.deleteExerciseTag(exerciseName, groupName, tag)}>
+                                    <span>{tag}</span>
+                                </HoverDelete>
                             {/each}
                         {/if}
-                        <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName: exercisePlan.exerciseName}}/>
+                        <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName}}/>
                         </div>
                     {/each}
                     Add group
@@ -52,7 +55,7 @@
             </ClickableTooltip>
 
             <!-- sets -->
-            {#each exercisePlan.sets as set}
+            {#each sets as set}
                 <div class="sets">
                     <input type="number" bind:value={set}>
                 </div>
