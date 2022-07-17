@@ -26,16 +26,14 @@
     }
 
     export function deleteGroup(groupName: string) {
-        deleteProcess = deleteGroupGenerator(groupName)
-        deleteProcess.next()
+        deleteProcess = deleteGroupGenerator()
+        confirmDeleteModal.show(`Delete ${groupName} group?`)
 
-        function* deleteGroupGenerator(groupName?: string) {
-            let savedGroupName = groupName
-            yield confirmDeleteModal.show(`Delete ${groupName} group?`)
-            yield confirmedGroupDelete(savedGroupName!) 
+        function* deleteGroupGenerator() {
+            yield confirmedGroupDelete() 
         }
 
-        function confirmedGroupDelete(groupName: string) {
+        function confirmedGroupDelete() {
             confirmDeleteModal.hide()
             $groups = $groups.deleteThisReturn(groupName)
             // Must also delete the "references" in $exercises.
@@ -75,10 +73,28 @@
     }
 
     export function deleteTag(tagName: string) {
-        // deleteProcess = deleteTagGenerator()
-        // remove from $groups
+        deleteProcess = deleteTagGenerator()
+        confirmDeleteModal.show(`Delete ${tagName} tag?`)
 
-        // remove $exercises 
+        function* deleteTagGenerator(){
+            yield confirmedTagDelete()
+        }
+
+        function confirmedTagDelete(){
+            confirmDeleteModal.hide()
+            // remove from $groups
+            $groups.getDefined($selectedGroup!).delete(tagName)
+            //HACK: reactivity trigger
+            $groups = $groups
+
+            // remove $exercises 
+            for (let properties of $exercises.values()) {
+               for (let tags of properties.values()) {
+                    if (tags.has(tagName)) tags.delete(tagName)
+                    // no reactivity needs to currently be triggered since exercise tags are shown on a different route
+               }
+            }
+        }
     }
 
 

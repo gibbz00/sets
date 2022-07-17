@@ -46,10 +46,9 @@
 {#if tagSets != undefined}
     {#each Array.from(tagSets.entries()) as [tagName, sets]}
         <!-- Tag name -->
-        <!-- <HoverDelete on:remove={() => model.deleteTag(tagName)}> -->
-            <!-- <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span> -->
-        <!-- </HoverDelete> -->
-        <div>{tagName}</div>
+        <HoverDelete on:remove={() => model.deleteTag(tagName)}>
+            <span>{tagName}</span>
+        </HoverDelete>
         {#each sets as setCount}
             <div>{setCount}</div>        
         {/each} 
