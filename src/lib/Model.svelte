@@ -25,6 +25,15 @@
         }
     }
 
+    export function updateGroup(oldGroupName: string, newGroupName: string) {
+        $groups = $groups.updateKeyPreserveOrder(oldGroupName, newGroupName)
+
+        // let oldValue = $groups.getDefined(oldGroupName)
+        // $groups.delete(oldGroupName)
+        // $groups.set(newGroupName, oldValue)
+        // $groups = $groups
+    }
+
     export function deleteGroup(groupName: string) {
         deleteProcess = deleteGroupGenerator()
         confirmDeleteModal.show(`Delete ${groupName} group?`)

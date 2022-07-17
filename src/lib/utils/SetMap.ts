@@ -33,6 +33,27 @@ export class SetMap<K, V> extends Map<K, V>{
         return this
     }
 
+    // Preserver order and update key:
+    // HACK: shitty performance that will be uneccesary if I granularize the svelte stores and use each keys in in html templating
+    updateKeyPreserveOrder(oldKey: K, newKey: K): this {
+        if (this.has(oldKey)) {
+            let tempArray = Array.from(this.entries())
+            let index = tempArray.findIndex(([key, ], index) => {
+                if (key == oldKey) return index
+            })
+            tempArray[index][0] = newKey
+
+            this.clear()
+            for(let [key, value] of tempArray) {
+                this.set(key, value)
+            }
+            return this
+        }
+        else {
+            throw new NoKeyInSetError(oldKey)
+        }
+    }
+
     deleteThisReturn(key: K): this {
         if (!this.has(key)) throw new NoKeyInSetError(key)
         super.delete(key) 
