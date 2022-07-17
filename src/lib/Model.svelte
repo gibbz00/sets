@@ -27,11 +27,6 @@
 
     export function updateGroup(oldGroupName: string, newGroupName: string) {
         $groups = $groups.updateKeyPreserveOrder(oldGroupName, newGroupName)
-
-        // let oldValue = $groups.getDefined(oldGroupName)
-        // $groups.delete(oldGroupName)
-        // $groups.set(newGroupName, oldValue)
-        // $groups = $groups
     }
 
     export function deleteGroup(groupName: string) {
@@ -78,6 +73,23 @@
                 resetUI()
             }
         }
+    }
+
+    export function updateTag(groupName: string, oldTagName:string, newTagName: string) {
+        // In each exercise
+        for (let [exerciseName, exerciseProperties] of $exercises.entries()) {
+            // Update only for the correct group, and if so a group that has the tag to be updated
+            // Shortcuts first statement if groupname does not exist on exercise, 
+            // so need to worry for getDefined to throw noKeyError
+            if (exerciseProperties.has(groupName)  && exerciseProperties.getDefined(groupName).has(oldTagName)) {
+                $exercises.getDefined(exerciseName).getDefined(groupName).update(oldTagName, newTagName)
+            }
+        }
+        $exercises = $exercises
+
+        // And in the groups registry
+        $groups.getDefined(groupName).update(oldTagName, newTagName)
+        $groups = $groups
     }
 
     export function deleteTag(tagName: string) {

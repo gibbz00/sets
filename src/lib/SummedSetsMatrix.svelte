@@ -39,6 +39,13 @@
             return tempTagSets
         }
     })()
+
+    // Currently only used in HoverChange on:update,
+        // which is nested an if statement that checks if tagSets is undefined,
+        // which is only possible if $selected group is undefined
+    // Hence it can not be null, but svelte doesn't support this reassurence with the ! notation
+    // Don't use the variable outside if tagSets 
+    $: notNullSelectedGroup = $selectedGroup!
 </script>
 
 <Model bind:this={model} />
@@ -48,6 +55,7 @@
         <!-- Tag name -->
         <HoverChange 
             updatePlaceholder="New tag name"
+            on:update={(event) => model.updateTag(notNullSelectedGroup, tagName, event.detail)}
             on:delete={() => model.deleteTag(tagName)}
         >
             <span>{tagName}</span>

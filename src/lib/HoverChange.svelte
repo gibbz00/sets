@@ -34,7 +34,6 @@
     }
 
     function checkSubmit(event: KeyboardEvent) {
-        console.log(event.key)
         switch (event.key) {
             case "Enter":
                 if (input != "") {

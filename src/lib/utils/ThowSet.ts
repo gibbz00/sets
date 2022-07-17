@@ -19,13 +19,18 @@ export class ThrowSet<V> extends Set<V>{
         return this
     }
 
-    //TODO: preserve set order and reference
+    //HACK: preserving set order 
+    // Similar to the update in MapSet, far from the best.
     update(oldValue: V, newValue: V): this {
         if (!this.has(oldValue)) throw new NoKeyInSetError(oldValue) 
-        for (let value of super.values()) {
-           if(oldValue === value) {
-                value = newValue
-           }
+        else {
+            let tempArray: V[] = Array.from(this.values())
+            let index = tempArray.indexOf(oldValue)
+            tempArray[index] = newValue
+            this.clear()
+            for (let value of tempArray) {
+               this.add(value) 
+            }
         }
         return this
     }
