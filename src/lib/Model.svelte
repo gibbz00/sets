@@ -56,7 +56,6 @@
     /*
         TAG
     */
-
     //TODO: Very similar to createGroup, could probably be refactored
     export function createTag(tagName: string) {
         if ($selectedGroup != null) {
@@ -97,7 +96,6 @@
         }
     }
 
-
     /*
         WEEK
     */
@@ -109,14 +107,35 @@
         else {
             $weekNames = $weekNames.add(weekName)
             // numbers of sets in exercise plans must also be updated
-            for (let [weekName, exercisePlans] of  $workoutPrograms.entries()){
+            for (let [weekDay, exercisePlans] of  $workoutPrograms.entries()){
                 for (let index = 0; index < exercisePlans.length; index++) {
                     exercisePlans[index].sets.push(0)
                 }
-                $workoutPrograms = $workoutPrograms.update(weekName, exercisePlans)
+                $workoutPrograms = $workoutPrograms.update(weekDay, exercisePlans)
             }
             resetUI()
         }
+    }
+
+    export function deleteWeek(weekName: string, index: number) {
+        deleteProcess = deleteWeekGenerator()
+        confirmDeleteModal.show(`Delete ${weekName}?`)
+
+        function* deleteWeekGenerator(){
+            yield confirmedWeekDelete()
+        }
+
+        function confirmedWeekDelete(){
+            confirmDeleteModal.hide()
+            $weekNames.delete(weekName)
+            $weekNames = $weekNames
+            // delete sets 
+            for (let [, exercisePlans] of  $workoutPrograms.entries()){
+                for (let exercisePlan of exercisePlans) {
+                    exercisePlan.sets.splice(index, 1)
+                }
+            }
+        } 
     }
 
     /*
@@ -151,7 +170,6 @@
             $workoutPrograms = $workoutPrograms
         } 
     }
-
 
     /*
         EXERCISE TAG
