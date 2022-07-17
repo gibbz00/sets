@@ -32,9 +32,11 @@
         <WeekNames/>
 
         <!-- iterates over ExercisePlan[] -->
-        {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}}
+        {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
             <ClickableTooltip>
-                <span slot="shown">{exerciseName}</span>
+                <HoverDelete slot="shown" on:remove={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}>
+                    <span>{exerciseName}</span>
+                </HoverDelete>
                 <div slot="content">
                     <!-- group names -->
                     {#each Array.from($groups.keys()) as groupName}

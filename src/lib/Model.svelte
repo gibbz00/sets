@@ -136,6 +136,21 @@
         })
         resetUI()
     }
+    
+    export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {
+        deleteProcess = deleteExercisePlanGenerator()
+        confirmDeleteModal.show(`Delete ${exerciseName} plan for ${selectedDay}?`)
+
+        function* deleteExercisePlanGenerator(){
+            yield confirmedExercisePlanDelete()
+        }
+
+        function confirmedExercisePlanDelete(){
+            confirmDeleteModal.hide()
+            $workoutPrograms.getDefined(selectedDay).splice(index, 1)
+            $workoutPrograms = $workoutPrograms
+        } 
+    }
 
 
     /*
