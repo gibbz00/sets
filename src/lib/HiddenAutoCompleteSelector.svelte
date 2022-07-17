@@ -80,7 +80,15 @@
                 if (selectedIndex > 0 ) input = remaining[--selectedIndex]
                 break
             case "ArrowDown":
-                if (data.length != 0 && selectedIndex == -1) {
+                // Do now attemp to select list item if input has been entered and there is no match,
+                // or when there is no data to be matched against
+                if ((input.length > 0 && remaining.length == 0) || (data.length == 0)) {
+                    console.log(input.length, remaining.length)
+                    return
+                }
+                // Show all list items without having to type anything
+                else if (selectedIndex == -1) {
+                    console.log(input.length, remaining.length)
                     filterData()
                     selectedIndex = 0
                     input = remaining[selectedIndex]
