@@ -135,6 +135,7 @@
                     exercisePlan.sets.splice(index, 1)
                 }
             }
+            $workoutPrograms = $workoutPrograms
         } 
     }
 
