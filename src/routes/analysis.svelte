@@ -4,9 +4,9 @@
     import SummedSetsMatrix from "$lib/SummedSetsMatrix.svelte"
     import { groups, weekNames, selectedGroup } from "$lib/Stores"
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte"
-    import HoverDelete from "$lib/HoverDelete.svelte"
     import Model from "$lib/Model.svelte"
-import AddButton from "$lib/Buttons/AddButton.svelte";
+    import AddButton from "$lib/Buttons/AddButton.svelte";
+    import HoverChange from "$lib/HoverChange.svelte";
 
     let model: Model
 </script>
@@ -16,9 +16,9 @@ import AddButton from "$lib/Buttons/AddButton.svelte";
 <nav>
     {#key $groups }
         {#each Array.from($groups.keys()) as groupName}
-            <HoverDelete on:remove={() => model.deleteGroup(groupName)}>
+            <HoverChange on:delete={() => model.deleteGroup(groupName)}>
                 <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
-            </HoverDelete>
+            </HoverChange>
         {/each}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
     {/key}
