@@ -11,7 +11,7 @@
 {#each Array.from($weekNames.values()) as weekName, index}
     <HoverChange 
         updatePlaceholder="New week name" 
-        on:update={(newValue) => console.log("updated", newValue)}
+        on:update={(event) => model.upddateWeek(weekName, event.detail)}
         on:delete={() => model.deleteWeek(weekName, index)}
     >
             <div>{weekName}</div>

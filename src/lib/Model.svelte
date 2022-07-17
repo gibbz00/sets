@@ -138,8 +138,9 @@
         }
     }
 
-    export function editWeek(weekName: string) {
-
+    export function upddateWeek(oldWeekName: string, newWeekName: string) {
+        $weekNames.update(oldWeekName, newWeekName)
+        $weekNames = $weekNames
     }
 
     export function deleteWeek(weekName: string, index: number) {
