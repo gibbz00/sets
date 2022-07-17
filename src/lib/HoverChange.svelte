@@ -2,11 +2,11 @@
     import { createEventDispatcher } from "svelte"
     let dispatcher: (type: "update" | "delete") => boolean = createEventDispatcher()
 
-    let changeIconVisibility: "hidden" | "initial" = "hidden"
-    let optionsVisibility: "hidden" | "initial" = "hidden"
+    let changeIconVisibility: "hidden" | "inherit" = "hidden"
+    let optionsVisibility: "hidden" | "inherit" = "hidden"
 
     function changeIconShow() {
-        changeIconVisibility = "initial"
+        changeIconVisibility = "inherit"
     }
 
     function changeIconHide() {
@@ -14,7 +14,7 @@
     }
 
     function optionsShow() {
-        optionsVisibility = "initial"
+        optionsVisibility = "inherit"
     }
 
     function optionsHide() {
@@ -22,7 +22,7 @@
     }
 </script>
 
-<svelte:window on:click={() => {if(optionsVisibility == "initial") optionsHide()}}/>
+<svelte:window on:click={() => {if(optionsVisibility == "inherit") optionsHide()}}/>
 
 <span on:mouseenter={changeIconShow} on:focus={changeIconShow} on:mouseleave={changeIconHide}>
     <slot></slot>

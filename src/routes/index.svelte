@@ -4,7 +4,6 @@
     import ClickableTooltip from "$lib/ClickableTooltip.svelte"
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
-    import HoverDelete from "$lib/HoverDelete.svelte"
     import HoverChange from "$lib/HoverChange.svelte"
 
     let model: Model
@@ -39,9 +38,9 @@
                         <div>{groupName}:
                         {#if $exercises.getDefined(exerciseName).has(groupName) }
                             {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
-                                <HoverDelete on:remove={() => model.deleteExerciseTag(exerciseName, groupName, tag)}>
+                                <HoverChange on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} on:update={() => console.log("pls add")}>
                                     <span>{tag}</span>
-                                </HoverDelete>
+                                </HoverChange>
                             {/each}
                         {/if}
                         <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName}}/>
