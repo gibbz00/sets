@@ -1,8 +1,3 @@
-<!-- TODO: title automatically added all pages, apart from those where something else is appropriate -->
-<svelte:head>
-    <title>Sets</title>
-</svelte:head>
-
 <!-- TODO: this route shows many similarities with idex, see how it can be modularied -->
 <script lang="ts">
     import  WeekNames from "$lib/WeekNames.svelte"

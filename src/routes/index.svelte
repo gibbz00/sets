@@ -1,8 +1,3 @@
-<!-- TODO: title automatically added all pages, apart from those where something else is appropriate -->
-<svelte:head>
-    <title>Sets</title>
-</svelte:head>
-
 <script lang="ts">
     import WeekNames from "$lib/WeekNames.svelte"
     import { weekNames, groups, workoutPrograms, exercises, selectedDay } from "$lib/Stores"
@@ -10,6 +5,7 @@
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverDelete from "$lib/HoverDelete.svelte"
+    import HoverChange from "$lib/HoverChange.svelte"
 
     let model: Model
 
@@ -34,9 +30,9 @@
         <!-- iterates over ExercisePlan[] -->
         {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
             <ClickableTooltip>
-                <HoverDelete slot="shown" on:remove={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}>
+                <HoverChange slot="shown" on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} on:update={() => console.log("udpate!")}>
                     <span>{exerciseName}</span>
-                </HoverDelete>
+                </HoverChange>
                 <div slot="content">
                     <!-- group names -->
                     {#each Array.from($groups.keys()) as groupName}
@@ -68,7 +64,9 @@
     </div>
 
     <AddButton scenario="week"/>
+
 </main>
+
 
 <style>
     main {
