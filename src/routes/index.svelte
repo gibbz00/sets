@@ -31,7 +31,7 @@
             <ClickableTooltip>
                 <HoverChange
                     slot="shown"
-                    updatePlaceholder="New exercise name"
+                    updatePlaceholder="Change exercise"
                     on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} 
                     on:update={() => console.log("udpate!")}
                 >
@@ -43,9 +43,9 @@
                         <div>{groupName}:
                         {#if $exercises.getDefined(exerciseName).has(groupName) }
                             {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
-                                <HoverChange updatePlaceholder="New exercise tag name"
+                                <HoverChange updatePlaceholder="Change tag name"
                                     on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} 
-                                    on:update={() => console.log("pls add")}
+                                    on:update={(event) => model.updateTag(groupName, tag, event.detail)}
                                 >
                                     <span>{tag}</span>
                                 </HoverChange>

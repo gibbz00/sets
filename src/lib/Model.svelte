@@ -10,6 +10,63 @@
     //TODO: fix this awful API
     let deleteProcess: Generator
 
+    /*
+        EXERCISE
+    */
+    export function createExercise(exerciseName: string){
+        if($exercises.has(exerciseName))  {
+            modal.show(`${exerciseName} exercise already exists!`)
+        }
+        else {
+            $exercises.set(exerciseName, new SetMap())
+            resetUI()
+        }
+    }
+
+    /*
+        EXERCISE TAG
+    */
+    export function createExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
+            // check the exercise has group entry property
+            // if not, create group reference
+            if (!$exercises.getDefined(exerciseName).has(groupName)) {
+                $exercises.getDefined(exerciseName).set(groupName, new ThrowSet())
+            }
+            // Check that tag is not already present in exercise property for the given group
+            else if ($exercises.getDefined(exerciseName).getDefined(groupName).has(desiredName)) {
+                // BUG: Inputs that are only shown during hover are not disabled when modal is shown
+                    // Possible solution would be to either "manually" hide the clickable tooltip, or move mouse cursor to modal
+                modal.show(`The tag ${desiredName} already exists in ${groupName}!`)
+                return
+            }
+            
+            // Makes sure that tag exists in $groups registry
+            if (!$groups.getDefined(groupName).has(desiredName)) {
+                $groups.getDefined(groupName).add(desiredName)
+            }
+
+            // Finally, link tag to exercise
+            $exercises.getDefined(exerciseName).getDefined(groupName).add(desiredName)
+            $exercises = $exercises
+        resetUI()
+    }
+
+    export function deleteExerciseTag(exerciseName: string, groupName: string, tagName: string) {
+        deleteProcess = deleteExerciseTagGenerator()
+        confirmDeleteModal.show(`Delete ${tagName} tag of ${groupName} in ${exerciseName}?`)
+
+        function* deleteExerciseTagGenerator(){
+            yield confirmedExerciseTagDelete()
+        }
+
+        function confirmedExerciseTagDelete(){
+            confirmDeleteModal.hide()
+            // remove tag from $exercises
+            $exercises.getDefined(exerciseName).getDefined(groupName).delete(tagName)
+            $exercises = $exercises
+        }
+    }
+
 
     /*
         GROUPS
@@ -55,8 +112,6 @@
         }
     }
     
-
-
     /*
         TAG
     */
@@ -182,6 +237,11 @@
         })
         resetUI()
     }
+
+    // Changes the name of the singular exercise
+    export function updateExercisePlanName(){
+
+    }
     
     export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {
         deleteProcess = deleteExercisePlanGenerator()
@@ -196,53 +256,6 @@
             $workoutPrograms.getDefined(selectedDay).splice(index, 1)
             $workoutPrograms = $workoutPrograms
         } 
-    }
-
-    /*
-        EXERCISE TAG
-    */
-    export function createExerciseTag(desiredName :string, groupName: string, exerciseName: string) {
-            // Check that tag is not present exercise property 
-            if($exercises.get(exerciseName)?.get(groupName)?.has(desiredName)){
-                // BUG: Inputs that are only shown during hover are not disabled when modal is shown
-                    // Possible solution would be to either hide the clickable tooltip, or move mouse cursor to modal
-                modal.show(`The tag ${desiredName} already exists in ${groupName}!`)
-                return
-            }
-
-            // Check that tag does not aleady exists in group. If so; add it to the groups registry
-            if (!$groups.get(groupName)?.has(desiredName)) {
-                $groups.get(groupName)?.add(desiredName)
-            }
-
-            // Link tag to exercise
-            exercises.update(setmap => {
-                let exerciseProperties = setmap.getDefined(exerciseName)
-                // check if group exists
-                // if not create groupName entry
-                if(!exerciseProperties.has(groupName)) {
-                    exerciseProperties.set(groupName, new ThrowSet())
-                }
-                exerciseProperties.getDefined(groupName).add(desiredName)
-                return setmap.update(exerciseName, exerciseProperties)
-            })
-        resetUI()
-    }
-
-    export function deleteExerciseTag(exerciseName: string, groupName: string, tagName: string) {
-        deleteProcess = deleteExerciseTagGenerator()
-        confirmDeleteModal.show(`Delete ${tagName} tag of ${groupName} in ${exerciseName}?`)
-
-        function* deleteExerciseTagGenerator(){
-            yield confirmedExerciseTagDelete()
-        }
-
-        function confirmedExerciseTagDelete(){
-            confirmDeleteModal.hide()
-            // remove tag from $exercises
-            $exercises.getDefined(exerciseName).getDefined(groupName).delete(tagName)
-            $exercises = $exercises
-        }
     }
 
     function resetUI(){
