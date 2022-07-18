@@ -32,7 +32,9 @@
     {:else if scenario == "week"}
         <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}/>
     {:else if scenario == "group"}
-        <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
+        <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
+            <span slot="placeholder">Add group +</span>
+        </HiddenAutoCompleteSelector>
     {:else if scenario == "tag"} 
         <HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)}/>
     {:else if scenario == "exerciseTag"}

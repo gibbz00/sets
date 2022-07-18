@@ -19,6 +19,7 @@
         }
         else {
             $exercises.set(exerciseName, new SetMap())
+            $exercises = $exercises
             resetUI()
         }
     }
@@ -226,6 +227,7 @@
     export function createExercisePlan(desiredName: string){
         if (!$exercises.has(desiredName)) {
             $exercises.set(desiredName, new SetMap())
+            $exercises = $exercises
         }
         const newExercisePlan: ExercisePlan = {
             exerciseName: desiredName,
@@ -238,9 +240,17 @@
         resetUI()
     }
 
-    // Changes the name of the singular exercise
-    export function updateExercisePlanName(){
+    // Change an exercise in an exercise plan, number of sets aren't changed
+    export function updatePlanExercise(newExercisePlanName: string, index: number){
+        // if exercise does not exist: create new exercise in $exercises
+        if (!$exercises.has(newExercisePlanName)) {
+            createExercise(newExercisePlanName)
+        }
 
+        $workoutPrograms.getDefined($selectedDay)[index].exerciseName = newExercisePlanName
+        $workoutPrograms = $workoutPrograms
+        // has to also be updated, 
+        $exercises = $exercises
     }
     
     export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {

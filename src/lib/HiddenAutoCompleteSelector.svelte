@@ -1,12 +1,24 @@
 <script lang="ts">
     /*
         Description:
-            * Pressing escape should make autocomplete hidden, also resets data entry
-            * Pressing outside also makes autocomplete hidden
-            1. Case-sensitive whole pattern matching starting only at first index  
-            2. Abilitity to select based on input or based on shown matches
-                2.1 Selection dispatches a SelectedEvent to parent component
-            TODO: 3. Shows options if component is in focus
+            * Selection:
+                * Pressing enter on non-empty input
+                * Clicking shown list
+                * Arrow up or down and pressing enter on selected list item
+            * Cancelation:
+                * Methods
+                    * Pressing escape 
+                    * Clicking outside of input
+                    * Enterering a empty input 
+            * Both selection and cancelation reset UI to initial state
+            * Autoselect option
+                * Case-sensitive whole pattern matching starting only at first index  
+                * Pressing down arrow before any input shows all options
+                * Input changes filter the list automatically
+                    * Reverting back to empty input shows all options
+            * No autoselect option
+                * Up and down arrows do nothing
+                * No list is shown
     */
 
     // Event dispatcher setup
@@ -102,7 +114,9 @@
 
 {#if hidden}
     <!-- stopPropagation required, window eventlistener will otherwise close it immediatedly -->
-    <span on:click|stopPropagation={() => hidden = !hidden}> + </span>
+    <span on:click|stopPropagation={() => hidden = !hidden}>
+        <slot name="placeholder"> + </slot>
+    </span>
 {:else}
     <span on:click|stopPropagation={() => {}}>
         <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->

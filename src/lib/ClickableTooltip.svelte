@@ -1,5 +1,5 @@
 <span class="tooltip">
-    <slot name="shown"></slot>
+    <slot name="placeholder"></slot>
     <span class="content">
         <slot name="content"></slot>
     </span>
@@ -13,9 +13,9 @@
 
     /* Tooltip text */
     .tooltip .content {
+        background-color: white;
         visibility: hidden;
         border: 1px solid black;
-        text-align: center;
         padding: 5px 0;
 
         /* Position the tooltip text */

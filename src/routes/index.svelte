@@ -5,6 +5,7 @@
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverChange from "$lib/HoverChange.svelte"
+import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
 
     let model: Model
 
@@ -29,14 +30,7 @@
         <!-- iterates over ExercisePlan[] -->
         {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
             <ClickableTooltip>
-                <HoverChange
-                    slot="shown"
-                    updatePlaceholder="Change exercise"
-                    on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} 
-                    on:update={() => alert("implement!")}
-                >
-                <span>{exerciseName}</span>
-                </HoverChange>
+                <span slot="placeholder">{exerciseName}</span>
                 <div slot="content">
                     <!-- group names -->
                     {#each Array.from($groups.keys()) as groupName}
@@ -54,9 +48,20 @@
                         <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName}}/>
                         </div>
                     {/each}
-                    Add group
-                    <AddButton scenario="group"/>
-                </div>
+                    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
+                        <button slot="placeholder">Add group +</button>
+                    </HiddenAutoCompleteSelector>
+                    <HiddenAutoCompleteSelector 
+                        placeholder="New exercise name" 
+                        data={Array.from($exercises.keys())} 
+                        on:selected={(event) => model.updatePlanExercise(event.detail, index)}
+                    > 
+                        <button slot="placeholder">Change exercise</button>
+                    </HiddenAutoCompleteSelector>
+                    <button on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}>
+                        Delete exercise plan
+                    </button>
+               </div>
             </ClickableTooltip>
 
             <!-- sets -->
