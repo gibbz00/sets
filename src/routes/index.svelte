@@ -33,9 +33,9 @@
                     slot="shown"
                     updatePlaceholder="Change exercise"
                     on:delete={() => model.deleteExercisePlan($selectedDay, exerciseName, index)} 
-                    on:update={() => console.log("udpate!")}
+                    on:update={() => alert("implement!")}
                 >
-                    <span>{exerciseName}</span>
+                <span>{exerciseName}</span>
                 </HoverChange>
                 <div slot="content">
                     <!-- group names -->

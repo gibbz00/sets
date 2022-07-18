@@ -88,7 +88,6 @@
                 }
                 // Show all list items without having to type anything
                 else if (selectedIndex == -1) {
-                    console.log(input.length, remaining.length)
                     filterData()
                     selectedIndex = 0
                     input = remaining[selectedIndex]
