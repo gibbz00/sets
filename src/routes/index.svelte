@@ -5,7 +5,7 @@
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverChange from "$lib/HoverChange.svelte"
-import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
+    import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
 
     let model: Model
 
@@ -76,7 +76,6 @@ import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
     </div>
 
     <AddButton scenario="week"/>
-
 </main>
 
 
