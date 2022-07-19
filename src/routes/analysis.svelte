@@ -9,20 +9,35 @@
     import HoverChange from "$lib/HoverChange.svelte";
     import TabBar from "@smui/tab-bar"
     import Tab, { Label } from "@smui/tab"
+    import Menu from "@smui/menu" 
+    import type { MenuComponentDev } from '@smui/menu';
+    import List, {Item, Text} from "@smui/list"
+    import IconButton from "@smui/icon-button"
+    import Button from "@smui/button"
 
     let model: Model
+    let optionsMenu: MenuComponentDev
 </script>
 
 <Model bind:this={model}/>
 
 <nav>
     <TabBar tabs={Array.from($groups.keys())} let:tab bind:active={$selectedGroup}>
-        <Tab {tab}>
-            <Label>{tab}</Label>
+        <Tab {tab} on:click={(event) => console.log("test", event.target)} ripple={false}>
+                <Label on:click={() => console.log("pest")}>{tab}</Label>
         </Tab>
+        <IconButton class="material-icons" on:click={() => {optionsMenu.setOpen(true); console.log("registered")}}>more_vert</IconButton>
     </TabBar>
     <a href="/">Set planner</a>
 </nav>
+
+<Menu static bind:this={optionsMenu}>
+    <List>
+        <Item>Edit</Item>
+        <Item>Delete</Item>
+    </List>
+</Menu>
+
 
 <nav>
     {#key $groups }
@@ -53,7 +68,6 @@
 {/if}
 
 <style>
-
     nav {
         display: flex;
         align-items: center;
