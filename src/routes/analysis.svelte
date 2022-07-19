@@ -7,11 +7,22 @@
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverChange from "$lib/HoverChange.svelte";
+    import TabBar from "@smui/tab-bar"
+    import Tab, { Label } from "@smui/tab"
 
     let model: Model
 </script>
 
 <Model bind:this={model}/>
+
+<nav>
+    <TabBar tabs={Array.from($groups.keys())} let:tab bind:active={$selectedGroup}>
+        <Tab {tab}>
+            <Label>{tab}</Label>
+        </Tab>
+    </TabBar>
+    <a href="/">Set planner</a>
+</nav>
 
 <nav>
     {#key $groups }
@@ -26,8 +37,6 @@
         {/each}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
     {/key}
-
-    <a href="/">Set planner</a>
 </nav>
 
 <hr>
@@ -44,6 +53,12 @@
 {/if}
 
 <style>
+
+    nav {
+        display: flex;
+        align-items: center;
+    }
+
     .grid {
         display: grid;
         grid-template-columns: repeat(calc(1 + var(--numberWeeks)), 1fr);

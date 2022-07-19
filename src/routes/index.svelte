@@ -7,6 +7,9 @@
     import HoverChange from "$lib/HoverChange.svelte"
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
 
+    import Tab, { Label } from "@smui/tab"
+    import TabBar from "@smui/tab-bar"
+
     let model: Model
 
 </script>
@@ -14,11 +17,14 @@
 <Model bind:this={model} />
 
 <nav>
-    {#each Array.from($workoutPrograms.keys()) as weekday}
-        <span style:text-decoration={$selectedDay == weekday ? "underline" : ""} on:click={() => {$selectedDay = weekday}}>{weekday}</span>
-    {/each}
-    <a href="/analysis">Set analysis</a>
+    <TabBar tabs={Array.from($workoutPrograms.keys())} let:tab bind:active={$selectedDay}>
+        <Tab {tab}>
+            <Label>{tab}</Label>
+        </Tab>
+    </TabBar>
+    <a href="/analysis"> Set analysis</a>
 </nav>
+
 
 <hr>
 
@@ -80,6 +86,11 @@
 
 
 <style>
+    nav {
+        display: flex;
+        align-items: center;
+    }
+
     main {
         display: flex;
     }
