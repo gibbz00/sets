@@ -34,7 +34,6 @@
                 <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
             </HoverChange>
         {/each}
-        <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
     {/key}
 </nav>
 
@@ -51,10 +50,27 @@
     </div>
 {/if}
 
+<!-- 
+    SMUI tab-bar bugs: 
+        * content of tabs are clickable, this is due to MDC-tab implementation, not smui
+            * FIX: css z-index = 1 and pointer-events = auto properties
+        * color="secondary" does not work on IconButton
+            * HACK: Icon explicitly wrapped in button component that is disabled
+                * Makes it grey only
+                    * color="secondary" with an enabled button created hover tabbing issues 
+        * Menu cropped by tab
+            * FIX: 
+                * mdc-tab-scroller must have overflow: visible
+                * .mdc-tab-scroller__scroll-area--scroll must have overflow-x: visible
+-->
 <style>
     * :global(.clickable-hack){
         pointer-events: all;
         z-index: 1;
+    }
+    * :global(.mdc-tab__content){
+        pointer-events: all;
+        z-index: 2;
     }
 
     * :global(.clickable-hack:hover .mdc-button__ripple) {

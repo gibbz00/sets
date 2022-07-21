@@ -20,7 +20,7 @@
 
     //Pressing edit changes both slot and change button to input text
         // This input text should have much of the same functionality as the input in autocomplete
-            // TODO: merge both inputs?
+            // TODO: create an use:action logic 
             // Escape cancels
             // Clicking outside cancels
             // Enter:
@@ -49,7 +49,13 @@
     }
 </script>
 
-<svelte:window on:click={() => {if(optionsVisibility == "inherit" || editing) resetUI()}}/>
+<svelte:window 
+    on:click={() => {
+        if (optionsVisibility == "inherit" || editing) {
+            resetUI()
+        }
+    }}
+/>
 
 {#if editing}
     <input 
