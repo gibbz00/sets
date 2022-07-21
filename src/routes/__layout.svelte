@@ -1,4 +1,7 @@
-<!-- TODO: title automatically added all pages, apart from those where something else is appropriate -->
+<script>
+    import "../app.css"
+</script>
+
 <svelte:head>
     <title>Sets</title>
 </svelte:head>
