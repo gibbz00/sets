@@ -10,44 +10,79 @@
     import Tab, { Label } from "@smui/tab"
     import TabBar from "@smui/tab-bar"
     import Menu from "@smui/menu" 
-    import type { MenuComponentDev } from '@smui/menu';
+    import type  { MenuComponentDev } from '@smui/menu';
     import List, {Item} from "@smui/list"
     import Icon from "@smui/icon-button"
     import Button from "@smui/button"
+    import { onMount } from "svelte";
 
     let model: Model
-    let optionsMenu: MenuComponentDev
+
+    // let optionMenus = new SetMap<string, MenuComponentDev>()
+    let optionMenus: {[groupName: string]: MenuComponentDev} = {}
+    for (let groupName of $groups.keys()) {
+        // Values are propely defined in bind:this=
+        optionMenus[groupName] = {} as MenuComponentDev
+    }
+
+    const ADD_GROUP_STRING: string = "+"
+    function generateTabs(): string[] {
+        let tempArray: string[] = Array.from($groups.keys())
+        tempArray.push(ADD_GROUP_STRING)
+        return tempArray
+    }
+
+    let selectedTab: string
+    onMount(() => {
+        if ($selectedGroup == null) throw new Error("$selectedGroup does not have a default value")
+        else {
+            selectedTab = $selectedGroup
+        }
+    })
+    function checkSelectedGroupChange(){
+        if (selectedTab != ADD_GROUP_STRING) $selectedGroup = selectedTab 
+    }
 </script>
 
 <Model bind:this={model}/>
 
 <nav>
-    <TabBar tabs={Array.from($groups.keys())} let:tab bind:active={$selectedGroup}>
+    <TabBar 
+        tabs={generateTabs()} 
+        let:tab on:MDCTabBar:activated={checkSelectedGroupChange} bind:active={selectedTab}>
         <Tab {tab}>
             <Label>{tab}</Label>
+            {#if tab != ADD_GROUP_STRING}
             <!-- 
                 Bugs: 
                     * content of tabs are clickable, this is due to MDC-tab implementation, not smui
                         * FIX: css z-index = 1 and pointer-events = auto properties
                     * color="secondary" does not work on IconButton
-                        * FIX: Icon explicitly wrapped in button component
-                            * Leads to visible button and hover effect 
-                                * FIX: has ripple = false prop and added a clickable-hack:hover > div selector to target the ripple class
+                        * HACK: Icon explicitly wrapped in button component that is disabled
+                            * Makes it grey only
+                                * color="secondary" with an enabled button created hover tabbing issues 
+                    * Menu cropped by tab
+                        * FIX: 
+                            * mdc-tab-scroller must have overflow: visible
+                            * .mdc-tab-scroller__scroll-area--scroll must have overflow-x: visible
             -->
-            <Button class="clickable-hack" color="secondary" ripple={false}>
-                <Icon class="material-icons" on:click$stopPropagation={() => {optionsMenu.setOpen(true); console.log("registered")}}>more_vert</Icon>
-            </Button>
+            <div>
+                <Button class="clickable-hack" disabled>
+                    <Icon class="material-icons" on:click$stopPropagation={() => {optionMenus[tab].setOpen(true)}}>more_vert</Icon>
+                </Button>
+                <Menu 
+                    bind:this={optionMenus[tab]}>
+                    <List>
+                        <Item>Edit</Item>
+                        <Item>Delete</Item>
+                    </List>
+                </Menu>
+            </div>
+            {/if}
         </Tab>
     </TabBar>
     <a href="/">Set planner</a>
 </nav>
-
-<Menu static bind:this={optionsMenu}>
-    <List>
-        <Item>Edit</Item>
-        <Item>Delete</Item>
-    </List>
-</Menu>
 
 
 <nav>
@@ -84,8 +119,16 @@
         z-index: 1;
     }
 
-    * :global(.clickable-hack:hover > div) {
+    * :global(.clickable-hack:hover .mdc-button__ripple) {
         opacity: 0;
+    }
+
+    * :global(.mdc-tab-scroller) {
+        overflow: visible;
+    }
+
+    * :global(.mdc-tab-scroller__scroll-area--scroll) {
+        overflow-x: visible;
     }
 
     nav {
