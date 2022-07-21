@@ -81,6 +81,7 @@
             $selectedGroup = groupName
             resetUI()
         }
+        
     }
 
     export function updateGroup(oldGroupName: string, newGroupName: string) {
