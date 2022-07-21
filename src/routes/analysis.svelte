@@ -7,12 +7,12 @@
     import Model from "$lib/Model.svelte"
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverChange from "$lib/HoverChange.svelte";
-    import TabBar from "@smui/tab-bar"
     import Tab, { Label } from "@smui/tab"
+    import TabBar from "@smui/tab-bar"
     import Menu from "@smui/menu" 
     import type { MenuComponentDev } from '@smui/menu';
-    import List, {Item, Text} from "@smui/list"
-    import IconButton from "@smui/icon-button"
+    import List, {Item} from "@smui/list"
+    import Icon from "@smui/icon-button"
     import Button from "@smui/button"
 
     let model: Model
@@ -23,10 +23,21 @@
 
 <nav>
     <TabBar tabs={Array.from($groups.keys())} let:tab bind:active={$selectedGroup}>
-        <Tab {tab} on:click={(event) => console.log("test", event.target)} ripple={false}>
-                <Label on:click={() => console.log("pest")}>{tab}</Label>
+        <Tab {tab}>
+            <Label>{tab}</Label>
+            <!-- 
+                Bugs: 
+                    * content of tabs are clickable, this is due to MDC-tab implementation, not smui
+                        * FIX: css z-index = 1 and pointer-events = auto properties
+                    * color="secondary" does not work on IconButton
+                        * FIX: Icon explicitly wrapped in button component
+                            * Leads to visible button and hover effect 
+                                * FIX: has ripple = false prop and added a clickable-hack:hover > div selector to target the ripple class
+            -->
+            <Button class="clickable-hack" color="secondary" ripple={false}>
+                <Icon class="material-icons" on:click$stopPropagation={() => {optionsMenu.setOpen(true); console.log("registered")}}>more_vert</Icon>
+            </Button>
         </Tab>
-        <IconButton class="material-icons" on:click={() => {optionsMenu.setOpen(true); console.log("registered")}}>more_vert</IconButton>
     </TabBar>
     <a href="/">Set planner</a>
 </nav>
@@ -68,6 +79,15 @@
 {/if}
 
 <style>
+    * :global(.clickable-hack){
+        pointer-events: all;
+        z-index: 1;
+    }
+
+    * :global(.clickable-hack:hover > div) {
+        opacity: 0;
+    }
+
     nav {
         display: flex;
         align-items: center;
