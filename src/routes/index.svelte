@@ -6,6 +6,7 @@
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HoverChange from "$lib/HoverChange.svelte"
 import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
+import Modal from "$lib/Modal.svelte";
 
     let model: Model
 
@@ -13,56 +14,82 @@ import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
 
 <Model bind:this={model} />
 
-<nav>
+<nav class="flex text-2xl text-center">
     {#each Array.from($workoutPrograms.keys()) as weekday}
-        <span style:text-decoration={$selectedDay == weekday ? "underline" : ""} on:click={() => {$selectedDay = weekday}}>{weekday}</span>
+        <div class="w-full" style:border-bottom-width={$selectedDay == weekday ? "4px" : ""} on:click={() => {$selectedDay = weekday}}>{weekday}</div>
     {/each}
-    <a href="/analysis">Set analysis</a>
+    <a class="w-full" href="/analysis">Set analysis</a>
 </nav>
 
 <hr>
 
 <main>
-    <div class="grid" style:--numberWeeks={$weekNames.size}>
-        <div>Exercise</div>
-        <WeekNames/>
+    <div class="grid w-full text-center" style:--numberWeeks={$weekNames.size}>
+        <div class="contents text-xl">
+            <div class="text-left">Exercise</div>
+            <WeekNames/>
+        </div>
 
         <!-- iterates over ExercisePlan[] -->
         {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
-            <ClickableTooltip>
-                <span slot="placeholder">{exerciseName}</span>
-                <div slot="content">
+            <div class="col-start-1 text-left relative group">
+                {exerciseName}
+                <div class="w-max p-3 hidden bg-slate-300 absolute top-0 left-full z-10 group-hover:inline">
                     <!-- group names -->
                     {#each Array.from($groups.keys()) as groupName}
-                        <div>{groupName}:
-                        {#if $exercises.getDefined(exerciseName).has(groupName) }
-                            {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
-                                <HoverChange updatePlaceholder="Change tag name"
-                                    on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} 
-                                    on:update={(event) => model.updateTag(groupName, tag, event.detail)}
-                                >
-                                    <span>{tag}</span>
-                                </HoverChange>
-                            {/each}
-                        {/if}
-                        <AddButton scenario="exerciseTag" parameters={{groupName, exerciseName}}/>
+                        <div class="text-lg font-bold">{groupName}:</div>
+                        <div>
+                            {#if $exercises.getDefined(exerciseName).has(groupName) }
+                                {#each Array.from($exercises.getDefined(exerciseName).getDefined(groupName)) as tag }
+                                    <HoverChange updatePlaceholder="Change tag name"
+                                        on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)} 
+                                        on:update={(event) => model.updateTag(groupName, tag, event.detail)}
+                                    >
+                                        <span class="bg-blue-800 p-3 rounded-full text-white font-bold">{tag}</span>
+                                    </HoverChange>
+                                {/each}
+                            {/if}
+                            <HiddenAutoCompleteSelector 
+                                data={Array.from($groups.getDefined((groupName)).values())} 
+                                placeholder="Add tag" on:selected={(event) => model.createExerciseTag(event.detail, groupName, exerciseName)}
+                            >
+                            <span class="h-full font-bold text-2xl" slot="placeholder">
+                                +
+                            </span>
+                            </HiddenAutoCompleteSelector>
                         </div>
                     {/each}
-                    <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
-                        <button slot="placeholder">Add group +</button>
-                    </HiddenAutoCompleteSelector>
-                    <HiddenAutoCompleteSelector 
-                        placeholder="New exercise name" 
-                        data={Array.from($exercises.keys())} 
-                        on:selected={(event) => model.updatePlanExercise(event.detail, index)}
-                    > 
-                        <button slot="placeholder">Change exercise</button>
-                    </HiddenAutoCompleteSelector>
-                    <button on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}>
-                        Delete exercise plan
-                    </button>
-               </div>
-            </ClickableTooltip>
+                    <div 
+                        class="
+                            flex 
+                            flex-col 
+                            [&_button]:bg-blue-800 
+                            [&_button]:p-2
+                            space-y-1
+                        "
+                    >
+                        <!-- Add group button -->
+                        <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
+                            <button class="w-full" slot="placeholder">Add group</button>
+                        </HiddenAutoCompleteSelector>
+
+                        <!-- Change exercise -->
+                        <HiddenAutoCompleteSelector 
+                            placeholder="New exercise name" 
+                            data={Array.from($exercises.keys())} 
+                            on:selected={(event) => model.updatePlanExercise(event.detail, index)}
+                        > 
+                            <button class="w-full" slot="placeholder">Change exercise</button>
+                        </HiddenAutoCompleteSelector>
+
+                        <!-- Delete exercise -->
+                        <button on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}>
+                            Delete exercise plan
+                        </button>
+
+                    </div>
+                </div>
+            </div>
 
             <!-- sets -->
             {#each sets as set}

@@ -1,4 +1,4 @@
-<!-- TODO: this route shows many similarities with idex, see how it can be modularied -->
+<!-- TODO: this route shows many similarities with index, see how it can be modularied -->
 <script lang="ts">
     import  WeekNames from "$lib/WeekNames.svelte"
     import SummedSetsMatrix from "$lib/SummedSetsMatrix.svelte"
@@ -13,7 +13,7 @@
 
 <Model bind:this={model}/>
 
-<nav>
+<nav class="flex text-2xl text-center">
     {#key $groups }
         {#each Array.from($groups.keys()) as groupName }
             <HoverChange 
@@ -21,13 +21,13 @@
                 on:update={(event) => model.updateGroup(groupName, event.detail)}
                 on:delete={() => model.deleteGroup(groupName)}
             >
-                <span style:text-decoration={$selectedGroup == groupName ? "underline" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</span>
+                <div class="w-full" style:border-bottom-width={$selectedGroup == groupName ? "4px" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</div>
             </HoverChange>
         {/each}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
     {/key}
 
-    <a href="/">Set planner</a>
+    <a class="w-full" href="/">Set planner</a>
 </nav>
 
 <hr>

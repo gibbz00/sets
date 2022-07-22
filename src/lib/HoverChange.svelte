@@ -3,8 +3,8 @@
     let deleteDispatcher: (type: "delete") => boolean = createEventDispatcher()
     let updateDispatcher: (type: "update", detail: string) => boolean = createEventDispatcher()
 
-    let changeIconVisibility: "hidden" | "inherit" = "hidden"
-    let optionsVisibility: "hidden" | "inherit" = "hidden"
+    let changeIconVisibility: "none" | "unset" = "none"
+    let optionsVisibility: "none" | "unset" = "none"
     let editing: boolean
     let input: string = "" 
     export let updatePlaceholder: null | string
@@ -12,11 +12,11 @@
         if (updatePlaceholder == null) throw new Error("Upate placeholder not defined")
     })
 
-    function changeIconShow() { changeIconVisibility = "inherit" }
-    function changeIconHide() { changeIconVisibility = "hidden" }
+    function changeIconShow() { changeIconVisibility = "unset" }
+    function changeIconHide() { changeIconVisibility = "none" }
 
-    function optionsShow() { optionsVisibility = "inherit" }
-    function optionsHide() { optionsVisibility = "hidden" }
+    function optionsShow() { optionsVisibility = "unset" }
+    function optionsHide() { optionsVisibility = "none" }
 
     //Pressing edit changes both slot and change button to input text
         // This input text should have much of the same functionality as the input in autocomplete
@@ -49,7 +49,7 @@
     }
 </script>
 
-<svelte:window on:click={() => {if(optionsVisibility == "inherit" || editing) resetUI()}}/>
+<svelte:window on:click={() => {if(optionsVisibility == "unset" || editing) resetUI()}}/>
 
 {#if editing}
     <input 
@@ -65,8 +65,8 @@
         on:mouseleave={changeIconHide}
     >
         <slot></slot>
-        <span style:visibility={changeIconVisibility} on:click|stopPropagation={optionsShow}> ⋮ </span>
-        <span on:click|stopPropagation style:visibility={optionsVisibility}>
+        <span style:display={changeIconVisibility} on:click|stopPropagation={optionsShow}> ⋮ </span>
+        <span on:click|stopPropagation style:display={optionsVisibility}>
             <span on:click|stopPropagation={() => {editing = true}}>Edit</span>
             <span on:click={() => deleteDispatcher("delete")}>Remove</span>
         </span>
