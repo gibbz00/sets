@@ -55,7 +55,7 @@
         bind:value={input}
     >
 {:else }
-    <div class="group">
+    <span class="group flex w-full">
         <slot></slot>
         <span class="hidden group-hover:inline" on:click|stopPropagation={optionsShow}> 
             <slot name="button">
@@ -74,5 +74,5 @@
                 </slot>
             </span>
         </span>
-    </div>
+    </span>
 {/if}

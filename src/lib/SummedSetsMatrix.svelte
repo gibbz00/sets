@@ -2,7 +2,8 @@
     import { weekNames, workoutPrograms, groups, exercises, selectedGroup } from "$lib/Stores"
     import { SetMap } from "$lib/utils/SetMap";
     import Model from "$lib/Model.svelte";
-    import HoverChange from "./HoverChange.svelte";
+    import PenBinHover from "./PenBinHover.svelte";
+
     let model: Model
 
     /* sumSetsByTag:
@@ -53,13 +54,15 @@
 {#if tagSets != undefined}
     {#each Array.from(tagSets.entries()) as [tagName, sets]}
         <!-- Tag name -->
-        <HoverChange 
+        <div class="w-max inline-block bg-blue-800 py-1 px-2 rounded-full text-white font-bold">
+        <PenBinHover 
             updatePlaceholder="New tag name"
             on:update={(event) => model.updateTag(notNullSelectedGroup, tagName, event.detail)}
             on:delete={() => model.deleteTag(tagName)}
         >
-            <span>{tagName}</span>
-        </HoverChange>
+            <span slot="placeholder" class="w-max">{tagName}</span>
+        </PenBinHover>
+        </div>
         {#each sets as setCount}
             <div>{setCount}</div>        
         {/each} 

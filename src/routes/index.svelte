@@ -21,21 +21,21 @@
 
 <hr>
 
-<main class="flex">
+<main class="flex text-xl">
         <!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
         <div 
-            class="grid w-full text-center"
-            style:grid-template-columns={"repeat(" + (1 + $weekNames.size) + ", minmax(0, 1fr))"}
+            class="grid w-full text-center gap-y-3"
+            style:grid-template-columns={"repeat(" + (1 + $weekNames.size) + ", auto)"}
         >
-            <div class="contents text-xl">
-                <div class="text-left">Exercise</div>
+            <div class="contents">
+                <div class="text-left w-min">Exercise</div>
                 <WeekNames/>
             </div>
 
             <!-- iterates over ExercisePlan[] -->
             {#each $workoutPrograms.getDefined($selectedDay) as {exerciseName, sets}, index}
                 <!-- scoping groups with tailwind-scoped-groups package -->
-                <div class="col-start-1 text-left relative group-one">
+                <div class="col-start-1 text-left w-max relative group-one">
                     {exerciseName}
                     <div class="w-max p-3 hidden bg-slate-300 absolute top-0 left-full z-10 group-one-hover:inline">
                         <!-- group names -->
@@ -49,7 +49,7 @@
                                     data={Array.from($groups.getDefined((groupName)).values())} 
                                     placeholder="Add tag" on:selected={(event) => model.createExerciseTag(event.detail, groupName, exerciseName)}
                                 >
-                                <span class="h-full font-bold text-2xl" slot="placeholder">
+                                <span class="pl-2 font-bold text-2xl" slot="placeholder">
                                     +
                                 </span>
                                 </HiddenAutoCompleteSelector>
@@ -62,6 +62,7 @@
                                 [&_button]:bg-blue-800 
                                 [&_button]:p-2
                                 space-y-1
+                                mt-2
                             "
                         >
                             <!-- Add group button -->
@@ -90,13 +91,13 @@
                 <!-- sets -->
                 {#each sets as set}
                     <div class="sets">
-                        <input type="number" bind:value={set}>
+                        <input class="w-max text-center invalid:text-rose-600" min="0" step="1" type="number" bind:value={set}>
                     </div>
                 {/each}
             {/each}
-
             <AddButton scenario="exercisePlan"/>
         </div>
-
-    <AddButton scenario="week"/>
+        <HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}>
+            <div slot="placeholder" class="self-start w-min text-2xl pr-2"> + </div>
+        </HiddenAutoCompleteSelector>
 </main>

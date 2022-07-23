@@ -96,7 +96,6 @@
                 // Do now attemp to select list item if input has been entered and there is no match,
                 // or when there is no data to be matched against
                 if ((input.length > 0 && remaining.length == 0) || (data.length == 0)) {
-                    console.log(input.length, remaining.length)
                     return
                 }
                 // Show all list items without having to type anything
@@ -115,13 +114,13 @@
 
 {#if hidden}
     <!-- stopPropagation required, window eventlistener will otherwise close it immediatedly -->
-    <span on:click|stopPropagation={() => hidden = !hidden}>
+    <span class="my-auto contents text-left" on:click|stopPropagation={() => hidden = !hidden}>
         <slot name="placeholder"> + </slot>
     </span>
 {:else}
     <span on:click|stopPropagation={() => {}}>
         <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
-        <input bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => inputResetCheck(event)} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
+        <input class="w-full" bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => inputResetCheck(event)} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
         {#if remaining.length > 0}
             <ul>
                 {#each remaining as element, index (element)}

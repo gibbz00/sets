@@ -21,7 +21,13 @@
                 on:update={(event) => model.updateGroup(groupName, event.detail)}
                 on:delete={() => model.deleteGroup(groupName)}
             >
-                <div class="w-full" style:border-bottom-width={$selectedGroup == groupName ? "4px" : ""} on:click={() => {$selectedGroup = groupName}}>{groupName}</div>
+                <div 
+                    class="w-full" 
+                    style:border-bottom-width={$selectedGroup == groupName ? "4px" : ""} 
+                    on:click={() => {$selectedGroup = groupName}}
+                >
+                    {groupName}
+                </div>
             </HoverChange>
         {/each}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}/>
@@ -32,20 +38,19 @@
 
 <hr>
 
-{#if $selectedGroup == null }
-    <p>Begin by adding a new group!</p>
-{:else}
-    <div class="grid" style:--numberWeeks={$weekNames.size}>
-        <div>Tags</div>
+<main class="pl-4 pt-2 text-xl flex">
+    {#if $selectedGroup == null }
+        <p>Begin by adding a new group!</p>
+    {:else}
+    <!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
+    <div 
+        class="grid text-center gap-y-3 w-full"
+        style:grid-template-columns={"repeat(" + (1 + $weekNames.size) + ", minmax(0, auto)"}
+    >
+        <div class="w-max text-left">Tags</div>
         <WeekNames />
         <SummedSetsMatrix/>
-        <AddButton scenario="tag" /> 
     </div>
-{/if}
-
-<style>
-    .grid {
-        display: grid;
-        grid-template-columns: repeat(calc(1 + var(--numberWeeks)), 1fr);
-    }
-</style>
+    <HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)} />
+    {/if}
+</main>
