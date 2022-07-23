@@ -5,5 +5,8 @@ module.exports = {
     extend: {},
   },
     plugins: [
+      require("tailwindcss-scoped-groups")({
+        groups: ["one", "two"],
+      }),
     ],
 }

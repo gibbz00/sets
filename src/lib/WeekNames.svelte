@@ -14,6 +14,6 @@
         on:update={(event) => model.upddateWeek(weekName, event.detail)}
         on:delete={() => model.deleteWeek(weekName, index)}
     >
-            <div>{weekName}</div>
+            {weekName}
     </HoverChange>
 {/each}
