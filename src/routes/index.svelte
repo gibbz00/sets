@@ -5,6 +5,7 @@
     import AddButton from "$lib/Buttons/AddButton.svelte";
     import HiddenAutoCompleteSelector from "$lib/HiddenAutoCompleteSelector.svelte";
     import EditableTags from "$lib/EditableTags.svelte"
+import SetNumberInput from "$lib/SetNumberInput.svelte";
 
     let model: Model
 
@@ -90,9 +91,7 @@
 
                 <!-- sets -->
                 {#each sets as set}
-                    <div class="sets">
-                        <input class="w-max text-center invalid:text-rose-600" min="0" step="1" type="number" bind:value={set}>
-                    </div>
+                    <SetNumberInput bind:set/>
                 {/each}
             {/each}
             <AddButton scenario="exercisePlan"/>
