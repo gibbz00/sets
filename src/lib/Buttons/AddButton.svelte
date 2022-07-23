@@ -27,11 +27,7 @@
 <Model bind:this={model}/>
 
 {#key $refresh}
-    {#if scenario == "exercisePlan"}
-        <HiddenAutoCompleteSelector placeholder="Add exercise plan" data={Array.from($exercises.keys())} on:selected={(event) => model.createExercisePlan(event.detail)}>
-            <span slot="placeholder" class="pl-2">+</span>
-        </HiddenAutoCompleteSelector>
-    {:else if scenario == "group"}
+    {#if scenario == "group"}
         <HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
             <span slot="placeholder">Add group +</span>
         </HiddenAutoCompleteSelector>

@@ -1,9 +1,15 @@
 <script>
-    import "../app.css"
+	import Icon from '$lib/Icon.svelte'
+
+	import '../app.css'
 </script>
 
 <svelte:head>
-    <title>Sets</title>
+	<title>Sets</title>
 </svelte:head>
 
-<slot></slot>
+<body class="absolute inset-0 h-screen bg-slate-100">
+	<main class="p-10 m-10 bg-white shadow-sm">
+		<slot />
+	</main>
+</body>

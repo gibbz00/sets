@@ -120,7 +120,17 @@
 {:else}
     <span on:click|stopPropagation={() => {}}>
         <!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
-        <input class="w-full" bind:this={inputElement} type="text" autocomplete="off" {placeholder} on:beforeinput={(event) => inputResetCheck(event)} on:keydown={(event) => checkSubmit(event)} on:input={(event) => filterDataPrepare(event)} value={input}>
+        <input 
+            bind:this={inputElement} 
+            on:beforeinput={(event) => inputResetCheck(event)} 
+            on:keydown={(event) => checkSubmit(event)} 
+            on:input={(event) => filterDataPrepare(event)} 
+            type="text" 
+            autocomplete="off" 
+            {placeholder} 
+            value={input}
+            size={input.length || 10}
+        >
         {#if remaining.length > 0}
             <ul>
                 {#each remaining as element, index (element)}
