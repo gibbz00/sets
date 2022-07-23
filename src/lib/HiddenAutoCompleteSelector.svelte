@@ -83,6 +83,7 @@
                 if (input != "") {
                     inputElement.blur()
                     dispatch("selected", input)
+                    hidden = true
                     break
                 }
             case "Escape":
