@@ -91,9 +91,13 @@
 		<div class="truncate">
 			<slot />
 		</div>
-		<div class="absolute right-0 inset-y-0">
+		<div class="absolute -right-2 inset-y-0">
 			<slot name="button">
-				<button bind:this={toggleButton} on:click={optionsToggle}>
+				<button
+					class="h-full"
+					bind:this={toggleButton}
+					on:click={optionsToggle}
+				>
 					<!-- Pointer events for correct event.target filtering  -->
 					<Icon
 						cls="pointer-events-none group-hover:fill-black fill-gray-500 w-7 h-7 "
@@ -101,23 +105,22 @@
 					/>
 				</button>
 			</slot>
-		</div>
-		<span
-			class="absolute left-full w-screen top-0 z-10 bg-white/30 py-2 backdrop-blur-sm px-4 text-xl text-left"
-			bind:this={optionWindow}
-			style:display={optionsVisibility}
-		>
-			<button
-				on:click={() => {
-					editing = true
-				}}
+			<span
+				class="divide-y border-2 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20  py-2 backdrop-blur-sm px-4 text-left"
+				bind:this={optionWindow}
+				style:display={optionsVisibility}
 			>
-				<slot name="edit">Edit</slot>
-			</button>
-			<hr />
-			<button on:click={() => deleteDispatcher('delete')}>
-				<slot name="delete">Remove</slot>
-			</button>
-		</span>
+				<button
+					on:click={() => {
+						editing = true
+					}}
+				>
+					<slot name="edit">Edit</slot>
+				</button>
+				<button on:click={() => deleteDispatcher('delete')}>
+					<slot name="delete">Remove</slot>
+				</button>
+			</span>
+		</div>
 	</span>
 {/if}

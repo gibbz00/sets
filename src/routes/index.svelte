@@ -55,12 +55,12 @@
 	<nav class="flex bg-slate-50 text-2xl text-center">
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
-				class="flex flex-col w-full"
+				class="flex flex-col hover:bg-slate-100 w-full"
 				on:click={() => {
 					$selectedDay = weekday
 				}}
 			>
-				<button class="py-5">{weekday}</button>
+				<div class="py-5">{weekday}</div>
 				{#if $selectedDay == weekday}
 					<div
 						in:receive={{ key: weekday }}
@@ -71,18 +71,30 @@
 			</div>
 		{/each}
 	</nav>
-	<section class="flex px-3 pt-2 text-xl">
+	<section class="flex-col px-3 pt-5 text-xl">
 		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
 		<div
-			class="grid w-full text-center gap-y-3"
+			class="grid justify-between text-center gap-y-3"
 			style:grid-template-columns={'repeat(' +
-				(1 + $weekNames.size) +
-				', minmax(0, 1fr))'}
+				(2 + $weekNames.size) +
+				', max-content'}
 		>
 			<!-- table header -->
-			<div class="contents font-semibold">
+			<div class="contents text-2xl">
 				<div class="text-left w-min">Exercise</div>
 				<WeekNames />
+				<HiddenAutoCompleteSelector
+					placeholder="Add week"
+					on:selected={(event) => model.createWeek(event.detail)}
+				>
+					<div slot="placeholder" class="px-6 w-min">+</div>
+				</HiddenAutoCompleteSelector>
+			</div>
+
+			<!-- table header horizontal rule -->
+
+			<div class="col-span-full">
+				<hr />
 			</div>
 
 			<!-- table rows -->
@@ -180,28 +192,14 @@
 					<SetNumberInput bind:set />
 				{/each}
 			{/each}
-
-			<!-- add exercise plan row -->
-			<div class="justify-self-start">
-				<HiddenAutoCompleteSelector
-					placeholder="Add exercise plan"
-					data={Array.from($exercises.keys())}
-					on:selected={(event) =>
-						model.createExercisePlan(event.detail)}
-				>
-					<span slot="placeholder">+</span>
-				</HiddenAutoCompleteSelector>
-			</div>
 		</div>
-		<div class="justify-self-end">
-			<HiddenAutoCompleteSelector
-				placeholder="Add week"
-				on:selected={(event) => model.createWeek(event.detail)}
-			>
-				<div slot="placeholder" class="self-start pr-2 text-2xl w-min">
-					+
-				</div>
-			</HiddenAutoCompleteSelector>
-		</div>
+		<!-- add exercise plan row -->
+		<HiddenAutoCompleteSelector
+			placeholder="Add exercise plan"
+			data={Array.from($exercises.keys())}
+			on:selected={(event) => model.createExercisePlan(event.detail)}
+		>
+			<span slot="placeholder">+</span>
+		</HiddenAutoCompleteSelector>
 	</section>
 </main>
