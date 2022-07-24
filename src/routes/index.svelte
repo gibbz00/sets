@@ -75,9 +75,9 @@
 		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
 		<div
 			class="grid justify-between text-center gap-y-3"
-			style:grid-template-columns={'repeat(' +
-				(2 + $weekNames.size) +
-				', max-content'}
+			style:grid-template-columns={`repeat(${
+				2 + $weekNames.size
+			}, max-content)`}
 		>
 			<!-- table header -->
 			<div class="contents text-2xl">
