@@ -55,7 +55,14 @@
 		<slot name="placeholder" />
 	</span>
 	<span class="hidden" style:display={editing ? 'inline-block' : 'none'}>
-		<input on:keydown={(event) => checkSubmit(event)} on:click|stopPropagation bind:value={input} class="text-black" type="text" />
+		<input
+			on:keydown={(event) => checkSubmit(event)}
+			on:click|stopPropagation
+			bind:value={input}
+			class="text-black"
+			type="text"
+			size={input.length || 13}
+		/>
 	</span>
 	<span class="hidden group-two-hover:flex">
 		<div class="contents" style:display={editing ? 'none' : ''}>
@@ -64,8 +71,8 @@
 				<Icon cls={svgClass} type="edit" />
 			</span>
 			<!-- Bin -->
-			<span class="w-7 h-7">
-				<Icon cls={svgClass} type="delete" on:click={() => deleteDispatcher('delete')} />
+			<span class="w-7 h-7" on:click={() => deleteDispatcher('delete')}>
+				<Icon cls={svgClass} type="delete" />
 			</span>
 		</div>
 	</span>

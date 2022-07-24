@@ -39,6 +39,7 @@
 			case 'Enter':
 				if (input != '') {
 					updateDispatcher('update', input)
+					//BUG: input is not being reset, reclickling add button shows it again
 				}
 				resetUI()
 				break
@@ -51,7 +52,7 @@
 </script>
 
 <svelte:window
-	on:click|capture={() => {
+	on:click={() => {
 		if (optionsVisibility == 'unset' || editing) resetUI()
 	}}
 />
@@ -59,15 +60,15 @@
 {#if editing}
 	<input placeholder={updatePlaceholder} on:click|stopPropagation on:keydown={(event) => checkSubmit(event)} bind:value={input} />
 {:else}
-	<span class="group flex justify-center w-full">
-		<span class="relative">
+	<span class="group flex justify-center w-full px-5">
+		<div class="truncate">
 			<slot />
-			<span class="absolute z-10 left-full inset-y-0 hidden group-hover:inline text-center" on:click|stopPropagation={optionsShow}>
-				<slot name="button">
-					<Icon cls="fill-black w-6 h-full" type="more_vert" />
-				</slot>
-			</span>
-			<span class="absolute left-full top-0 z-20 bg-rose-500 py-2 px-4 text-lg text-left" on:click|stopPropagation style:display={optionsVisibility}>
+		</div>
+		<span class="relative hidden group-hover:inline text-center" on:click|stopPropagation={optionsShow}>
+			<slot name="button">
+				<Icon cls="fill-black w-6 h-full" type="more_vert" />
+			</slot>
+			<span class="absolute left-full top-0 z-10 bg-rose-500 py-2 px-4 text-lg text-left" on:click|stopPropagation style:display={optionsVisibility}>
 				<span
 					on:click|stopPropagation={() => {
 						editing = true

@@ -51,7 +51,7 @@
 					$selectedDay = weekday
 				}}
 			>
-				<div class="py-3">{weekday}</div>
+				<div class="py-5">{weekday}</div>
 				{#if $selectedDay == weekday}
 					<div in:receive={{ key: weekday }} out:send={{ key: weekday }} class="h-1 bg-black" />
 				{/if}
@@ -75,7 +75,7 @@
 					{exerciseName}
 					<div class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-hover:inline">
 						<!-- group names -->
-						{#each Array.from($groups.keys()) as groupName}
+						{#each [...$groups.keys()] as groupName}
 							<div class="text-lg font-bold">{groupName}:</div>
 							<div class="flex">
 								{#if $exercises.getDefined(exerciseName).has(groupName)}
@@ -137,8 +137,10 @@
 				</HiddenAutoCompleteSelector>
 			</div>
 		</div>
-		<HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}>
-			<div slot="placeholder" class="self-start pr-2 text-2xl w-min">+</div>
-		</HiddenAutoCompleteSelector>
+		<div class="justify-self-end">
+			<HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}>
+				<div slot="placeholder" class="self-start pr-2 text-2xl w-min">+</div>
+			</HiddenAutoCompleteSelector>
+		</div>
 	</section>
 </main>

@@ -46,42 +46,46 @@
 
 <main class="shadow-lg pb-5 rounded-md">
 	<nav class="bg-slate-50 flex text-2xl text-center">
-		{#key $groups}
-			{#each Array.from($groups.keys()) as groupName (groupName)}
-				<div
-					class="flex flex-col w-full"
-					on:click={() => {
-						$selectedGroup = groupName
-					}}
-				>
-					<div class="py-3">
-						<HoverChange
-							updatePlaceholder="New group name"
-							on:update={(event) => model.updateGroup(groupName, event.detail)}
-							on:delete={() => model.deleteGroup(groupName)}
-						>
-							{groupName}
-						</HoverChange>
+		<div class="flex w-full grow-0">
+			{#each [...$groups.keys()] as groupName (groupName)}
+				<div style:flex-basis={`${100 / $groups.size}%`}>
+					<div
+						class="flex flex-col"
+						on:click={() => {
+							$selectedGroup = groupName
+						}}
+					>
+						<div class="py-5">
+							<HoverChange
+								updatePlaceholder="New group name"
+								on:update={(event) => model.updateGroup(groupName, event.detail)}
+								on:delete={() => model.deleteGroup(groupName)}
+							>
+								{groupName}
+							</HoverChange>
+						</div>
+						{#if $selectedGroup == groupName}
+							<div in:receive={{ key: groupName }} out:send={{ key: groupName }} class="h-1 bg-black" />
+						{/if}
 					</div>
-					{#if $selectedGroup == groupName}
-						<div in:receive={{ key: groupName }} out:send={{ key: groupName }} class="h-1 bg-black" />
-					{/if}
 				</div>
 			{/each}
+		</div>
+		<div class="px-4 w-min my-auto">
 			<HiddenAutoCompleteSelector placeholder="New group name" on:selected={(event) => model.createGroup(event.detail)}>
-				<span slot="placeholder" class="px-4 w-min my-auto"> + </span>
+				<span slot="placeholder"> + </span>
 			</HiddenAutoCompleteSelector>
-		{/key}
+		</div>
 	</nav>
 
-	<section class="flex px-4 pt-2 text-xl">
+	<section class="flex flex-col px-4 pt-2 gap-y-3 text-xl">
 		{#if $selectedGroup == null}
 			<p>Begin by adding a new group!</p>
 		{:else}
 			<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
-			<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, auto)'}>
+			<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, 1fr)'}>
 				<div class="contents font-semibold">
-					<div class="text-left w-max">Tags</div>
+					<div class="text-left">Tags</div>
 					<WeekNames />
 				</div>
 				<SummedSetsMatrix />

@@ -9,54 +9,53 @@
         * BUG: not possible to override function return types in TS, hence the getDefined
 */
 
-import { KeyAlreadyExistsError, NoKeyInSetError } from "./SetErrors";
+import { KeyAlreadyExistsError, NoKeyInSetError } from './SetErrors'
 
-export class SetMap<K, V> extends Map<K, V>{
-    constructor(){
-        super()
-    }
+export class SetMap<K, V> extends Map<K, V> {
+	constructor() {
+		super()
+	}
 
-    getDefined(key: K): V {
-        if(!this.has(key)) throw new NoKeyInSetError(key);
-        return super.get(key) as V
-    }
+	getDefined(key: K): V {
+		if (!this.has(key)) throw new NoKeyInSetError(key)
+		return super.get(key) as V
+	}
 
-    override set(key: K, value: V): this {
-        if(this.has(key)) throw new KeyAlreadyExistsError(key)
-        super.set(key, value)
-        return this
-    }
+	override set(key: K, value: V): this {
+		if (this.has(key)) throw new KeyAlreadyExistsError(key)
+		super.set(key, value)
+		return this
+	}
 
-    update(key: K, value: V): this {
-        if (!this.has(key)) throw new NoKeyInSetError(key)
-        super.set(key, value)
-        return this
-    }
+	update(key: K, value: V): this {
+		if (!this.has(key)) throw new NoKeyInSetError(key)
+		super.set(key, value)
+		return this
+	}
 
-    // Preserver order and update key:
-    // HACK: shitty performance that will be uneccesary if I granularize the svelte stores and use each keys in in html templating
-    updateKeyPreserveOrder(oldKey: K, newKey: K): this {
-        if (this.has(oldKey)) {
-            let tempArray = Array.from(this.entries())
-            let index = tempArray.findIndex(([key, ], index) => {
-                if (key == oldKey) return index
-            })
-            tempArray[index][0] = newKey
+	// Preserver order and update key:
+	// HACK: shitty performance that will be uneccesary if I granularize the svelte stores and use each keys in in html templating
+	updateKeyPreserveOrder(oldKey: K, newKey: K): this {
+		if (this.has(oldKey)) {
+			let tempArray = Array.from(this.entries())
+			let index = tempArray.findIndex(([key], index) => {
+				if (key === oldKey) return true
+			})
+			tempArray[index][0] = newKey
 
-            this.clear()
-            for(let [key, value] of tempArray) {
-                this.set(key, value)
-            }
-            return this
-        }
-        else {
-            throw new NoKeyInSetError(oldKey)
-        }
-    }
+			this.clear()
+			for (let [key, value] of tempArray) {
+				this.set(key, value)
+			}
+			return this
+		} else {
+			throw new NoKeyInSetError(oldKey)
+		}
+	}
 
-    deleteThisReturn(key: K): this {
-        if (!this.has(key)) throw new NoKeyInSetError(key)
-        super.delete(key) 
-        return this
-    }
+	deleteThisReturn(key: K): this {
+		if (!this.has(key)) throw new NoKeyInSetError(key)
+		super.delete(key)
+		return this
+	}
 }

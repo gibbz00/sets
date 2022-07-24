@@ -55,9 +55,9 @@
 <Model bind:this={model} />
 
 {#if tagSets != undefined}
-	{#each Array.from(tagSets.entries()) as [tagName, sets]}
+	{#each [...tagSets.entries()] as [tagName, sets]}
 		<!-- Tag name -->
-		<div class="w-max inline-block bg-blue-800 py-1 px-2 rounded-full text-white font-bold">
+		<div class="w-max inline-block bg-blue-800 py-1 px-2 rounded-full text-white font-semi">
 			<PenBinHover
 				svgClass="fill-white"
 				updatePlaceholder="New tag name"
