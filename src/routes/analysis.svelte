@@ -68,8 +68,8 @@
 					{/if}
 				</div>
 			{/each}
-			<HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
-				<span slot="placeholder" class="basis-1/6"> + </span>
+			<HiddenAutoCompleteSelector placeholder="New group name" on:selected={(event) => model.createGroup(event.detail)}>
+				<span slot="placeholder" class="px-4 w-min my-auto"> + </span>
 			</HiddenAutoCompleteSelector>
 		{/key}
 	</nav>
@@ -80,8 +80,10 @@
 		{:else}
 			<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
 			<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, auto)'}>
-				<div class="text-left w-max">Tags</div>
-				<WeekNames />
+				<div class="contents font-semibold">
+					<div class="text-left w-max">Tags</div>
+					<WeekNames />
+				</div>
 				<SummedSetsMatrix />
 			</div>
 			<HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)} />
