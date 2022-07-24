@@ -11,6 +11,9 @@
 		if (updatePlaceholder == null) throw new Error('Upate placeholder not defined')
 	})
 
+	//TODO: proper tying
+	export let svgClass: string
+
 	//Pressing edit changes both slot and change button to input text
 	// This input text should have much of the same functionality as the input in autocomplete
 	// TODO: make this logic an action
@@ -58,11 +61,11 @@
 		<div class="contents" style:display={editing ? 'none' : ''}>
 			<!-- Pen -->
 			<span class="w-7 h-7" on:click|stopPropagation={() => (editing = true)}>
-				<Icon type="edit" />
+				<Icon cls={svgClass} type="edit" />
 			</span>
 			<!-- Bin -->
 			<span class="w-7 h-7">
-				<Icon type="delete" on:click={() => deleteDispatcher('delete')} />
+				<Icon cls={svgClass} type="delete" on:click={() => deleteDispatcher('delete')} />
 			</span>
 		</div>
 	</span>

@@ -1,6 +1,4 @@
 <script>
-	import Icon from '$lib/Icon.svelte'
-
 	import '../app.css'
 </script>
 

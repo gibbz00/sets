@@ -37,7 +37,7 @@
 	<a class="flex py-3 px-4 justify-around items-center bg-green-800 rounded-xl" href="/analysis">
 		<span class="text-2xl text-white font-medium h-min">Set analysis</span>
 		<span class="w-8 h-8">
-			<Icon type="arrowRightAlt" />
+			<Icon cls="fill-white" type="arrowRightAlt" />
 		</span>
 	</a>
 </header>

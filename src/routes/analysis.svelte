@@ -8,6 +8,26 @@
 	import HoverChange from '$lib/HoverChange.svelte'
 	import Icon from '$lib/Icon.svelte'
 
+	import { crossfade } from 'svelte/transition'
+	import { quintOut } from 'svelte/easing'
+	const [send, receive] = crossfade({
+		duration: (d) => Math.sqrt(d * 200),
+
+		fallback(node, params) {
+			const style = getComputedStyle(node)
+			const transform = style.transform === 'none' ? '' : style.transform
+
+			return {
+				duration: 600,
+				easing: quintOut,
+				css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+			}
+		},
+	})
+
 	let model: Model
 </script>
 
@@ -18,47 +38,53 @@
 	<a class="flex py-3 px-4 justify-around items-center bg-green-800 rounded-md" href="/">
 		<span class="text-2xl text-white font-medium h-min">Set planner</span>
 		<span class="w-8 h-8">
-			<Icon type="arrowRightAlt" />
+			<Icon cls="fill-white" type="arrowRightAlt" />
 		</span>
 	</a>
 </header>
 <hr />
 
-<nav class="flex text-2xl text-center">
-	{#key $groups}
-		{#each Array.from($groups.keys()) as groupName}
-			<HoverChange
-				updatePlaceholder="New group name"
-				on:update={(event) => model.updateGroup(groupName, event.detail)}
-				on:delete={() => model.deleteGroup(groupName)}
-			>
+<main class="shadow-lg pb-5 rounded-md">
+	<nav class="bg-slate-50 flex text-2xl text-center">
+		{#key $groups}
+			{#each Array.from($groups.keys()) as groupName (groupName)}
 				<div
-					class="w-full"
-					style:border-bottom-width={$selectedGroup == groupName ? '4px' : ''}
+					class="flex flex-col w-full"
 					on:click={() => {
 						$selectedGroup = groupName
 					}}
 				>
-					{groupName}
+					<div class="py-3">
+						<HoverChange
+							updatePlaceholder="New group name"
+							on:update={(event) => model.updateGroup(groupName, event.detail)}
+							on:delete={() => model.deleteGroup(groupName)}
+						>
+							{groupName}
+						</HoverChange>
+					</div>
+					{#if $selectedGroup == groupName}
+						<div in:receive={{ key: groupName }} out:send={{ key: groupName }} class="h-1 bg-black" />
+					{/if}
 				</div>
-			</HoverChange>
-		{/each}
-		<HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
-			<span slot="placeholder" class="basis-1/6"> + </span>
-		</HiddenAutoCompleteSelector>
-	{/key}
-</nav>
+			{/each}
+			<HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
+				<span slot="placeholder" class="basis-1/6"> + </span>
+			</HiddenAutoCompleteSelector>
+		{/key}
+	</nav>
 
-<main class="flex px-4 pt-2 text-xl">
-	{#if $selectedGroup == null}
-		<p>Begin by adding a new group!</p>
-	{:else}
-		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
-		<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, auto)'}>
-			<div class="text-left w-max">Tags</div>
-			<WeekNames />
-			<SummedSetsMatrix />
-		</div>
-		<HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)} />
-	{/if}
+	<section class="flex px-4 pt-2 text-xl">
+		{#if $selectedGroup == null}
+			<p>Begin by adding a new group!</p>
+		{:else}
+			<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
+			<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, auto)'}>
+				<div class="text-left w-max">Tags</div>
+				<WeekNames />
+				<SummedSetsMatrix />
+			</div>
+			<HiddenAutoCompleteSelector placeholder="Enter tag name" on:selected={(event) => model.createTag(event.detail)} />
+		{/if}
+	</section>
 </main>
