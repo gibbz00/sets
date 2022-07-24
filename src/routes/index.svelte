@@ -1,6 +1,12 @@
 <script lang="ts">
 	import WeekNames from '$lib/WeekNames.svelte'
-	import { weekNames, groups, workoutPrograms, exercises, selectedDay } from '$lib/Stores'
+	import {
+		weekNames,
+		groups,
+		workoutPrograms,
+		exercises,
+		selectedDay,
+	} from '$lib/Stores'
 	import Model from '$lib/Model.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
 	import EditableTags from '$lib/EditableTags.svelte'
@@ -34,7 +40,10 @@
 
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
-	<a class="flex py-3 px-4 justify-around items-center bg-green-800 rounded-xl" href="/analysis">
+	<a
+		class="flex py-3 px-4 justify-around items-center bg-green-800 rounded-xl"
+		href="/analysis"
+	>
 		<span class="text-2xl text-white font-medium h-min">Set analysis</span>
 		<span class="w-8 h-8">
 			<Icon cls="fill-white" type="arrowRightAlt" />
@@ -44,23 +53,32 @@
 
 <main class="shadow-lg pb-5 rounded-md">
 	<nav class="flex bg-slate-50 text-2xl text-center">
-		{#each Array.from($workoutPrograms.keys()) as weekday (weekday)}
+		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
 				class="flex flex-col w-full"
 				on:click={() => {
 					$selectedDay = weekday
 				}}
 			>
-				<div class="py-5">{weekday}</div>
+				<button class="py-5">{weekday}</button>
 				{#if $selectedDay == weekday}
-					<div in:receive={{ key: weekday }} out:send={{ key: weekday }} class="h-1 bg-black" />
+					<div
+						in:receive={{ key: weekday }}
+						out:send={{ key: weekday }}
+						class="h-1 bg-black"
+					/>
 				{/if}
 			</div>
 		{/each}
 	</nav>
 	<section class="flex px-3 pt-2 text-xl">
 		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
-		<div class="grid w-full text-center gap-y-3" style:grid-template-columns={'repeat(' + (1 + $weekNames.size) + ', minmax(0, 1fr))'}>
+		<div
+			class="grid w-full text-center gap-y-3"
+			style:grid-template-columns={'repeat(' +
+				(1 + $weekNames.size) +
+				', minmax(0, 1fr))'}
+		>
 			<!-- table header -->
 			<div class="contents font-semibold">
 				<div class="text-left w-min">Exercise</div>
@@ -73,20 +91,36 @@
 				<!-- scoping groups with tailwind-scoped-groups package -->
 				<div class="relative col-start-1 text-left w-max group-one">
 					{exerciseName}
-					<div class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-hover:inline">
+					<div
+						class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-hover:inline"
+					>
 						<!-- group names -->
 						{#each [...$groups.keys()] as groupName}
 							<div class="text-lg font-bold">{groupName}:</div>
 							<div class="flex">
-								{#if $exercises.getDefined(exerciseName).has(groupName)}
+								{#if $exercises
+									.getDefined(exerciseName)
+									.has(groupName)}
 									<EditableTags {exerciseName} {groupName} />
 								{/if}
 								<HiddenAutoCompleteSelector
-									data={Array.from($groups.getDefined(groupName).values())}
+									data={Array.from(
+										$groups.getDefined(groupName).values()
+									)}
 									placeholder="Add tag"
-									on:selected={(event) => model.createExerciseTag(event.detail, groupName, exerciseName)}
+									on:selected={(event) =>
+										model.createExerciseTag(
+											event.detail,
+											groupName,
+											exerciseName
+										)}
 								>
-									<span class="pl-2 text-2xl font-bold" slot="placeholder"> + </span>
+									<span
+										class="pl-2 text-2xl font-bold"
+										slot="placeholder"
+									>
+										+
+									</span>
 								</HiddenAutoCompleteSelector>
 							</div>
 						{/each}
@@ -101,21 +135,42 @@
 							"
 						>
 							<!-- Add group button -->
-							<HiddenAutoCompleteSelector placeholder="Enter group name" on:selected={(event) => model.createGroup(event.detail)}>
-								<button class="w-full" slot="placeholder">Add group</button>
+							<HiddenAutoCompleteSelector
+								placeholder="Enter group name"
+								on:selected={(event) =>
+									model.createGroup(event.detail)}
+							>
+								<button class="w-full" slot="placeholder"
+									>Add group</button
+								>
 							</HiddenAutoCompleteSelector>
 
 							<!-- Change exercise -->
 							<HiddenAutoCompleteSelector
 								placeholder="New exercise name"
 								data={Array.from($exercises.keys())}
-								on:selected={(event) => model.updatePlanExercise(event.detail, index)}
+								on:selected={(event) =>
+									model.updatePlanExercise(
+										event.detail,
+										index
+									)}
 							>
-								<button class="w-full" slot="placeholder">Change exercise</button>
+								<button class="w-full" slot="placeholder"
+									>Change exercise</button
+								>
 							</HiddenAutoCompleteSelector>
 
 							<!-- Delete exercise -->
-							<button on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}> Delete exercise plan </button>
+							<button
+								on:click={() =>
+									model.deleteExercisePlan(
+										$selectedDay,
+										exerciseName,
+										index
+									)}
+							>
+								Delete exercise plan
+							</button>
 						</div>
 					</div>
 				</div>
@@ -131,15 +186,21 @@
 				<HiddenAutoCompleteSelector
 					placeholder="Add exercise plan"
 					data={Array.from($exercises.keys())}
-					on:selected={(event) => model.createExercisePlan(event.detail)}
+					on:selected={(event) =>
+						model.createExercisePlan(event.detail)}
 				>
 					<span slot="placeholder">+</span>
 				</HiddenAutoCompleteSelector>
 			</div>
 		</div>
 		<div class="justify-self-end">
-			<HiddenAutoCompleteSelector placeholder="Add week" on:selected={(event) => model.createWeek(event.detail)}>
-				<div slot="placeholder" class="self-start pr-2 text-2xl w-min">+</div>
+			<HiddenAutoCompleteSelector
+				placeholder="Add week"
+				on:selected={(event) => model.createWeek(event.detail)}
+			>
+				<div slot="placeholder" class="self-start pr-2 text-2xl w-min">
+					+
+				</div>
 			</HiddenAutoCompleteSelector>
 		</div>
 	</section>
