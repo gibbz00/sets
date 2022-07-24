@@ -140,8 +140,8 @@
 			autocomplete="off"
 			{placeholder}
 			value={input}
-			size={input.length || 13}
-			class="placeholder:text-center placeholder:truncate"
+			size={input.length >= 5 ? input.length / 2 : 5}
+			class="placeholder:text-center placeholder:truncate text-center"
 		/>
 		{#if remaining.length > 0}
 			<ul>

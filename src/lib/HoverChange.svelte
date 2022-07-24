@@ -104,19 +104,24 @@
 						/>
 					</button>
 				</slot>
+				<!-- Option window -->
 				<span
-					class="divide-y border-2 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20  py-2 backdrop-blur-sm px-4 text-left"
+					class="border-2 rounded-sm divide-y-2 text-black/70 font-normal divide-slate-100/50 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20 backdrop-blur-sm"
 					bind:this={optionWindow}
 					style:display={optionsVisibility}
 				>
 					<button
+						class="px-1 py-1 w-full hover:bg-slate-100/50 text-left"
 						on:click={() => {
 							editing = true
 						}}
 					>
 						<slot name="edit">Edit</slot>
 					</button>
-					<button on:click={() => deleteDispatcher('delete')}>
+					<button
+						class="px-1 py-1 w-full hover:bg-slate-100/50 text-left"
+						on:click={() => deleteDispatcher('delete')}
+					>
 						<slot name="delete">Remove</slot>
 					</button>
 				</span>

@@ -52,7 +52,7 @@
 </header>
 
 <main class="shadow-lg pb-5 rounded-md">
-	<nav class="flex bg-slate-50 text-2xl text-center">
+	<nav class="flex bg-slate-50 text-2xl rounded-md text-center">
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
 				class="flex flex-col hover:bg-slate-100 w-full"
@@ -191,14 +191,14 @@
 					/>
 				{/each}
 			{/each}
+			<!-- add exercise plan row -->
+			<HiddenAutoCompleteSelector
+				placeholder="Add exercise plan"
+				data={Array.from($exercises.keys())}
+				on:selected={(event) => model.createExercisePlan(event.detail)}
+			>
+				<span slot="placeholder">+</span>
+			</HiddenAutoCompleteSelector>
 		</div>
-		<!-- add exercise plan row -->
-		<HiddenAutoCompleteSelector
-			placeholder="Add exercise plan"
-			data={Array.from($exercises.keys())}
-			on:selected={(event) => model.createExercisePlan(event.detail)}
-		>
-			<span slot="placeholder">+</span>
-		</HiddenAutoCompleteSelector>
 	</section>
 </main>
