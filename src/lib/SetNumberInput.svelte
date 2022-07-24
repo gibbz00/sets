@@ -8,6 +8,8 @@
 <div class={`group flex ${justify}`}>
 	<button
 		class="w-7 text-gray-400 group-hover:text-black"
+		disabled={set == 0 ? true : false}
+		style:color={set == 0 ? 'grey' : ''}
 		on:click={() => set--}>-</button
 	>
 	<input
