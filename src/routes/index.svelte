@@ -73,22 +73,15 @@
 	</nav>
 	<section class="flex-col px-3 pt-5 text-xl">
 		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
+		<!-- 0px fist column exists so that the spacing won't change upon exercise name width change -->
 		<div
 			class="grid justify-between text-center gap-y-3"
-			style:grid-template-columns={`repeat(${
-				2 + $weekNames.size
-			}, max-content)`}
+			style:grid-template-columns={`0px repeat(${$weekNames.size}, max-content)`}
 		>
 			<!-- table header -->
 			<div class="contents text-2xl">
 				<div class="text-left w-min">Exercise</div>
 				<WeekNames />
-				<HiddenAutoCompleteSelector
-					placeholder="Add week"
-					on:selected={(event) => model.createWeek(event.detail)}
-				>
-					<div slot="placeholder" class="pr-6 w-min">+</div>
-				</HiddenAutoCompleteSelector>
 			</div>
 
 			<!-- table header horizontal rule -->
@@ -188,8 +181,14 @@
 				</div>
 
 				<!-- sets grid -->
-				{#each sets as set}
-					<SetNumberInput bind:set />
+				<!-- Last sets should self align left due to add for proper add week button placement -->
+				{#each sets as set, index}
+					<SetNumberInput
+						justify={index != sets.length - 1
+							? 'justify-center'
+							: 'justify-start'}
+						bind:set
+					/>
 				{/each}
 			{/each}
 		</div>

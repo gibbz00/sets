@@ -87,40 +87,41 @@
 		size={input.length || 13}
 	/>
 {:else}
-	<span class="group relative px-5">
-		<div class="truncate">
+	<span class="group flex px-5">
+		<div class="relative">
 			<slot />
-		</div>
-		<div class="absolute -right-2 inset-y-0">
-			<slot name="button">
-				<button
-					class="h-full"
-					bind:this={toggleButton}
-					on:click={optionsToggle}
+			<div class="absolute -right-6 inset-y-0">
+				<slot name="button">
+					<button
+						class="h-full"
+						bind:this={toggleButton}
+						on:click={optionsToggle}
+					>
+						<!-- Pointer events for correct event.target filtering  -->
+						<Icon
+							cls="pointer-events-none group-hover:fill-black fill-gray-500 w-7 h-7 "
+							type="more_vert"
+						/>
+					</button>
+				</slot>
+				<span
+					class="divide-y border-2 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20  py-2 backdrop-blur-sm px-4 text-left"
+					bind:this={optionWindow}
+					style:display={optionsVisibility}
 				>
-					<!-- Pointer events for correct event.target filtering  -->
-					<Icon
-						cls="pointer-events-none group-hover:fill-black fill-gray-500 w-7 h-7 "
-						type="more_vert"
-					/>
-				</button>
-			</slot>
-			<span
-				class="divide-y border-2 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20  py-2 backdrop-blur-sm px-4 text-left"
-				bind:this={optionWindow}
-				style:display={optionsVisibility}
-			>
-				<button
-					on:click={() => {
-						editing = true
-					}}
-				>
-					<slot name="edit">Edit</slot>
-				</button>
-				<button on:click={() => deleteDispatcher('delete')}>
-					<slot name="delete">Remove</slot>
-				</button>
-			</span>
+					<button
+						on:click={() => {
+							editing = true
+						}}
+					>
+						<slot name="edit">Edit</slot>
+					</button>
+					<button on:click={() => deleteDispatcher('delete')}>
+						<slot name="delete">Remove</slot>
+					</button>
+				</span>
+			</div>
 		</div>
+		<slot name="non-relative" />
 	</span>
 {/if}
