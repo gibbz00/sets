@@ -24,7 +24,12 @@
 						placeholder="Add week"
 						on:selected={(event) => model.createWeek(event.detail)}
 					>
-						<div slot="placeholder">+</div>
+						<div
+							slot="placeholder"
+							class="hover:bg-slate-100/50 rounded-full w-8 text-center"
+						>
+							+
+						</div>
 					</HiddenAutoCompleteSelector>
 				</div>
 			{/if}

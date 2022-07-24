@@ -41,7 +41,7 @@
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
 	<a
-		class="flex py-3 px-4 justify-around items-center bg-green-800 rounded-xl"
+		class="flex py-3 px-4 justify-around items-center bg-green-900 rounded-lg"
 		href="/analysis"
 	>
 		<span class="text-2xl text-white font-medium h-min">Set analysis</span>
@@ -65,7 +65,7 @@
 					<div
 						in:receive={{ key: weekday }}
 						out:send={{ key: weekday }}
-						class="h-1 bg-black"
+						class="h-1 bg-green-900"
 					/>
 				{/if}
 			</div>

@@ -93,7 +93,7 @@
 			<div class="absolute -right-6 inset-y-0">
 				<slot name="button">
 					<button
-						class="h-full"
+						class="h-full hover:bg-slate-100/50 rounded-full"
 						bind:this={toggleButton}
 						on:click={optionsToggle}
 					>
