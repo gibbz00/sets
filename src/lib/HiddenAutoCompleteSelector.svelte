@@ -25,7 +25,8 @@
 	import { createEventDispatcher } from 'svelte'
 	// Detail should be input value
 	// TODO: use typesetting to program this in
-	const dispatch: (type: 'selected', detail: string) => boolean = createEventDispatcher()
+	const dispatch: (type: 'selected', detail: string) => boolean =
+		createEventDispatcher()
 
 	// Flexibilty for feature extention of wht data-types the component can handle
 	type element = string
@@ -70,7 +71,10 @@
 	}
 
 	function inputResetCheck(event: InputEvent) {
-		if (event.inputType == 'deleteWordBackward' || 'deleteContentBackward') {
+		if (
+			event.inputType == 'deleteWordBackward' ||
+			'deleteContentBackward'
+		) {
 			selectedIndex = -1
 		}
 	}
@@ -92,7 +96,10 @@
 			case 'ArrowDown':
 				// Do now attemp to select list item if input has been entered and there is no match,
 				// or when there is no data to be matched against
-				if ((input.length > 0 && remaining.length == 0) || data.length == 0) {
+				if (
+					(input.length > 0 && remaining.length == 0) ||
+					data.length == 0
+				) {
 					return
 				}
 				// Show all list items without having to type anything
@@ -100,7 +107,8 @@
 					filterData()
 					selectedIndex = 0
 					input = remaining[selectedIndex]
-				} else if (selectedIndex < remaining.length - 1) input = remaining[++selectedIndex]
+				} else if (selectedIndex < remaining.length - 1)
+					input = remaining[++selectedIndex]
 				break
 		}
 	}
@@ -114,7 +122,10 @@
 
 {#if hidden}
 	<!-- stopPropagation required, window eventlistener will otherwise close it immediatedly -->
-	<span class="my-auto contents text-left" on:click|stopPropagation={() => (hidden = !hidden)}>
+	<span
+		class="my-auto contents text-left"
+		on:click|stopPropagation={() => (hidden = !hidden)}
+	>
 		<slot name="placeholder">+</slot>
 	</span>
 {:else}
@@ -130,11 +141,17 @@
 			{placeholder}
 			value={input}
 			size={input.length || 13}
+			class="placeholder:text-center placeholder:truncate"
 		/>
 		{#if remaining.length > 0}
 			<ul>
 				{#each remaining as element, index (element)}
-					<li class={index == selectedIndex ? 'selected' : undefined} on:click={() => dispatch('selected', element)}>{element}</li>
+					<li
+						class={index == selectedIndex ? 'selected' : undefined}
+						on:click={() => dispatch('selected', element)}
+					>
+						{element}
+					</li>
 				{/each}
 			</ul>
 		{/if}

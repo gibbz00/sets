@@ -87,7 +87,7 @@
 					placeholder="Add week"
 					on:selected={(event) => model.createWeek(event.detail)}
 				>
-					<div slot="placeholder" class="px-6 w-min">+</div>
+					<div slot="placeholder" class="pr-6 w-min">+</div>
 				</HiddenAutoCompleteSelector>
 			</div>
 
