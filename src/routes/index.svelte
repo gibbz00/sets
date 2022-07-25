@@ -41,21 +41,21 @@
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
 	<a
-		class="flex py-3 px-4 justify-around items-center bg-green-900 rounded-lg"
+		class="flex items-center justify-around px-4 py-3 bg-green-900 rounded-lg"
 		href="/analysis"
 	>
-		<span class="text-2xl text-white font-medium h-min">Set analysis</span>
+		<span class="text-2xl font-medium text-white h-min">Set analysis</span>
 		<span class="w-8 h-8">
 			<Icon cls="fill-white" type="arrowRightAlt" />
 		</span>
 	</a>
 </header>
 
-<main class="shadow-lg pb-5 rounded-md">
-	<nav class="flex bg-slate-50 text-2xl rounded-md text-center">
+<main class="pb-5 rounded-md shadow-lg">
+	<nav class="flex text-2xl text-center rounded-md bg-slate-50">
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
-				class="flex flex-col hover:bg-slate-100 w-full"
+				class="flex flex-col w-full hover:bg-slate-100"
 				on:click={() => {
 					$selectedDay = weekday
 				}}
@@ -79,7 +79,7 @@
 			style:grid-template-columns={`0px repeat(${$weekNames.size}, max-content)`}
 		>
 			<!-- table header -->
-			<div class="contents text-2xl">
+			<div class="text-2xl contents">
 				<div class="text-left w-min">Exercise</div>
 				<WeekNames />
 			</div>

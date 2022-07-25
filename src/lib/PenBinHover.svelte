@@ -2,13 +2,15 @@
 	import Icon from '$lib/Icon.svelte'
 	import { createEventDispatcher, onMount } from 'svelte'
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
-	let updateDispatcher: (type: 'update', detail: string) => boolean = createEventDispatcher()
+	let updateDispatcher: (type: 'update', detail: string) => boolean =
+		createEventDispatcher()
 
 	let editing: boolean = false
 	let input: string = ''
 	export let updatePlaceholder: null | string
 	onMount(() => {
-		if (updatePlaceholder == null) throw new Error('Upate placeholder not defined')
+		if (updatePlaceholder == null)
+			throw new Error('Upate placeholder not defined')
 	})
 
 	//TODO: proper tying
@@ -67,7 +69,10 @@
 	<span class="hidden group-two-hover:flex">
 		<div class="contents" style:display={editing ? 'none' : ''}>
 			<!-- Pen -->
-			<span class="w-7 h-7" on:click|stopPropagation={() => (editing = true)}>
+			<span
+				class="w-7 h-7"
+				on:click|stopPropagation={() => (editing = true)}
+			>
 				<Icon cls={svgClass} type="edit" />
 			</span>
 			<!-- Bin -->

@@ -26,7 +26,7 @@
 					>
 						<div
 							slot="placeholder"
-							class="hover:bg-slate-100/50 rounded-full w-8 text-center"
+							class="w-8 text-center rounded-full hover:bg-slate-100/50"
 						>
 							+
 						</div>
