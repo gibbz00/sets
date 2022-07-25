@@ -51,7 +51,7 @@
 	</a>
 </header>
 
-<main class="pb-5 rounded-md shadow-lg">
+<main class="pb-5 rounded-md shadow-md">
 	<nav class="flex text-2xl text-center rounded-md bg-slate-50">
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div

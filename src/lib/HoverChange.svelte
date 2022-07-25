@@ -15,7 +15,6 @@
 	})
 
 	function optionsToggle() {
-		console.log('ran x')
 		optionsVisibility = optionsVisibility == 'block' ? 'none' : 'block'
 	}
 
@@ -87,13 +86,13 @@
 		size={input.length || 13}
 	/>
 {:else}
-	<span class="group flex px-5">
+	<span class="flex px-5 group">
 		<div class="relative">
 			<slot />
-			<div class="absolute -right-6 inset-y-0">
+			<div class="absolute inset-y-0 -right-6">
 				<slot name="button">
 					<button
-						class="h-full hover:bg-slate-100/50 rounded-full"
+						class="h-full rounded-full hover:bg-slate-100/50"
 						bind:this={toggleButton}
 						on:click={optionsToggle}
 					>
@@ -106,12 +105,12 @@
 				</slot>
 				<!-- Option window -->
 				<span
-					class="border-2 rounded-sm divide-y-2 text-black/70 font-normal divide-slate-100/50 border-white absolute left-1/2 top-1/2 z-10 bg-slate-50/20 backdrop-blur-sm"
+					class="absolute z-10 font-normal text-black bg-white border-2 divide-y-2 rounded-sm shadow-sm border-gray divide-slate-100 left-1/2 top-1/2"
 					bind:this={optionWindow}
 					style:display={optionsVisibility}
 				>
 					<button
-						class="px-1 py-1 w-full hover:bg-slate-100/50 text-left"
+						class="w-full px-1 py-1 text-left hover:bg-slate-100"
 						on:click={() => {
 							editing = true
 						}}
@@ -119,7 +118,7 @@
 						<slot name="edit">Edit</slot>
 					</button>
 					<button
-						class="px-1 py-1 w-full hover:bg-slate-100/50 text-left"
+						class="w-full px-1 py-1 text-left hover:bg-slate-100/50"
 						on:click={() => deleteDispatcher('delete')}
 					>
 						<slot name="delete">Remove</slot>
