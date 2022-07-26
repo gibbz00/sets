@@ -118,8 +118,9 @@
 			{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
 				<!-- exercise names column -->
 				<!-- scoping groups with tailwind-scoped-groups package -->
-				<div class="relative col-start-1 text-left w-max group-one">
+				<div class="relative w-32 col-start-1 text-left group-one">
 					<div
+						class="truncate"
 						in:fade={{
 							delay: fadeInDelay,
 							duration: fadeInDuration,
@@ -239,7 +240,7 @@
 					</div>
 				{/each}
 			{/each}
-			<!-- add exercise plan row -->
+			<!-- Add exercise plan row -->
 			<HiddenAutoCompleteSelector
 				inputStartLength={10}
 				placeholder="Add exercise plan"

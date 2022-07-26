@@ -52,6 +52,8 @@
 	let textField: HTMLInputElement
 	let optionWindow: HTMLElement
 	let toggleButton: HTMLButtonElement
+
+	export let inputStartLength: number = 5
 </script>
 
 <svelte:window
@@ -77,11 +79,13 @@
 {#if editing}
 	<input
 		placeholder={updatePlaceholder}
-		class="placeholder:text-center placeholder:truncate"
+		class="text-center placeholder:text-center placeholder:truncate"
 		on:keydown={(event) => checkSubmit(event)}
 		bind:value={input}
 		bind:this={textField}
-		size={input.length || 13}
+		size={input.length >= inputStartLength
+			? input.length
+			: inputStartLength}
 	/>
 {:else}
 	<span class="flex px-5 group">

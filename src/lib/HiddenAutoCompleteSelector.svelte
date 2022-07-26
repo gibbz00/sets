@@ -118,11 +118,8 @@
 	}
 
 	export let inputStartLength: number = 5
+	export let textAlign: 'left' | 'center' | 'right' = 'left'
 </script>
-
-<!-- BUGS:
-
--->
 
 <!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
 <svelte:window
@@ -155,7 +152,8 @@
 			size={input.length >= inputStartLength
 				? input.length
 				: inputStartLength}
-			class="text-center placeholder:text-center placeholder:truncate"
+			style:text-align={textAlign}
+			class="placeholder:text-center placeholder:truncate"
 		/>
 		{#if remaining.length > 0}
 			<ul class="w-max">
