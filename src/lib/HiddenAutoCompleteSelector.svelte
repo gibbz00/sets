@@ -46,7 +46,6 @@
 	export let data: element[] = []
 	export let placeholder: string = ''
 
-	let inputElement: HTMLInputElement
 	function filterData() {
 		if (input.length == 0) {
 			remaining = data
@@ -83,12 +82,12 @@
 		switch (event.key) {
 			case 'Enter':
 				if (input != '') {
-					hidden = true
 					dispatch('selected', input)
+					resetUI()
 					break
 				}
 			case 'Escape':
-				hidden = true
+				resetUI()
 				break
 			case 'ArrowUp':
 				if (selectedIndex > 0) input = remaining[--selectedIndex]
@@ -111,14 +110,27 @@
 					input = remaining[++selectedIndex]
 				break
 		}
+
+		function resetUI() {
+			hidden = true
+			input = ''
+		}
 	}
 
 	export let inputStartLength: number = 5
 </script>
 
+<!-- BUGS:
+
+-->
+
+<!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
 <svelte:window
 	on:click={() => {
 		if (!hidden) hidden = true
+	}}
+	on:keydown={(event) => {
+		checkSubmit(event)
 	}}
 />
 
@@ -134,21 +146,19 @@
 	<span class="w-full my-auto" on:click|stopPropagation={() => {}}>
 		<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
 		<input
-			bind:this={inputElement}
 			on:beforeinput={(event) => inputResetCheck(event)}
-			on:keydown={(event) => checkSubmit(event)}
 			on:input={(event) => filterDataPrepare(event)}
 			type="text"
 			autocomplete="off"
 			{placeholder}
 			value={input}
 			size={input.length >= inputStartLength
-				? input.length / 2
+				? input.length
 				: inputStartLength}
 			class="text-center placeholder:text-center placeholder:truncate"
 		/>
 		{#if remaining.length > 0}
-			<ul>
+			<ul class="w-max">
 				{#each remaining as element, index (element)}
 					<li
 						class={index == selectedIndex ? 'selected' : undefined}

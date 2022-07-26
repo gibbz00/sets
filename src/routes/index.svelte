@@ -246,7 +246,7 @@
 				data={Array.from($exercises.keys())}
 				on:selected={(event) => model.createExercisePlan(event.detail)}
 			>
-				<span slot="placeholder">+</span>
+				<button slot="placeholder">+</button>
 			</HiddenAutoCompleteSelector>
 		</div>
 	</section>
