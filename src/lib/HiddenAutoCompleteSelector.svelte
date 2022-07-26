@@ -112,6 +112,8 @@
 				break
 		}
 	}
+
+	export let inputStartLength: number = 5
 </script>
 
 <svelte:window
@@ -140,7 +142,9 @@
 			autocomplete="off"
 			{placeholder}
 			value={input}
-			size={input.length >= 5 ? input.length / 2 : 5}
+			size={input.length >= inputStartLength
+				? input.length / 2
+				: inputStartLength}
 			class="text-center placeholder:text-center placeholder:truncate"
 		/>
 		{#if remaining.length > 0}

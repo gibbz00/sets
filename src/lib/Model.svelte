@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { exercises, selectedDay, groups, selectedGroup, weekNames, workoutPrograms, refresh } from '$lib/Stores'
+	import {
+		exercises,
+		selectedDay,
+		groups,
+		selectedGroup,
+		weekNames,
+		workoutPrograms,
+		refresh,
+	} from '$lib/Stores'
 	import { ThrowSet } from '$lib/utils/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './utils/SetMap'
@@ -26,14 +34,23 @@
 	/*
         EXERCISE TAG
     */
-	export function createExerciseTag(desiredName: string, groupName: string, exerciseName: string) {
+	export function createExerciseTag(
+		desiredName: string,
+		groupName: string,
+		exerciseName: string
+	) {
 		// check the exercise has group entry property
 		// if not, create group reference
 		if (!$exercises.getDefined(exerciseName).has(groupName)) {
 			$exercises.getDefined(exerciseName).set(groupName, new ThrowSet())
 		}
 		// Check that tag is not already present in exercise property for the given group
-		else if ($exercises.getDefined(exerciseName).getDefined(groupName).has(desiredName)) {
+		else if (
+			$exercises
+				.getDefined(exerciseName)
+				.getDefined(groupName)
+				.has(desiredName)
+		) {
 			// BUG: Inputs that are only shown during hover are not disabled when modal is shown
 			// Possible solution would be to either "manually" hide the clickable tooltip, or move mouse cursor to modal
 			modal.show(`The tag ${desiredName} already exists in ${groupName}!`)
@@ -46,23 +63,35 @@
 		}
 
 		// Finally, link tag to exercise
-		$exercises.getDefined(exerciseName).getDefined(groupName).add(desiredName)
+		$exercises
+			.getDefined(exerciseName)
+			.getDefined(groupName)
+			.add(desiredName)
 		$exercises = $exercises
 		resetUI()
 	}
 
-	export function deleteExerciseTag(exerciseName: string, groupName: string, tagName: string) {
+	export function deleteExerciseTag(
+		exerciseName: string,
+		groupName: string,
+		tagName: string
+	) {
 		deleteProcess = deleteExerciseTagGenerator()
-		confirmDeleteModal.show(`Delete ${tagName} tag of ${groupName} in ${exerciseName}?`)
+		confirmDeleteModal.show(
+			`Delete ${tagName} tag of ${groupName} in ${exerciseName}?`
+		)
 
 		function* deleteExerciseTagGenerator() {
 			yield confirmedExerciseTagDelete()
 		}
 
 		function confirmedExerciseTagDelete() {
-			confirmDeleteModal.hide()
+			confirmDeleteModal.close()
 			// remove tag from $exercises
-			$exercises.getDefined(exerciseName).getDefined(groupName).delete(tagName)
+			$exercises
+				.getDefined(exerciseName)
+				.getDefined(groupName)
+				.delete(tagName)
 			$exercises = $exercises
 		}
 	}
@@ -94,7 +123,7 @@
 		}
 
 		function confirmedGroupDelete() {
-			confirmDeleteModal.hide()
+			confirmDeleteModal.close()
 			$groups = $groups.deleteThisReturn(groupName)
 			// Must also delete the "references" in $exercises.
 			for (let properties of $exercises.values()) {
@@ -128,7 +157,11 @@
 		}
 	}
 
-	export function updateTag(groupName: string, oldTagName: string, newTagName: string) {
+	export function updateTag(
+		groupName: string,
+		oldTagName: string,
+		newTagName: string
+	) {
 		//Make sure that the new tag name is not present in group
 		if ($groups.getDefined(groupName).has(newTagName)) {
 			modal.show(`${newTagName} tag already exists in ${groupName}!`)
@@ -137,12 +170,21 @@
 			$groups = $groups
 
 			// And in each exercise
-			for (let [exerciseName, exerciseProperties] of $exercises.entries()) {
+			for (let [
+				exerciseName,
+				exerciseProperties,
+			] of $exercises.entries()) {
 				// Update only for the correct group, and if so a group that has the tag to be updated
 				// Shortcuts first statement if groupname does not exist on exercise,
 				// so need to worry for getDefined to throw noKeyError
-				if (exerciseProperties.has(groupName) && exerciseProperties.getDefined(groupName).has(oldTagName)) {
-					$exercises.getDefined(exerciseName).getDefined(groupName).update(oldTagName, newTagName)
+				if (
+					exerciseProperties.has(groupName) &&
+					exerciseProperties.getDefined(groupName).has(oldTagName)
+				) {
+					$exercises
+						.getDefined(exerciseName)
+						.getDefined(groupName)
+						.update(oldTagName, newTagName)
 				}
 			}
 			$exercises = $exercises
@@ -158,7 +200,7 @@
 		}
 
 		function confirmedTagDelete() {
-			confirmDeleteModal.hide()
+			confirmDeleteModal.close()
 			// remove from $groups
 			$groups.getDefined($selectedGroup!).delete(tagName)
 			//HACK: reactivity trigger
@@ -188,7 +230,10 @@
 				for (let index = 0; index < exercisePlans.length; index++) {
 					exercisePlans[index].sets.push(0)
 				}
-				$workoutPrograms = $workoutPrograms.update(weekDay, exercisePlans)
+				$workoutPrograms = $workoutPrograms.update(
+					weekDay,
+					exercisePlans
+				)
 			}
 			resetUI()
 		}
@@ -208,7 +253,7 @@
 		}
 
 		function confirmedWeekDelete() {
-			confirmDeleteModal.hide()
+			confirmDeleteModal.close()
 			$weekNames.delete(weekName)
 			$weekNames = $weekNames
 			// delete sets
@@ -241,28 +286,38 @@
 	}
 
 	// Change an exercise in an exercise plan, number of sets aren't changed
-	export function updatePlanExercise(newExercisePlanName: string, index: number) {
+	export function updatePlanExercise(
+		newExercisePlanName: string,
+		index: number
+	) {
 		// if exercise does not exist: create new exercise in $exercises
 		if (!$exercises.has(newExercisePlanName)) {
 			createExercise(newExercisePlanName)
 		}
 
-		$workoutPrograms.getDefined($selectedDay)[index].exerciseName = newExercisePlanName
+		$workoutPrograms.getDefined($selectedDay)[index].exerciseName =
+			newExercisePlanName
 		$workoutPrograms = $workoutPrograms
 		// has to also be updated,
 		$exercises = $exercises
 	}
 
-	export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {
+	export function deleteExercisePlan(
+		selectedDay: string,
+		exerciseName: string,
+		index: number
+	) {
 		deleteProcess = deleteExercisePlanGenerator()
-		confirmDeleteModal.show(`Delete ${exerciseName} plan for ${selectedDay}?`)
+		confirmDeleteModal.show(
+			`Delete ${exerciseName} plan for ${selectedDay}?`
+		)
 
 		function* deleteExercisePlanGenerator() {
 			yield confirmedExercisePlanDelete()
 		}
 
 		function confirmedExercisePlanDelete() {
-			confirmDeleteModal.hide()
+			confirmDeleteModal.close()
 			$workoutPrograms.getDefined(selectedDay).splice(index, 1)
 			$workoutPrograms = $workoutPrograms
 		}
@@ -273,11 +328,14 @@
 	}
 </script>
 
-<Modal bind:this={modal} visible={false} />
-<Modal bind:this={confirmDeleteModal} visible={false}
-	><button
+<Modal bind:this={modal} />
+<Modal bind:this={confirmDeleteModal}>
+	<button
+		slot="deleteButton"
 		on:click={() => {
 			deleteProcess.next()
-		}}>Delete</button
-	></Modal
->
+		}}
+	>
+		Delete
+	</button>
+</Modal>

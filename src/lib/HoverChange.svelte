@@ -56,7 +56,6 @@
 
 <svelte:window
 	on:click|capture={(event) => {
-		console.log(event.target)
 		// Close if editing and click was pressed outside of textField
 		if (event.target != textField && editing) {
 			resetUI()
@@ -64,7 +63,6 @@
 		}
 		// Do not close if clicking inside of component
 		else if (event.target == (textField || optionWindow)) {
-			console.log('ran z')
 			return
 		}
 		// do not close if clicking on toggle button and the window is not opened
