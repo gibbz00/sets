@@ -127,7 +127,7 @@
 		if (!hidden) hidden = true
 	}}
 	on:keydown={(event) => {
-		checkSubmit(event)
+		if (!hidden) checkSubmit(event)
 	}}
 />
 

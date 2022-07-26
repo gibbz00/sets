@@ -2,6 +2,7 @@
 	import { createEventDispatcher, onMount } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	import Icon from '$lib/Icon.svelte'
+	import { centerToParent } from '$lib/Actions/CenterToParent'
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let updateDispatcher: (type: 'update', detail: string) => boolean =
 		createEventDispatcher()
@@ -53,8 +54,16 @@
 	let textField: HTMLInputElement
 	let optionWindow: HTMLElement
 	let toggleButton: HTMLButtonElement
+
+	let predecessor: HTMLElement
+	let predecessorWith: number
+
+	onMount(() => {
+		predecessorWith = predecessor.clientWidth
+	})
 </script>
 
+<!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
 <svelte:window
 	on:click|capture={(event) => {
 		// Close if editing and click was pressed outside of textField
@@ -73,19 +82,31 @@
 			resetUI()
 		}
 	}}
+	on:keydown={(event) => {
+		if (editing) checkSubmit(event)
+	}}
 />
 
 {#if editing}
-	<input
-		placeholder={updatePlaceholder}
-		class="text-center placeholder:text-center placeholder:truncate"
-		use:inputWidthAutoResize
-		on:keydown={(event) => checkSubmit(event)}
-		bind:value={input}
-		bind:this={textField}
-	/>
+	<!-- Input positioned absolute in order to not break the original flow of the parent componentent -->
+	<!-- style transform used as aciton for it to run onMount-->
+	<!-- 
+		div width must be the same if not larger than predecessor (i.e span after the else statement) 
+			otherwise the smaller span will trigger columns with reflow, precisely what we're trying to remove
+	-->
+
+	<div class="relative" style:width={`${predecessorWith}px`}>
+		<input
+			placeholder={updatePlaceholder}
+			class="absolute inset-y-0 text-center placeholder:text-center placeholder:truncate"
+			use:inputWidthAutoResize
+			use:centerToParent
+			bind:value={input}
+			bind:this={textField}
+		/>
+	</div>
 {:else}
-	<span class="flex px-5 group">
+	<span bind:this={predecessor} class="flex px-5 group">
 		<div class="relative">
 			<slot />
 			<div class="absolute inset-y-0 -right-6">
