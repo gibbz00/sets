@@ -13,7 +13,7 @@
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
 	import Icon from '$lib/Icon.svelte'
 
-	import { crossfade } from 'svelte/transition'
+	import { crossfade, fade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
 	const [send, receive] = crossfade({
 		duration: (d) => Math.sqrt(d * 200),
@@ -34,6 +34,22 @@
 	})
 
 	let model: Model
+
+	/*
+		Section height animaiton:
+		Base on: https://css-tricks.com/using-css-transitions-auto-dimensions/
+
+		Animation duration "requirements"
+		* fadeInDelay  >= heightTransitonDuration + heightTransitionDelay, otherwise element will begin rendering before the container is fully rendered
+		* heightTransitionDelay >= fadeOutDelay + fadeOutDuration, elements will otherwise remain outside of container
+	*/
+	// in (ms), these values to not fill requirements, all because I don't want the height transition delay be non-zero
+	const heightTransitionDelay: number = 0
+	const heightTransitionDuration: number = 100
+	const fadeInDelay: number = 100
+	const fadeInDuration: number = 100
+	const fadeOutDelay: number = 0
+	const fadeOutDuration: number = 100
 </script>
 
 <Model bind:this={model} />
@@ -71,7 +87,15 @@
 			</div>
 		{/each}
 	</nav>
-	<section class="flex-col px-3 pt-5 text-xl">
+	<!-- +1 to length if for the max-height to be 160 when only add button is present -->
+	<section
+		style:max-height={`${
+			($workoutPrograms.getDefined($selectedDay).length + 1) * 160
+		}px`}
+		style:transition-delay={`${heightTransitionDelay}ms`}
+		style:transition-duration={`${heightTransitionDuration}ms`}
+		class="flex-col px-3 pt-5 text-xl transition-[max-height]"
+	>
 		<!-- "HACK": dynamically assigned tailwind classes don't really work since unused are removed with postcss be the svelte preprocessor -->
 		<!-- 0px fist column exists so that the spacing won't change upon exercise name width change -->
 		<div
@@ -95,7 +119,20 @@
 				<!-- exercise names column -->
 				<!-- scoping groups with tailwind-scoped-groups package -->
 				<div class="relative col-start-1 text-left w-max group-one">
-					{exerciseName}
+					<div
+						in:fade={{
+							delay: fadeInDelay,
+							duration: fadeInDuration,
+						}}
+						out:fade={{
+							delay: fadeOutDelay,
+							duration: fadeOutDuration,
+						}}
+					>
+						{exerciseName}
+					</div>
+					<!-- Popup -->
+					<!-- TODO: make clickable drawer: -->
 					<div
 						class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-hover:inline"
 					>
@@ -183,12 +220,23 @@
 				<!-- sets grid -->
 				<!-- Last sets should self align left due to add for proper add week button placement -->
 				{#each sets as set, index}
-					<SetNumberInput
-						justify={index != sets.length - 1
-							? 'justify-center'
-							: 'justify-start'}
-						bind:set
-					/>
+					<div
+						in:fade={{
+							delay: fadeInDelay,
+							duration: fadeInDuration,
+						}}
+						out:fade={{
+							delay: fadeOutDelay,
+							duration: fadeOutDuration,
+						}}
+					>
+						<SetNumberInput
+							justify={index != sets.length - 1
+								? 'justify-center'
+								: 'justify-start'}
+							bind:set
+						/>
+					</div>
 				{/each}
 			{/each}
 			<!-- add exercise plan row -->

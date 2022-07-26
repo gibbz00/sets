@@ -123,7 +123,7 @@
 {#if hidden}
 	<!-- stopPropagation required, window eventlistener will otherwise close it immediatedly -->
 	<span
-		class="my-auto contents text-left"
+		class="my-auto text-left contents"
 		on:click|stopPropagation={() => (hidden = !hidden)}
 	>
 		<slot name="placeholder">+</slot>
@@ -141,7 +141,7 @@
 			{placeholder}
 			value={input}
 			size={input.length >= 5 ? input.length / 2 : 5}
-			class="placeholder:text-center placeholder:truncate text-center"
+			class="text-center placeholder:text-center placeholder:truncate"
 		/>
 		{#if remaining.length > 0}
 			<ul>
