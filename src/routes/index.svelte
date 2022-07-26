@@ -242,7 +242,6 @@
 			{/each}
 			<!-- Add exercise plan row -->
 			<HiddenAutoCompleteSelector
-				inputStartLength={10}
 				placeholder="Add exercise plan"
 				data={Array.from($exercises.keys())}
 				on:selected={(event) => model.createExercisePlan(event.detail)}

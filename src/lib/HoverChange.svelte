@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount } from 'svelte'
+	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	import Icon from '$lib/Icon.svelte'
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let updateDispatcher: (type: 'update', detail: string) => boolean =
@@ -52,8 +53,6 @@
 	let textField: HTMLInputElement
 	let optionWindow: HTMLElement
 	let toggleButton: HTMLButtonElement
-
-	export let inputStartLength: number = 5
 </script>
 
 <svelte:window
@@ -80,12 +79,10 @@
 	<input
 		placeholder={updatePlaceholder}
 		class="text-center placeholder:text-center placeholder:truncate"
+		use:inputWidthAutoResize
 		on:keydown={(event) => checkSubmit(event)}
 		bind:value={input}
 		bind:this={textField}
-		size={input.length >= inputStartLength
-			? input.length
-			: inputStartLength}
 	/>
 {:else}
 	<span class="flex px-5 group">

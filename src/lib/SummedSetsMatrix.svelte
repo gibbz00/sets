@@ -1,6 +1,12 @@
 <script lang="ts">
-	import { weekNames, workoutPrograms, groups, exercises, selectedGroup } from '$lib/Stores'
-	import { SetMap } from '$lib/utils/SetMap'
+	import {
+		weekNames,
+		workoutPrograms,
+		groups,
+		exercises,
+		selectedGroup,
+	} from '$lib/Stores'
+	import { SetMap } from '$lib/ADTs/SetMap'
 	import Model from '$lib/Model.svelte'
 	import PenBinHover from './PenBinHover.svelte'
 
@@ -29,12 +35,22 @@
 			}
 			for (let exercisesPlans of $workoutPrograms.values()) {
 				for (let exercisePlan of exercisesPlans) {
-					let exerciseGroups = $exercises.getDefined(exercisePlan.exerciseName)
+					let exerciseGroups = $exercises.getDefined(
+						exercisePlan.exerciseName
+					)
 					if (exerciseGroups.has($selectedGroup)) {
-						for (let exerciseTag of exerciseGroups.getDefined($selectedGroup)) {
+						for (let exerciseTag of exerciseGroups.getDefined(
+							$selectedGroup
+						)) {
 							tempTagSets.update(
 								exerciseTag,
-								tempTagSets.getDefined(exerciseTag).map((setCount, weekIndex) => setCount + exercisePlan.sets[weekIndex])
+								tempTagSets
+									.getDefined(exerciseTag)
+									.map(
+										(setCount, weekIndex) =>
+											setCount +
+											exercisePlan.sets[weekIndex]
+									)
 							)
 						}
 					}
@@ -57,11 +73,18 @@
 {#if tagSets != undefined}
 	{#each [...tagSets.entries()] as [tagName, sets]}
 		<!-- Tag name -->
-		<div class="w-max inline-block bg-blue-800 py-1 px-2 rounded-full text-white font-semi">
+		<div
+			class="inline-block px-2 py-1 text-white bg-blue-800 rounded-full w-max font-semi"
+		>
 			<PenBinHover
 				svgClass="fill-white"
 				updatePlaceholder="New tag name"
-				on:update={(event) => model.updateTag(notNullSelectedGroup, tagName, event.detail)}
+				on:update={(event) =>
+					model.updateTag(
+						notNullSelectedGroup,
+						tagName,
+						event.detail
+					)}
 				on:delete={() => model.deleteTag(tagName)}
 			>
 				<span slot="placeholder" class="w-max">{tagName}</span>

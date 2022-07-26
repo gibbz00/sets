@@ -23,6 +23,7 @@
 
 	// Event dispatcher setup
 	import { createEventDispatcher } from 'svelte'
+	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	// Detail should be input value
 	// TODO: use typesetting to program this in
 	const dispatch: (type: 'selected', detail: string) => boolean =
@@ -117,7 +118,6 @@
 		}
 	}
 
-	export let inputStartLength: number = 5
 	export let textAlign: 'left' | 'center' | 'right' = 'left'
 </script>
 
@@ -149,9 +149,7 @@
 			autocomplete="off"
 			{placeholder}
 			value={input}
-			size={input.length >= inputStartLength
-				? input.length
-				: inputStartLength}
+			use:inputWidthAutoResize
 			style:text-align={textAlign}
 			class="placeholder:text-center placeholder:truncate"
 		/>

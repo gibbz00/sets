@@ -8,10 +8,10 @@
 		workoutPrograms,
 		refresh,
 	} from '$lib/Stores'
-	import { ThrowSet } from '$lib/utils/ThowSet'
+	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
-	import { SetMap } from './utils/SetMap'
-	import type { ExercisePlan } from './utils/Types'
+	import { SetMap } from './ADTs/SetMap'
+	import type { ExercisePlan } from './ADTs/Types'
 
 	let modal: Modal
 	let confirmDeleteModal: Modal
