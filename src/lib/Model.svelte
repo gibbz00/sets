@@ -246,7 +246,9 @@
 
 	export function deleteWeek(weekName: string, index: number) {
 		deleteProcess = deleteWeekGenerator()
-		confirmDeleteModal.show(`Delete ${weekName}?`)
+		confirmDeleteModal.show(
+			`Are you sure you want to delete the entire <b>${weekName}</b> set plan?`
+		)
 
 		function* deleteWeekGenerator() {
 			yield confirmedWeekDelete()
@@ -329,13 +331,10 @@
 </script>
 
 <Modal bind:this={modal} />
-<Modal bind:this={confirmDeleteModal}>
-	<button
-		slot="deleteButton"
-		on:click={() => {
-			deleteProcess.next()
-		}}
-	>
-		Delete
-	</button>
-</Modal>
+<Modal
+	bind:this={confirmDeleteModal}
+	delete
+	on:delete={() => {
+		deleteProcess.next()
+	}}
+/>
