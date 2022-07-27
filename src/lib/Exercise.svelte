@@ -61,7 +61,14 @@
 			if (dialog.open == true) return dialog
 		})
 
-		if (event.key == 'Escape' && opened && openedDialogs.length == 0) {
+		// should not be triggered if there are inputs present in the dropright
+
+		if (
+			event.key == 'Escape' &&
+			opened &&
+			openedDialogs.length == 0 &&
+			document.querySelectorAll("#drop-right-menu input[type='text']").length == 0
+		) {
 			console.log('rans')
 			close()
 		}
@@ -109,6 +116,7 @@
 	<!-- dropright -->
 	{#if opened}
 		<div
+			id="drop-right-menu"
 			bind:this={dropRightContainer}
 			class="
 						absolute 
@@ -143,9 +151,7 @@
 										.getDefined(exerciseName)
 										.getDefined(groupName)] as tag}
 									<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
-									<div
-										class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium"
-									>
+									<div class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium">
 										<HoverChange
 											updatePlaceholder="Change tag name"
 											inputStyling="bg-green-800 text-white placeholder:text-gray-300 border-2 border-yellow-500"
@@ -154,11 +160,7 @@
 												hover: 'fill-white',
 											}}
 											on:update={(event) =>
-												model.updateTag(
-													groupName,
-													tag,
-													event.detail
-												)}
+												model.updateTag(groupName, tag, event.detail)}
 											on:delete={() =>
 												model.deleteExerciseTag(
 													exerciseName,
@@ -166,9 +168,7 @@
 													tag
 												)}
 										>
-											<div
-												class="w-max my-auto text-white"
-											>
+											<div class="w-max my-auto text-white">
 												{tag}
 											</div>
 										</HoverChange>
@@ -178,21 +178,12 @@
 						{/if}
 						<HiddenAutoCompleteSelector
 							inputStyling="border-2 border-yellow-500"
-							data={Array.from(
-								$groups.getDefined(groupName).values()
-							)}
+							data={Array.from($groups.getDefined(groupName).values())}
 							placeholder="Add tag"
 							on:selected={(event) =>
-								model.createExerciseTag(
-									event.detail,
-									groupName,
-									exerciseName
-								)}
+								model.createExerciseTag(event.detail, groupName, exerciseName)}
 						>
-							<button
-								class="pl-2 align-middle text-2xl"
-								slot="placeholder"
-							>
+							<button class="pl-2 align-middle text-2xl" slot="placeholder">
 								+
 							</button>
 						</HiddenAutoCompleteSelector>
@@ -218,9 +209,7 @@
 					placeholder="Enter group name"
 					on:selected={(event) => model.createGroup(event.detail)}
 				>
-					<button class="hover:bg-green-900 mb-2" slot="placeholder"
-						>Add group</button
-					>
+					<button class="hover:bg-green-900 mb-2" slot="placeholder">Add group</button>
 				</HiddenAutoCompleteSelector>
 
 				<!-- Change exercise -->
@@ -228,8 +217,7 @@
 					inputStyling="border-2 border-yellow-500"
 					placeholder="New exercise name"
 					data={Array.from($exercises.keys())}
-					on:selected={(event) =>
-						model.updatePlanExercise(event.detail, index)}
+					on:selected={(event) => model.updatePlanExercise(event.detail, index)}
 				>
 					<button class="hover:bg-green-900 mb-2" slot="placeholder"
 						>Change exercise</button
@@ -238,12 +226,7 @@
 
 				<!-- Delete exercise -->
 				<button
-					on:click={() =>
-						model.deleteExercisePlan(
-							$selectedDay,
-							exerciseName,
-							index
-						)}
+					on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}
 					class="hover:bg-green-900"
 				>
 					Delete exercise plan
