@@ -26,14 +26,7 @@
 						inputStyling="text-center border-2 border-yellow-500"
 						placeholder="Add week"
 						on:selected={(event) => model.createWeek(event.detail)}
-					>
-						<button
-							slot="placeholder"
-							class="w-8 text-center rounded-full hover:bg-slate-100/50"
-						>
-							+
-						</button>
-					</HiddenAutoCompleteSelector>
+					/>
 				</div>
 			{/if}
 		</svelte:fragment>
