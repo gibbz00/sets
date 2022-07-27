@@ -61,12 +61,11 @@
 			if (dialog.open == true) return dialog
 		})
 
-		// should not be triggered if there are inputs present in the dropright
-
 		if (
 			event.key == 'Escape' &&
 			opened &&
 			openedDialogs.length == 0 &&
+			// should not be triggered if there are inputs present in the dropright
 			document.querySelectorAll("#drop-right-menu input[type='text']").length == 0
 		) {
 			console.log('rans')
@@ -92,7 +91,7 @@
 <!-- scoping groups with tailwind-scoped-groups package -->
 <button
 	class="relative flex col-start-1 text-left min-w-max max-w-56 group-one"
-	on:click|stopPropagation={() => {
+	on:click={() => {
 		if (!opened) {
 			open()
 		}
