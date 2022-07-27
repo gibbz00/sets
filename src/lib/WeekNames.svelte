@@ -23,9 +23,8 @@
 			{#if index == $weekNames.size - 1}
 				<div class="ml-20 mr-6 w-min">
 					<HiddenAutoCompleteSelector
-						inputStyling="border-2 border-yellow-500"
+						inputStyling="text-center border-2 border-yellow-500"
 						placeholder="Add week"
-						textAlign="center"
 						on:selected={(event) => model.createWeek(event.detail)}
 					>
 						<button

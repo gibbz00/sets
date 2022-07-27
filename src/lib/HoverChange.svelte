@@ -14,15 +14,13 @@
 	export let inputStyling: string = ''
 
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
-	let updateDispatcher: (type: 'update', detail: string) => boolean =
-		createEventDispatcher()
+	let updateDispatcher: (type: 'update', detail: string) => boolean = createEventDispatcher()
 
 	let optionsVisibility: 'none' | 'block' = 'none'
 	let editing: boolean = false
 	let input: string = ''
 	onMount(() => {
-		if (updatePlaceholder == null)
-			throw new Error('Update placeholder not defined')
+		if (updatePlaceholder == null) throw new Error('Update placeholder not defined')
 	})
 
 	function optionsToggle() {

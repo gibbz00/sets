@@ -24,17 +24,16 @@
 	// Event dispatcher setup
 	import { createEventDispatcher } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
+	import { text } from 'svelte/internal'
 
 	// data - array of matches to compare input with
 	export let data: element[] = []
 	export let placeholder: string = ''
-	export let textAlign: 'left' | 'center' | 'right' = 'left'
 	export let inputStyling: string = ''
 
 	// Detail should be input value
 	// TODO: use typesetting to program this in
-	const dispatch: (type: 'selected', detail: string) => boolean =
-		createEventDispatcher()
+	const dispatch: (type: 'selected', detail: string) => boolean = createEventDispatcher()
 
 	// Flexibilty for feature extention of wht data-types the component can handle
 	type element = string
@@ -74,10 +73,7 @@
 	}
 
 	function inputResetCheck(event: InputEvent) {
-		if (
-			event.inputType == 'deleteWordBackward' ||
-			'deleteContentBackward'
-		) {
+		if (event.inputType == 'deleteWordBackward' || 'deleteContentBackward') {
 			selectedIndex = -1
 		}
 	}
@@ -99,10 +95,7 @@
 			case 'ArrowDown':
 				// Do now attemp to select list item if input has been entered and there is no match,
 				// or when there is no data to be matched against
-				if (
-					(input.length > 0 && remaining.length == 0) ||
-					data.length == 0
-				) {
+				if ((input.length > 0 && remaining.length == 0) || data.length == 0) {
 					return
 				}
 				// Show all list items without having to type anything
@@ -110,8 +103,7 @@
 					filterData()
 					selectedIndex = 0
 					input = remaining[selectedIndex]
-				} else if (selectedIndex < remaining.length - 1)
-					input = remaining[++selectedIndex]
+				} else if (selectedIndex < remaining.length - 1) input = remaining[++selectedIndex]
 				break
 		}
 	}
@@ -121,12 +113,16 @@
 		input = ''
 		remaining = []
 	}
+
+	let textField: HTMLInputElement
 </script>
 
 <!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
 <svelte:window
-	on:click={() => {
-		if (!hidden) hidden = true
+	on:click|capture={(event) => {
+		if (!hidden && event.target != textField) {
+			resetUI()
+		}
 	}}
 	on:keydown={(event) => {
 		if (!hidden) checkSubmit(event)
@@ -134,45 +130,37 @@
 />
 
 {#if hidden}
-	<!-- stopPropagation required, window eventlistener will otherwise close it immediatedly -->
-	<span
-		class="my-auto text-left contents"
-		on:click|stopPropagation={() => (hidden = !hidden)}
-	>
+	<span class="my-auto text-left contents" on:click={() => (hidden = false)}>
 		<slot name="placeholder">+</slot>
 	</span>
 {:else}
-	<span class="w-full my-auto">
-		<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
-		<!-- All the empty on:click|stopProgagation could be removed and handled by window as done with Hover change   -->
-		<input
-			on:click|stopPropagation={() => {}}
-			on:beforeinput={(event) => inputResetCheck(event)}
-			on:input={(event) => filterDataPrepare(event)}
-			type="text"
-			autocomplete="off"
-			{placeholder}
-			value={input}
-			use:inputWidthAutoResize
-			style:text-align={textAlign}
-			class={`px-2 placeholder:text-center placeholder:truncate ${inputStyling}`}
-		/>
-		{#if remaining.length > 0}
-			<ul on:click|stopPropagation={() => {}} class="w-max">
-				{#each remaining as element, index (element)}
-					<li
-						class={index == selectedIndex ? 'selected' : undefined}
-						on:click={() => {
-							dispatch('selected', element)
-							resetUI()
-						}}
-					>
-						{element}
-					</li>
-				{/each}
-			</ul>
-		{/if}
-	</span>
+	<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
+	<input
+		bind:this={textField}
+		on:beforeinput={(event) => inputResetCheck(event)}
+		on:input={(event) => filterDataPrepare(event)}
+		type="text"
+		autocomplete="off"
+		{placeholder}
+		value={input}
+		use:inputWidthAutoResize
+		class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling}`}
+	/>
+	{#if remaining.length > 0}
+		<ul on:click|stopPropagation={() => {}} class="w-max">
+			{#each remaining as element, index (element)}
+				<li
+					class={index == selectedIndex ? 'selected' : undefined}
+					on:click={() => {
+						dispatch('selected', element)
+						resetUI()
+					}}
+				>
+					{element}
+				</li>
+			{/each}
+		</ul>
+	{/if}
 {/if}
 
 <style>
