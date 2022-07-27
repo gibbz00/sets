@@ -2,20 +2,18 @@
 	import WeekNames from '$lib/WeekNames.svelte'
 	import {
 		weekNames,
-		groups,
 		workoutPrograms,
 		exercises,
 		selectedDay,
 	} from '$lib/Stores'
 	import Model from '$lib/Model.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
-	import EditableTags from '$lib/EditableTags.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
 	import Icon from '$lib/Icon.svelte'
 
 	import { crossfade, fade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
-	import HoverChange from '$lib/HoverChange.svelte'
+	import Exercise from '$lib/Exercise.svelte'
 	const [send, receive] = crossfade({
 		duration: (d) => Math.sqrt(d * 200),
 
@@ -117,189 +115,7 @@
 
 			<!-- table rows -->
 			{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
-				<!-- exercise names column -->
-				<!-- scoping groups with tailwind-scoped-groups package -->
-				<button
-					class="relative flex col-start-1 text-left min-w-max max-w-56 group-one"
-					in:fade={{
-						delay: fadeInDelay,
-						duration: fadeInDuration,
-					}}
-					out:fade={{
-						delay: fadeOutDelay,
-						duration: fadeOutDuration,
-					}}
-				>
-					<span class="truncate">{exerciseName}</span>
-					<Icon
-						type="arrowRight"
-						cls="
-							fill-gray-500 
-							w-8 
-							h-8 
-							shrink-0 
-							group-one-hover:fill-black  
-							group-one-focus-within:fill-black 
-							group-one-focus-within:rotate-180 
-							transition-transform
-						"
-					/>
-					<!-- Popup -->
-					<!-- TODO: make clickable drawer: -->
-					<div
-						class="
-							absolute 
-							top-0 
-							left-full
-							z-10 
-							p-3 
-							text-black 
-							bg-white 
-							border-2 
-							rounded-sm 
-							shadow-sm 
-							w-max 
-							group-one-focus-within:inline 
-							border-gray 
-							cursor-default
-						"
-					>
-						<!-- group names -->
-						<span class="space-y-2">
-							{#each [...$groups.keys()] as groupName}
-								<div class="text-xl mb-1">
-									{groupName}
-								</div>
-								<div class="flex">
-									{#if $exercises
-										.getDefined(exerciseName)
-										.has(groupName)}
-										<!-- <EditableTags
-											{exerciseName}
-											{groupName}
-										/> -->
-										<span class="space-x-1 flex mr-2">
-											{#each [...$exercises
-													.getDefined(exerciseName)
-													.getDefined(groupName)] as tag}
-												<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
-												<div
-													class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium"
-												>
-													<HoverChange
-														updatePlaceholder="Change tag name"
-														inputStyling="bg-green-800 text-white placeholder:text-gray-300 border-2 border-yellow-500"
-														iconColor={{
-															default:
-																'fill-gray-100',
-															hover: 'fill-white',
-														}}
-														on:update={(event) =>
-															model.updateTag(
-																groupName,
-																tag,
-																event.detail
-															)}
-														on:delete={() =>
-															model.deleteExerciseTag(
-																exerciseName,
-																groupName,
-																tag
-															)}
-													>
-														<div
-															class="w-max my-auto text-white"
-														>
-															{tag}
-														</div>
-													</HoverChange>
-												</div>
-											{/each}
-										</span>
-									{/if}
-									<HiddenAutoCompleteSelector
-										inputStyling="border-2 border-yellow-500"
-										data={Array.from(
-											$groups
-												.getDefined(groupName)
-												.values()
-										)}
-										placeholder="Add tag"
-										on:selected={(event) =>
-											model.createExerciseTag(
-												event.detail,
-												groupName,
-												exerciseName
-											)}
-									>
-										<button
-											class="pl-2 align-middle text-2xl"
-											slot="placeholder"
-										>
-											+
-										</button>
-									</HiddenAutoCompleteSelector>
-								</div>
-							{/each}
-						</span>
-						<div
-							class="
-							flex
-							flex-col
-							[&_button]:bg-green-800
-							[&_button]:px-2
-							[&_button]:rounded-sm
-							[&_button]:py-4
-							text-white
-							font-medium
-							mt-3
-						"
-						>
-							<!-- Add group button -->
-							<HiddenAutoCompleteSelector
-								inputStyling="border-2 border-yellow-500"
-								placeholder="Enter group name"
-								on:selected={(event) =>
-									model.createGroup(event.detail)}
-							>
-								<button
-									class="hover:bg-green-900 mb-2"
-									slot="placeholder">Add group</button
-								>
-							</HiddenAutoCompleteSelector>
-
-							<!-- Change exercise -->
-							<HiddenAutoCompleteSelector
-								inputStyling="border-2 border-yellow-500"
-								placeholder="New exercise name"
-								data={Array.from($exercises.keys())}
-								on:selected={(event) =>
-									model.updatePlanExercise(
-										event.detail,
-										index
-									)}
-							>
-								<button
-									class="hover:bg-green-900 mb-2"
-									slot="placeholder">Change exercise</button
-								>
-							</HiddenAutoCompleteSelector>
-
-							<!-- Delete exercise -->
-							<button
-								on:click={() =>
-									model.deleteExercisePlan(
-										$selectedDay,
-										exerciseName,
-										index
-									)}
-								class="hover:bg-green-900"
-							>
-								Delete exercise plan
-							</button>
-						</div>
-					</div>
-				</button>
+				<Exercise {exerciseName} {index} />
 
 				<!-- sets grid -->
 				<!-- Last sets should self align left due to add for proper add week button placement -->

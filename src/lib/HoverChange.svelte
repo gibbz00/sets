@@ -94,6 +94,7 @@
 	<!-- style transform used as aciton for it to run onMount-->
 	<div class="relative">
 		<input
+			autofocus
 			placeholder={updatePlaceholder}
 			class={`
 				px-2 text-center placeholder:text-center placeholder:truncate 
