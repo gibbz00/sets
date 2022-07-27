@@ -16,7 +16,10 @@
 	let dialog: HTMLDialogElement
 </script>
 
-<dialog class="p-0 shadow-md backdrop:backdrop-blur-sm" bind:this={dialog}>
+<dialog
+	class="p-0 rounded-sm shadow-md backdrop:backdrop-blur-sm"
+	bind:this={dialog}
+>
 	<div class="flex flex-col contents-between w-min">
 		<div class="p-6 text-xl">
 			{@html message}

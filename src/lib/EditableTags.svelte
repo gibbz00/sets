@@ -10,15 +10,21 @@
 
 <Model bind:this={model} />
 
-{#each [...$exercises.getDefined(exerciseName).getDefined(groupName)] as tag}
-	<span class="inline-block bg-blue-800 p-3 rounded-full text-white font-bold">
-		<PenBinHover
-			svgClass="fill-white"
-			updatePlaceholder="Change tag name"
-			on:delete={() => model.deleteExerciseTag(exerciseName, groupName, tag)}
-			on:update={(event) => model.updateTag(groupName, tag, event.detail)}
-		>
-			<span slot="placeholder">{tag}</span>
-		</PenBinHover>
-	</span>
-{/each}
+<span class="space-x-1 flex">
+	{#each [...$exercises
+			.getDefined(exerciseName)
+			.getDefined(groupName)] as tag}
+		<div class="bg-green-800 py-1 px-2 rounded-xl text-white font-medium">
+			<PenBinHover
+				svgClass="fill-white cursor-pointer"
+				updatePlaceholder="Change tag name"
+				on:delete={() =>
+					model.deleteExerciseTag(exerciseName, groupName, tag)}
+				on:update={(event) =>
+					model.updateTag(groupName, tag, event.detail)}
+			>
+				<div class="w-max" slot="placeholder">{tag}</div>
+			</PenBinHover>
+		</div>
+	{/each}
+</span>

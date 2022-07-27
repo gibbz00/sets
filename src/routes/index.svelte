@@ -15,6 +15,7 @@
 
 	import { crossfade, fade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
+	import HoverChange from '$lib/HoverChange.svelte'
 	const [send, receive] = crossfade({
 		duration: (d) => Math.sqrt(d * 200),
 
@@ -57,7 +58,7 @@
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
 	<a
-		class="flex items-center justify-around px-4 py-3 bg-green-900 rounded-lg"
+		class="flex items-center justify-around px-4 py-3 bg-green-800 hover:bg-green-900 rounded-lg"
 		href="/analysis"
 	>
 		<span class="text-2xl font-medium text-white h-min">Set analysis</span>
@@ -132,53 +133,116 @@
 					<span class="truncate">{exerciseName}</span>
 					<Icon
 						type="arrowRight"
-						cls="fill-gray-500 w-8 h-8 shrink-0 group-one-hover:fill-black"
+						cls="
+							fill-gray-500 
+							w-8 
+							h-8 
+							shrink-0 
+							group-one-hover:fill-black  
+							group-one-focus-within:fill-black 
+							group-one-focus-within:rotate-180 
+							transition-transform
+						"
 					/>
 					<!-- Popup -->
 					<!-- TODO: make clickable drawer: -->
 					<div
-						class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-focus-within:inline"
+						class="
+							absolute 
+							hidden
+							top-0 
+							left-full
+							z-10 
+							p-3 
+							text-black 
+							bg-white 
+							border-2 
+							rounded-sm 
+							shadow-sm 
+							w-max 
+							group-one-focus-within:inline 
+							border-gray 
+							cursor-default
+						"
 					>
 						<!-- group names -->
-						{#each [...$groups.keys()] as groupName}
-							<div class="text-lg font-bold">
-								{groupName}:
-							</div>
-							<div class="flex">
-								{#if $exercises
-									.getDefined(exerciseName)
-									.has(groupName)}
-									<EditableTags {exerciseName} {groupName} />
-								{/if}
-								<HiddenAutoCompleteSelector
-									data={Array.from(
-										$groups.getDefined(groupName).values()
-									)}
-									placeholder="Add tag"
-									on:selected={(event) =>
-										model.createExerciseTag(
-											event.detail,
-											groupName,
-											exerciseName
+						<span class="space-y-2">
+							{#each [...$groups.keys()] as groupName}
+								<div class="text-xl mb-1">
+									{groupName}
+								</div>
+								<div class="flex">
+									{#if $exercises
+										.getDefined(exerciseName)
+										.has(groupName)}
+										<!-- <EditableTags
+											{exerciseName}
+											{groupName}
+										/> -->
+										<span class="space-x-1 flex">
+											{#each [...$exercises
+													.getDefined(exerciseName)
+													.getDefined(groupName)] as tag}
+												<div
+													class="bg-green-800 py-1 px-2 rounded-xl text-white font-medium"
+												>
+													<HoverChange
+														updatePlaceholder="Change tag name"
+														iconColor={{
+															default:
+																'fill-gray-100',
+															hover: 'fill-white',
+														}}
+														on:delete={() =>
+															model.deleteExerciseTag(
+																exerciseName,
+																groupName,
+																tag
+															)}
+													>
+														<div class="w-max">
+															{tag}
+														</div>
+													</HoverChange>
+												</div>
+											{/each}
+										</span>
+									{/if}
+									<HiddenAutoCompleteSelector
+										data={Array.from(
+											$groups
+												.getDefined(groupName)
+												.values()
 										)}
-								>
-									<span
-										class="pl-2 text-2xl font-bold"
-										slot="placeholder"
+										placeholder="Add tag"
+										on:selected={(event) =>
+											model.createExerciseTag(
+												event.detail,
+												groupName,
+												exerciseName
+											)}
 									>
-										+
-									</span>
-								</HiddenAutoCompleteSelector>
-							</div>
-						{/each}
+										<button
+											class="pl-2 align-middle text-2xl"
+											slot="placeholder"
+										>
+											+
+										</button>
+									</HiddenAutoCompleteSelector>
+								</div>
+							{/each}
+						</span>
 						<div
 							class="
 							flex
 							flex-col
-							[&_button]:bg-blue-800
-							[&_button]:p-2
-							space-y-1
-							mt-2
+							[&_button]:bg-green-800
+							[&_button]:px-2
+							[&_button]:rounded-sm
+							[&_button]:py-4
+							text-white
+							font-medium
+							mt-3
 						"
 						>
 							<!-- Add group button -->
@@ -187,8 +251,9 @@
 								on:selected={(event) =>
 									model.createGroup(event.detail)}
 							>
-								<button class="w-full" slot="placeholder"
-									>Add group</button
+								<button
+									class="hover:bg-green-900 mb-2"
+									slot="placeholder">Add group</button
 								>
 							</HiddenAutoCompleteSelector>
 
@@ -202,8 +267,9 @@
 										index
 									)}
 							>
-								<button class="w-full" slot="placeholder"
-									>Change exercise</button
+								<button
+									class="hover:bg-green-900 mb-2"
+									slot="placeholder">Change exercise</button
 								>
 							</HiddenAutoCompleteSelector>
 
@@ -215,6 +281,7 @@
 										exerciseName,
 										index
 									)}
+								class="hover:bg-green-900"
 							>
 								Delete exercise plan
 							</button>

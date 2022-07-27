@@ -3,6 +3,14 @@
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	import Icon from '$lib/Icon.svelte'
 	import { centerToParent } from '$lib/Actions/CenterToParent'
+
+	export let updatePlaceholder: null | string
+	//TODO: typeset to tailwind colors
+	export let iconColor: { default: string; hover: string } = {
+		default: 'fill-gray-500',
+		hover: 'fill-black',
+	}
+
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let updateDispatcher: (type: 'update', detail: string) => boolean =
 		createEventDispatcher()
@@ -10,7 +18,6 @@
 	let optionsVisibility: 'none' | 'block' = 'none'
 	let editing: boolean = false
 	let input: string = ''
-	export let updatePlaceholder: null | string
 	onMount(() => {
 		if (updatePlaceholder == null)
 			throw new Error('Update placeholder not defined')
@@ -118,7 +125,8 @@
 					>
 						<!-- Pointer events for correct event.target filtering  -->
 						<Icon
-							cls="pointer-events-none group-hover:fill-black fill-gray-500 w-7 h-7 "
+							cls={'pointer-events-none w-7 h-7' +
+								`group-hover:${iconColor.hover} ${iconColor.default}`}
 							type="more_vert"
 						/>
 					</button>
