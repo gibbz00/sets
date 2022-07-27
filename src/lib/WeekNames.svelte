@@ -12,6 +12,7 @@
 {#each [...$weekNames.values()] as weekName, index}
 	<HoverChange
 		updatePlaceholder="New week name"
+		absoluteInputPositioning
 		on:update={(event) => model.updateWeek(weekName, event.detail)}
 		on:delete={() => model.deleteWeek(weekName, index)}
 	>

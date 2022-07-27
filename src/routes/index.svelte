@@ -149,7 +149,6 @@
 					<div
 						class="
 							absolute 
-							hidden
 							top-0 
 							left-full
 							z-10 
@@ -183,8 +182,9 @@
 											{#each [...$exercises
 													.getDefined(exerciseName)
 													.getDefined(groupName)] as tag}
+												<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
 												<div
-													class="bg-green-800 py-1 px-2 rounded-xl text-white font-medium"
+													class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium"
 												>
 													<HoverChange
 														updatePlaceholder="Change tag name"
@@ -193,6 +193,12 @@
 																'fill-gray-100',
 															hover: 'fill-white',
 														}}
+														on:update={(event) =>
+															model.updateTag(
+																groupName,
+																tag,
+																event.detail
+															)}
 														on:delete={() =>
 															model.deleteExerciseTag(
 																exerciseName,
@@ -200,7 +206,9 @@
 																tag
 															)}
 													>
-														<div class="w-max">
+														<div
+															class="w-max my-auto text-white"
+														>
 															{tag}
 														</div>
 													</HoverChange>

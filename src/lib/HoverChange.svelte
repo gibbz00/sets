@@ -10,6 +10,7 @@
 		default: 'fill-gray-500',
 		hover: 'fill-black',
 	}
+	export let absoluteInputPositioning: boolean = false
 
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let updateDispatcher: (type: 'update', detail: string) => boolean =
@@ -105,7 +106,9 @@
 	<div class="relative" style:width={`${predecessorWith}px`}>
 		<input
 			placeholder={updatePlaceholder}
-			class="absolute inset-y-0 text-center placeholder:text-center placeholder:truncate"
+			class={`text-center placeholder:text-center placeholder:truncate ${
+				absoluteInputPositioning ? 'absolute inset-y-0' : ''
+			}`}
 			use:inputWidthAutoResize
 			use:centerToParent
 			bind:value={input}
@@ -114,7 +117,7 @@
 	</div>
 {:else}
 	<span bind:this={predecessor} class="flex mx-auto px-5 group">
-		<div class="relative">
+		<div class="relative flex">
 			<slot />
 			<div class="absolute inset-y-0 -right-6">
 				<slot name="button">
