@@ -113,7 +113,7 @@
 		/>
 	</div>
 {:else}
-	<span bind:this={predecessor} class="flex px-5 group">
+	<span bind:this={predecessor} class="flex mx-auto px-5 group">
 		<div class="relative">
 			<slot />
 			<div class="absolute inset-y-0 -right-6">

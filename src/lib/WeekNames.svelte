@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { weekNames } from './Stores'
-	import Model from './Model.svelte'
-	import HoverChange from './HoverChange.svelte'
+	import { weekNames } from '$lib/Stores'
+	import Model from '$lib/Model.svelte'
+	import HoverChange from '$lib/HoverChange.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
 
 	let model: Model
