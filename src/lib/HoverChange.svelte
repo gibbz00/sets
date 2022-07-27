@@ -96,7 +96,7 @@
 		<input
 			placeholder={updatePlaceholder}
 			class={`
-				text-center placeholder:text-center placeholder:truncate 
+				px-2 text-center placeholder:text-center placeholder:truncate 
 				${absoluteInputPositioning ? 'absolute inset-y-0 ' : ' '}
 				${inputStyling}
 			`}

@@ -155,7 +155,7 @@
 			value={input}
 			use:inputWidthAutoResize
 			style:text-align={textAlign}
-			class={`placeholder:text-center placeholder:truncate ${inputStyling}`}
+			class={`px-2 placeholder:text-center placeholder:truncate ${inputStyling}`}
 		/>
 		{#if remaining.length > 0}
 			<ul on:click|stopPropagation={() => {}} class="w-max">

@@ -188,7 +188,7 @@
 												>
 													<HoverChange
 														updatePlaceholder="Change tag name"
-														inputStyling="bg-green-800 text-white border-2 border-yellow-500"
+														inputStyling="bg-green-800 text-white placeholder:text-gray-300 border-2 border-yellow-500"
 														iconColor={{
 															default:
 																'fill-gray-100',
