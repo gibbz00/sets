@@ -24,6 +24,13 @@
 	// Event dispatcher setup
 	import { createEventDispatcher } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
+
+	// data - array of matches to compare input with
+	export let data: element[] = []
+	export let placeholder: string = ''
+	export let textAlign: 'left' | 'center' | 'right' = 'left'
+	export let inputStyling: string = ''
+
 	// Detail should be input value
 	// TODO: use typesetting to program this in
 	const dispatch: (type: 'selected', detail: string) => boolean =
@@ -42,10 +49,6 @@
 	// TODO: typeset to whole numbers greater than -1 and always less than remaining.length
 	// -1 symbolises unset
 	let selectedIndex: number = -1
-
-	// data - array of matches to compare input with
-	export let data: element[] = []
-	export let placeholder: string = ''
 
 	function filterData() {
 		if (input.length == 0) {
@@ -117,8 +120,6 @@
 			input = ''
 		}
 	}
-
-	export let textAlign: 'left' | 'center' | 'right' = 'left'
 </script>
 
 <!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
@@ -151,7 +152,7 @@
 			value={input}
 			use:inputWidthAutoResize
 			style:text-align={textAlign}
-			class="placeholder:text-center placeholder:truncate"
+			class={`placeholder:text-center placeholder:truncate ${inputStyling}`}
 		/>
 		{#if remaining.length > 0}
 			<ul class="w-max">
