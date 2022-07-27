@@ -118,32 +118,32 @@
 			{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
 				<!-- exercise names column -->
 				<!-- scoping groups with tailwind-scoped-groups package -->
-				<div class="relative w-56 col-start-1 text-left group-one">
-					<button
-						class="flex"
-						in:fade={{
-							delay: fadeInDelay,
-							duration: fadeInDuration,
-						}}
-						out:fade={{
-							delay: fadeOutDelay,
-							duration: fadeOutDuration,
-						}}
-					>
-						<span class="truncate">{exerciseName}</span>
-						<Icon
-							type="arrowRight"
-							cls="fill-gray-500 w-8 h-8 shrink-0 group-one-hover:fill-black"
-						/>
-					</button>
+				<button
+					class="relative flex col-start-1 text-left min-w-max max-w-56 group-one"
+					in:fade={{
+						delay: fadeInDelay,
+						duration: fadeInDuration,
+					}}
+					out:fade={{
+						delay: fadeOutDelay,
+						duration: fadeOutDuration,
+					}}
+				>
+					<span class="truncate">{exerciseName}</span>
+					<Icon
+						type="arrowRight"
+						cls="fill-gray-500 w-8 h-8 shrink-0 group-one-hover:fill-black"
+					/>
 					<!-- Popup -->
 					<!-- TODO: make clickable drawer: -->
 					<div
-						class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-hover:inline"
+						class="absolute top-0 z-10 hidden p-3 w-max bg-slate-300 left-full group-one-focus-within:inline"
 					>
 						<!-- group names -->
 						{#each [...$groups.keys()] as groupName}
-							<div class="text-lg font-bold">{groupName}:</div>
+							<div class="text-lg font-bold">
+								{groupName}:
+							</div>
 							<div class="flex">
 								{#if $exercises
 									.getDefined(exerciseName)
@@ -173,13 +173,13 @@
 						{/each}
 						<div
 							class="
-								flex
-								flex-col
-								[&_button]:bg-blue-800
-								[&_button]:p-2
-								space-y-1
-								mt-2
-							"
+							flex
+							flex-col
+							[&_button]:bg-blue-800
+							[&_button]:p-2
+							space-y-1
+							mt-2
+						"
 						>
 							<!-- Add group button -->
 							<HiddenAutoCompleteSelector
@@ -220,7 +220,7 @@
 							</button>
 						</div>
 					</div>
-				</div>
+				</button>
 
 				<!-- sets grid -->
 				<!-- Last sets should self align left due to add for proper add week button placement -->
