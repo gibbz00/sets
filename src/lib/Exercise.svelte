@@ -68,7 +68,6 @@
 			// should not be triggered if there are inputs present in the dropright
 			document.querySelectorAll("#drop-right-menu input[type='text']").length == 0
 		) {
-			console.log('rans')
 			close()
 		}
 	}
@@ -205,21 +204,23 @@
 			>
 				<!-- Add group button -->
 				<HiddenAutoCompleteSelector
-					inputStyling="border-2 border-yellow-500 text-black"
+					inputStyling="border-2 border-yellow-500 text-black mb-2"
 					placeholder="Enter group name"
 					on:selected={(event) => model.createGroup(event.detail)}
 				>
-					<button class="hover:bg-green-900 mb-2" slot="placeholder">Add group</button>
+					<button class="hover:bg-green-900 mb-2 w-full" slot="placeholder"
+						>Add group</button
+					>
 				</HiddenAutoCompleteSelector>
 
 				<!-- Change exercise -->
 				<HiddenAutoCompleteSelector
-					inputStyling="border-2 border-yellow-500 text-black"
+					inputStyling="border-2 border-yellow-500 text-black mb-2"
 					placeholder="New exercise name"
 					data={Array.from($exercises.keys())}
 					on:selected={(event) => model.updatePlanExercise(event.detail, index)}
 				>
-					<button class="hover:bg-green-900 mb-2" slot="placeholder"
+					<button class="hover:bg-green-900 mb-2 w-full" slot="placeholder"
 						>Change exercise</button
 					>
 				</HiddenAutoCompleteSelector>

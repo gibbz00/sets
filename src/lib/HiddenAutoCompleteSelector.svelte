@@ -24,12 +24,13 @@
 	// Event dispatcher setup
 	import { createEventDispatcher } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
-	import { text } from 'svelte/internal'
+	import { preserveInputPlaceholderHeight } from '$lib/Actions/PreserveInputPlaceholderHeight'
 
 	// data - array of matches to compare input with
 	export let data: element[] = []
 	export let placeholder: string = ''
 	export let inputStyling: string = ''
+	export let preserveHeight: boolean = true
 
 	// Detail should be input value
 	// TODO: use typesetting to program this in
@@ -45,6 +46,7 @@
 	// Array of objects that match the input
 	let remaining: element[] = []
 
+	let textField: HTMLInputElement
 	// TODO: typeset to whole numbers greater than -1 and always less than remaining.length
 	// -1 symbolises unset
 	let selectedIndex: number = -1
@@ -114,7 +116,9 @@
 		remaining = []
 	}
 
-	let textField: HTMLInputElement
+	function unHide() {
+		hidden = false
+	}
 </script>
 
 <!-- Keydown listened on window so that there isn't a requirement for the input to be focused -->
@@ -129,11 +133,16 @@
 	}}
 />
 
-{#if hidden}
-	<span class="my-auto text-left contents" on:click={() => (hidden = false)}>
-		<slot name="placeholder">+</slot>
-	</span>
-{:else}
+<!--
+	class="hidden" used instead of svelte if blocks so that input height can be calculated on mount, 
+	it has to be known before shown to the user
+-->
+<div class="contents" use:preserveInputPlaceholderHeight={preserveHeight}>
+	<div class={`${hidden ? '' : 'hidden'}`} on:click={() => unHide()}>
+		<slot name="placeholder">
+			<button class="my-auto text-left "> + </button>
+		</slot>
+	</div>
 	<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
 	<input
 		bind:this={textField}
@@ -144,7 +153,9 @@
 		{placeholder}
 		value={input}
 		use:inputWidthAutoResize
-		class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling}`}
+		class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling} ${
+			hidden ? 'hidden' : ''
+		}`}
 	/>
 	{#if remaining.length > 0}
 		<ul on:click|stopPropagation={() => {}} class="w-max">
@@ -161,7 +172,7 @@
 			{/each}
 		</ul>
 	{/if}
-{/if}
+</div>
 
 <style>
 	.selected {
