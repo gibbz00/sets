@@ -118,9 +118,9 @@
 			{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
 				<!-- exercise names column -->
 				<!-- scoping groups with tailwind-scoped-groups package -->
-				<div class="relative w-32 col-start-1 text-left group-one">
-					<div
-						class="truncate"
+				<div class="relative w-56 col-start-1 text-left group-one">
+					<button
+						class="flex"
 						in:fade={{
 							delay: fadeInDelay,
 							duration: fadeInDuration,
@@ -130,8 +130,12 @@
 							duration: fadeOutDuration,
 						}}
 					>
-						{exerciseName}
-					</div>
+						<span class="truncate">{exerciseName}</span>
+						<Icon
+							type="arrowRight"
+							cls="fill-gray-500 w-8 h-8 shrink-0 group-one-hover:fill-black"
+						/>
+					</button>
 					<!-- Popup -->
 					<!-- TODO: make clickable drawer: -->
 					<div
