@@ -12,6 +12,7 @@
 	}
 	export let absoluteInputPositioning: boolean = false
 	export let inputStyling: string = ''
+	export let dynamicInputWidth: boolean = true
 
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let updateDispatcher: (type: 'update', detail: string) => boolean = createEventDispatcher()
@@ -99,7 +100,7 @@
 				${absoluteInputPositioning ? 'absolute inset-y-0 ' : ' '}
 				${inputStyling}
 			`}
-			use:inputWidthAutoResize
+			use:inputWidthAutoResize={dynamicInputWidth}
 			use:centerToParent={absoluteInputPositioning}
 			bind:value={input}
 			bind:this={textField}

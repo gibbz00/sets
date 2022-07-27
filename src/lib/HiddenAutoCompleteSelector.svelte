@@ -31,6 +31,7 @@
 	export let placeholder: string = ''
 	export let inputStyling: string = ''
 	export let preserveHeight: boolean = true
+	export let dynamicInputWidth: boolean = true
 
 	// Detail should be input value
 	// TODO: use typesetting to program this in
@@ -152,7 +153,7 @@
 		autocomplete="off"
 		{placeholder}
 		value={input}
-		use:inputWidthAutoResize
+		use:inputWidthAutoResize={dynamicInputWidth}
 		class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling} ${
 			hidden ? 'hidden' : ''
 		}`}

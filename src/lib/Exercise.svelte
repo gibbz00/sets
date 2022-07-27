@@ -204,7 +204,7 @@
 			>
 				<!-- Add group button -->
 				<HiddenAutoCompleteSelector
-					inputStyling="border-2 border-yellow-500 text-black mb-2"
+					inputStyling="border-2 border-yellow-500 text-black mb-2 min-w-full text-center"
 					placeholder="Enter group name"
 					on:selected={(event) => model.createGroup(event.detail)}
 				>
@@ -215,7 +215,7 @@
 
 				<!-- Change exercise -->
 				<HiddenAutoCompleteSelector
-					inputStyling="border-2 border-yellow-500 text-black mb-2"
+					inputStyling="border-2 border-yellow-500 text-black mb-2 min-w-full text-center"
 					placeholder="New exercise name"
 					data={Array.from($exercises.keys())}
 					on:selected={(event) => model.updatePlanExercise(event.detail, index)}

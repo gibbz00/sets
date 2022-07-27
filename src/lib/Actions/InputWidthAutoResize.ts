@@ -14,35 +14,35 @@
 */
 
 type Pixels = `${number}px`
-export function inputWidthAutoResize(inputElement: HTMLInputElement) {
-	inputElement.style.width = getInputWidthInPixels(inputElement)
-
-	inputElement.addEventListener('input', () => {
+export function inputWidthAutoResize(inputElement: HTMLInputElement, dynamicInputWidth: boolean) {
+	if (dynamicInputWidth) {
 		inputElement.style.width = getInputWidthInPixels(inputElement)
-	})
 
-	function getInputWidthInPixels(element: HTMLInputElement): Pixels {
-		const {
-			font,
-			borderLeftWidth,
-			borderRightWidth,
-			paddingLeft,
-			paddingRight,
-		}: CSSStyleDeclaration = window.getComputedStyle(element)
+		inputElement.addEventListener('input', () => {
+			inputElement.style.width = getInputWidthInPixels(inputElement)
+		})
 
-		const context: CanvasRenderingContext2D = document
-			.createElement('canvas')
-			.getContext('2d')!
-		context.font = font
+		function getInputWidthInPixels(element: HTMLInputElement): Pixels {
+			const {
+				font,
+				borderLeftWidth,
+				borderRightWidth,
+				paddingLeft,
+				paddingRight,
+			}: CSSStyleDeclaration = window.getComputedStyle(element)
 
-		return `${
-			parseFloat(borderLeftWidth) +
-			parseFloat(borderRightWidth) +
-			parseFloat(paddingLeft) +
-			parseFloat(paddingRight) +
-			context.measureText(
-				element.value == '' ? element.placeholder : element.value
-			).width
-		}px`
+			const context: CanvasRenderingContext2D = document
+				.createElement('canvas')
+				.getContext('2d')!
+			context.font = font
+
+			return `${
+				parseFloat(borderLeftWidth) +
+				parseFloat(borderRightWidth) +
+				parseFloat(paddingLeft) +
+				parseFloat(paddingRight) +
+				context.measureText(element.value == '' ? element.placeholder : element.value).width
+			}px`
+		}
 	}
 }
