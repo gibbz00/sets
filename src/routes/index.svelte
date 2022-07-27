@@ -178,7 +178,7 @@
 											{exerciseName}
 											{groupName}
 										/> -->
-										<span class="space-x-1 flex">
+										<span class="space-x-1 flex mr-2">
 											{#each [...$exercises
 													.getDefined(exerciseName)
 													.getDefined(groupName)] as tag}
@@ -188,7 +188,7 @@
 												>
 													<HoverChange
 														updatePlaceholder="Change tag name"
-														inputStyling="bg-green-800 text-white"
+														inputStyling="bg-green-800 text-white border-2 border-yellow-500"
 														iconColor={{
 															default:
 																'fill-gray-100',
@@ -218,6 +218,7 @@
 										</span>
 									{/if}
 									<HiddenAutoCompleteSelector
+										inputStyling="border-2 border-yellow-500"
 										data={Array.from(
 											$groups
 												.getDefined(groupName)
@@ -256,6 +257,7 @@
 						>
 							<!-- Add group button -->
 							<HiddenAutoCompleteSelector
+								inputStyling="border-2 border-yellow-500"
 								placeholder="Enter group name"
 								on:selected={(event) =>
 									model.createGroup(event.detail)}
@@ -268,6 +270,7 @@
 
 							<!-- Change exercise -->
 							<HiddenAutoCompleteSelector
+								inputStyling="border-2 border-yellow-500"
 								placeholder="New exercise name"
 								data={Array.from($exercises.keys())}
 								on:selected={(event) =>
@@ -322,6 +325,7 @@
 			{/each}
 			<!-- Add exercise plan row -->
 			<HiddenAutoCompleteSelector
+				inputStyling="border-2 border-yellow-500"
 				placeholder="Add exercise plan"
 				data={Array.from($exercises.keys())}
 				on:selected={(event) => model.createExercisePlan(event.detail)}

@@ -13,6 +13,7 @@
 	<HoverChange
 		updatePlaceholder="New week name"
 		absoluteInputPositioning
+		inputStyling="border-2 border-yellow-500"
 		on:update={(event) => model.updateWeek(weekName, event.detail)}
 		on:delete={() => model.deleteWeek(weekName, index)}
 	>
@@ -22,6 +23,7 @@
 			{#if index == $weekNames.size - 1}
 				<div class="ml-20 mr-6 w-min">
 					<HiddenAutoCompleteSelector
+						inputStyling="border-2 border-yellow-500"
 						placeholder="Add week"
 						textAlign="center"
 						on:selected={(event) => model.createWeek(event.detail)}

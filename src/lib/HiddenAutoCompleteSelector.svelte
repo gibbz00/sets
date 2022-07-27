@@ -114,11 +114,12 @@
 					input = remaining[++selectedIndex]
 				break
 		}
+	}
 
-		function resetUI() {
-			hidden = true
-			input = ''
-		}
+	function resetUI() {
+		hidden = true
+		input = ''
+		remaining = []
 	}
 </script>
 
@@ -141,9 +142,11 @@
 		<slot name="placeholder">+</slot>
 	</span>
 {:else}
-	<span class="w-full my-auto" on:click|stopPropagation={() => {}}>
+	<span class="w-full my-auto">
 		<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
+		<!-- All the empty on:click|stopProgagation could be removed and handled by window as done with Hover change   -->
 		<input
+			on:click|stopPropagation={() => {}}
 			on:beforeinput={(event) => inputResetCheck(event)}
 			on:input={(event) => filterDataPrepare(event)}
 			type="text"
@@ -155,11 +158,14 @@
 			class={`placeholder:text-center placeholder:truncate ${inputStyling}`}
 		/>
 		{#if remaining.length > 0}
-			<ul class="w-max">
+			<ul on:click|stopPropagation={() => {}} class="w-max">
 				{#each remaining as element, index (element)}
 					<li
 						class={index == selectedIndex ? 'selected' : undefined}
-						on:click={() => dispatch('selected', element)}
+						on:click={() => {
+							dispatch('selected', element)
+							resetUI()
+						}}
 					>
 						{element}
 					</li>
