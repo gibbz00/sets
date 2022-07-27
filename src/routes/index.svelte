@@ -1,11 +1,6 @@
 <script lang="ts">
 	import WeekNames from '$lib/WeekNames.svelte'
-	import {
-		weekNames,
-		workoutPrograms,
-		exercises,
-		selectedDay,
-	} from '$lib/Stores'
+	import { weekNames, workoutPrograms, exercises, selectedDay } from '$lib/Stores'
 	import Model from '$lib/Model.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
@@ -88,9 +83,7 @@
 	</nav>
 	<!-- +1 to length if for the max-height to be 160 when only add button is present -->
 	<section
-		style:max-height={`${
-			($workoutPrograms.getDefined($selectedDay).length + 1) * 160
-		}px`}
+		style:max-height={`${($workoutPrograms.getDefined($selectedDay).length + 1) * 160}px`}
 		style:transition-delay={`${heightTransitionDelay}ms`}
 		style:transition-duration={`${heightTransitionDuration}ms`}
 		class="flex-col px-3 pt-5 text-xl transition-[max-height]"
@@ -131,9 +124,7 @@
 						}}
 					>
 						<SetNumberInput
-							justify={index != sets.length - 1
-								? 'justify-center'
-								: 'justify-start'}
+							justify={index != sets.length - 1 ? 'justify-center' : 'justify-start'}
 							bind:set
 						/>
 					</div>
@@ -145,9 +136,7 @@
 				placeholder="Add exercise plan"
 				data={Array.from($exercises.keys())}
 				on:selected={(event) => model.createExercisePlan(event.detail)}
-			>
-				<button slot="placeholder">+</button>
-			</HiddenAutoCompleteSelector>
+			/>
 		</div>
 	</section>
 </main>

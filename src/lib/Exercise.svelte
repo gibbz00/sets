@@ -180,11 +180,7 @@
 							placeholder="Add tag"
 							on:selected={(event) =>
 								model.createExerciseTag(event.detail, groupName, exerciseName)}
-						>
-							<button class="pl-2 align-middle text-2xl" slot="placeholder">
-								+
-							</button>
-						</HiddenAutoCompleteSelector>
+						/>
 					</div>
 				{/each}
 			</span>

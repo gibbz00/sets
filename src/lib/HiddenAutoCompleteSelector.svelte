@@ -141,7 +141,7 @@
 <div class="contents" use:preserveInputPlaceholderHeight={preserveHeight}>
 	<div class={`${hidden ? '' : 'hidden'}`} on:click={() => unHide()}>
 		<slot name="placeholder">
-			<button class="my-auto text-left "> + </button>
+			<button class="my-auto text-2xl rounded-full hover:bg-gray-200 w-8"> + </button>
 		</slot>
 	</div>
 	<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
