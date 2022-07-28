@@ -21,7 +21,6 @@
                 * No list is shown
     */
 
-	// Event dispatcher setup
 	import { createEventDispatcher } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	import { preserveInputPlaceholderHeight } from '$lib/Actions/PreserveInputPlaceholderHeight'
@@ -87,8 +86,8 @@
 				if (input != '') {
 					dispatch('selected', input)
 					resetUI()
-					break
 				}
+				break
 			case 'Escape':
 				resetUI()
 				break

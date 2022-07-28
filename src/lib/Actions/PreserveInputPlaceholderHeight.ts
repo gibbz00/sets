@@ -7,7 +7,6 @@ export function preserveInputPlaceholderHeight(
 	preserveInputPlaceholderHeight: boolean
 ) {
 	if (preserveInputPlaceholderHeight) {
-		console.log((node as HTMLElement).querySelector('button')?.clientHeight)
 		let buttonHeight = (node as HTMLElement).querySelector('button')?.clientHeight
 		// height added as a style attribute since the input ins't rendered
 		let input: HTMLInputElement = (node as HTMLElement).querySelector('input')!
