@@ -24,6 +24,7 @@
 	import { createEventDispatcher } from 'svelte'
 	import { inputWidthAutoResize } from '$lib/Actions/InputWidthAutoResize'
 	import { preserveInputPlaceholderHeight } from '$lib/Actions/PreserveInputPlaceholderHeight'
+	import { offsetFromInput } from '$lib/Actions/OffsetFromInput'
 
 	// data - array of matches to compare input with
 	export let data: element[] = []
@@ -143,35 +144,41 @@
 			<button class="text-2xl rounded-full hover:bg-gray-200 w-8 h-full"> + </button>
 		</slot>
 	</div>
-	<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
-	<input
-		bind:this={textField}
-		on:beforeinput={(event) => inputResetCheck(event)}
-		on:input={(event) => filterDataPrepare(event)}
-		type="text"
-		autocomplete="off"
-		{placeholder}
-		value={input}
-		use:inputWidthAutoResize={dynamicInputWidth}
-		class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling} ${
-			hidden ? 'hidden' : ''
-		}`}
-	/>
-	{#if remaining.length > 0}
-		<ul on:click|stopPropagation={() => {}} class="w-max">
-			{#each remaining as element, index (element)}
-				<li
-					class={index == selectedIndex ? 'selected' : undefined}
-					on:click={() => {
-						dispatch('selected', element)
-						resetUI()
-					}}
-				>
-					{element}
-				</li>
-			{/each}
-		</ul>
-	{/if}
+
+	<div class={`relative border-2 border-purple-500 ${hidden ? 'hidden' : ''} w-min`}>
+		<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
+		<input
+			bind:this={textField}
+			on:beforeinput={(event) => inputResetCheck(event)}
+			on:input={(event) => filterDataPrepare(event)}
+			type="text"
+			autocomplete="off"
+			{placeholder}
+			value={input}
+			use:inputWidthAutoResize={dynamicInputWidth}
+			class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling}`}
+		/>
+		{#if remaining.length > 0}
+			<!-- Top offset calculated from action -->
+			<ul
+				use:offsetFromInput
+				on:click|stopPropagation={() => {}}
+				class="absolute left-0 border-2 border-blue-500"
+			>
+				{#each remaining as element, index (element)}
+					<li
+						class={`${index == selectedIndex ? 'selected' : undefined} text-left`}
+						on:click={() => {
+							dispatch('selected', element)
+							resetUI()
+						}}
+					>
+						{element}
+					</li>
+				{/each}
+			</ul>
+		{/if}
+	</div>
 </div>
 
 <style>
