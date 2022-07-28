@@ -135,7 +135,7 @@
 	export function updateTag(groupName: string, oldTagName: string, newTagName: string) {
 		//Make sure that the new tag name is not present in group
 		if ($groups.getDefined(groupName).has(newTagName)) {
-			modal.show(`${newTagName} tag already exists in ${groupName}!`)
+			modal.show(`<b>${newTagName}</b> tag already added to <b>${groupName}</b>!`)
 		} else {
 			$groups.getDefined(groupName).update(oldTagName, newTagName)
 			$groups = $groups
@@ -161,7 +161,9 @@
 
 	export function deleteTag(tagName: string) {
 		deleteProcess = deleteTagGenerator()
-		confirmDeleteModal.show(`Delete ${tagName} tag?`)
+		confirmDeleteModal.show(
+			`Delete <b>${tagName}</b>? Tag will be removoed from all associated exercises.`
+		)
 
 		function* deleteTagGenerator() {
 			yield confirmedTagDelete()
@@ -189,7 +191,7 @@
 	export function createWeek(weekName: string) {
 		// Check that week names does not already exist
 		if ($weekNames.has(weekName)) {
-			modal.show(`${weekName} already exists!`)
+			modal.show(`<b>${weekName}</b> already exists!`)
 		} else {
 			$weekNames = $weekNames.add(weekName)
 			// numbers of sets in exercise plans must also be updated
