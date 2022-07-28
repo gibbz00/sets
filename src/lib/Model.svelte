@@ -267,7 +267,7 @@
 
 	export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {
 		deleteProcess = deleteExercisePlanGenerator()
-		confirmDeleteModal.show(`Delete ${exerciseName} plan for ${selectedDay}?`)
+		confirmDeleteModal.show(`Remove <b>${exerciseName}</b> from <b>${selectedDay}</b>?`)
 
 		function* deleteExercisePlanGenerator() {
 			yield confirmedExercisePlanDelete()
