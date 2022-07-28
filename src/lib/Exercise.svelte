@@ -121,6 +121,7 @@
 						top-0 
 						left-full
 						z-10 
+						max-w-lg
 						p-3 
 						text-black 
 						bg-white 
@@ -135,44 +136,34 @@
 			<!-- group names -->
 			<span class="space-y-2">
 				{#each [...$groups.keys()] as groupName}
-					<div class="text-xl mb-1">
+					<div class="text-2xl mb-1">
 						{groupName}
 					</div>
-					<div class="flex">
+					<div class="flex flex-wrap gap-2">
 						{#if $exercises.getDefined(exerciseName).has(groupName)}
-							<!-- <EditableTags
-										{exerciseName}
-										{groupName}
-									/> -->
-							<span class="space-x-1 flex mr-2">
-								{#each [...$exercises
-										.getDefined(exerciseName)
-										.getDefined(groupName)] as tag}
-									<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
-									<div class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium">
-										<HoverChange
-											updatePlaceholder="Change tag name"
-											inputStyling="bg-green-800 text-white placeholder:text-gray-300 border-2 border-yellow-500"
-											iconColor={{
-												default: 'fill-gray-100',
-												hover: 'fill-white',
-											}}
-											on:update={(event) =>
-												model.updateTag(groupName, tag, event.detail)}
-											on:delete={() =>
-												model.deleteExerciseTag(
-													exerciseName,
-													groupName,
-													tag
-												)}
-										>
-											<div class="w-max my-auto text-white">
-												{tag}
-											</div>
-										</HoverChange>
-									</div>
-								{/each}
-							</span>
+							{#each [...$exercises
+									.getDefined(exerciseName)
+									.getDefined(groupName)] as tag}
+								<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
+								<div class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium">
+									<HoverChange
+										updatePlaceholder="Change tag name"
+										inputStyling="bg-green-800 text-white placeholder:text-gray-300 border-2 border-yellow-500"
+										iconColor={{
+											default: 'fill-gray-100',
+											hover: 'fill-white',
+										}}
+										on:update={(event) =>
+											model.updateTag(groupName, tag, event.detail)}
+										on:delete={() =>
+											model.deleteExerciseTag(exerciseName, groupName, tag)}
+									>
+										<div class="w-max my-auto text-white">
+											{tag}
+										</div>
+									</HoverChange>
+								</div>
+							{/each}
 						{/if}
 						<HiddenAutoCompleteSelector
 							inputStyling="border-2 border-yellow-500"
