@@ -173,11 +173,11 @@
 			<ul
 				use:offsetFromInput
 				on:click|stopPropagation={() => {}}
-				class="absolute left-0 border-2 border-blue-500"
+				class="absolute z-10 inset-x-0 min-w-max text-left bg-white border-2 divide-y-2 rounded-sm shadow-sm border-gray divide-slate-100"
 			>
 				{#each remaining as element, index (element)}
 					<li
-						class={`${index == selectedIndex ? 'selected' : undefined} text-left`}
+						class={`${index == selectedIndex ? 'bg-gray-100' : ''} px-3 py-2`}
 						on:click={() => {
 							dispatch('selected', element)
 							resetUI()
@@ -190,9 +190,3 @@
 		{/if}
 	</div>
 </div>
-
-<style>
-	.selected {
-		color: red;
-	}
-</style>
