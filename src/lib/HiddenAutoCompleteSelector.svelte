@@ -35,7 +35,8 @@
 
 	// Detail should be input value
 	// TODO: use typesetting to program this in
-	const dispatch: (type: 'selected', detail: string) => boolean = createEventDispatcher()
+	const dispatch: (type: 'selected' | 'input', detail?: string) => boolean =
+		createEventDispatcher()
 
 	// Flexibilty for feature extention of wht data-types the component can handle
 	type element = string
@@ -55,7 +56,6 @@
 	function filterData() {
 		if (input.length == 0) {
 			remaining = data
-			selectedIndex = -1
 		} else {
 			let tempRemaining = data
 			for (let index = 0; index < input.length; index++) {
@@ -75,9 +75,11 @@
 		filterData()
 	}
 
-	function inputResetCheck(event: InputEvent) {
+	function handleInput(event: InputEvent) {
 		if (event.inputType == 'deleteWordBackward' || 'deleteContentBackward') {
 			selectedIndex = -1
+		} else {
+			filterDataPrepare(event)
 		}
 	}
 
@@ -93,10 +95,14 @@
 				resetUI()
 				break
 			case 'ArrowUp':
-				if (selectedIndex > 0) input = remaining[--selectedIndex]
+				if (selectedIndex > 0) {
+					input = remaining[--selectedIndex]
+					setTimeout(() => textField.dispatchEvent(new Event('input')), 40)
+				}
 				break
+			// TODO: fix setTimeouts
 			case 'ArrowDown':
-				// Do now attemp to select list item if input has been entered and there is no match,
+				// Do not attemp to select list item if input has been entered and there is no match,
 				// or when there is no data to be matched against
 				if ((input.length > 0 && remaining.length == 0) || data.length == 0) {
 					return
@@ -106,9 +112,14 @@
 					filterData()
 					selectedIndex = 0
 					input = remaining[selectedIndex]
-				} else if (selectedIndex < remaining.length - 1) input = remaining[++selectedIndex]
+					setTimeout(() => textField.dispatchEvent(new Event('input')), 40)
+				} else if (selectedIndex < remaining.length - 1) {
+					input = remaining[++selectedIndex]
+					setTimeout(() => textField.dispatchEvent(new Event('input')), 40)
+				}
 				break
 		}
+		console.log(selectedIndex, remaining[selectedIndex])
 	}
 
 	function resetUI() {
@@ -149,8 +160,7 @@
 		<!-- bind:input not used since eventlistener is fired first anyway, creates a bug in all the data is shown before any input has been made -->
 		<input
 			bind:this={textField}
-			on:beforeinput={(event) => inputResetCheck(event)}
-			on:input={(event) => filterDataPrepare(event)}
+			on:beforeinput={(event) => handleInput(event)}
 			type="text"
 			autocomplete="off"
 			{placeholder}
