@@ -1,17 +1,15 @@
 <script lang="ts">
+	import HiddenInput from '$lib/testSnippets/HiddenInput.svelte'
+
 	/*
         Playground for testing snippets in dev environment
         TODO: remove route for production!
     */
 
-	import AutoComplete from '$lib/testSnippets/AutoComplete.svelte'
-	import Hidden from '$lib/testSnippets/Hidden.svelte'
-	import InputClickSelectable from '$lib/testSnippets/InputClickSelectable.svelte'
-
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 </script>
 
-<InputClickSelectable
+<HiddenInput
 	on:selected={() => {
 		console.log('fired selected event')
 	}}

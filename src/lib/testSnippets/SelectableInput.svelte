@@ -5,7 +5,7 @@
         Add a clickable arrow beside inputs for mouse/tap driven users
 
         Tests:
-            * Selected event can be listened to on parent component
+            * Selected event can be listened to on parent component (done)
     */
 
 	import { createEventDispatcher } from 'svelte'
