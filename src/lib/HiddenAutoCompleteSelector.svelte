@@ -83,10 +83,13 @@
 		}
 	}
 
+	// ArrowUp and Arrowdown should not be listened to globally, only from input
 	function checkSubmit(event: KeyboardEvent) {
 		switch (event.key) {
 			case 'Enter':
+				console.log(input)
 				if (input != '') {
+					console.log('rans')
 					dispatch('selected', input)
 					resetUI()
 				}
@@ -140,7 +143,7 @@
 			resetUI()
 		}
 	}}
-	on:keydown={(event) => {
+	on:keyup={(event) => {
 		if (!hidden) checkSubmit(event)
 	}}
 />
@@ -166,7 +169,7 @@
 			{placeholder}
 			value={input}
 			use:inputWidthAutoResize={dynamicInputWidth}
-			class={`px-2 my-auto placeholder:text-center placeholder:truncate ${inputStyling}`}
+			class={`px-2 my-auto ${inputStyling}`}
 		/>
 		{#if remaining.length > 0}
 			<!-- Top offset calculated from action -->
