@@ -14,6 +14,7 @@
 	import { createEventDispatcher } from 'svelte'
 	import type { SelectedEvent } from './Events'
 
+	export let value: string = ''
 	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 	let textField: HTMLInputElement
 </script>
@@ -32,7 +33,7 @@
 		}
 	}}
 >
-	<input class="focus-visible:outline-none" type="text" bind:this={textField} />
+	<input class="focus-visible:outline-none" type="text" bind:value bind:this={textField} />
 	<button
 		on:click={() => {
 			selectedDispatcher('selected', textField.value)

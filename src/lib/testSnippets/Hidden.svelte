@@ -3,15 +3,17 @@
         Description:
             Parent component to be used independently, or by AutoComplete and EllipsisMenu
 
-            * Reveal
-                * Standard behaviour is to reveal the content when the component is clicked
-                * However, the is the option to explicitly define which element triggers the input reveal
-                * This should ovverride the standard behaviour
-                    * (Needed for EllipsisMenu)
-            * Cancelation:
-                * Methods
-                    * Pressing escape 
-                    * Clicking outside of Hidden
+            X Reveal
+                X Standard behaviour is to reveal the content when the component is clicked
+                X However, the is the option to explicitly define which element triggers the input reveal
+                X This should ovverride the standard behaviour
+                    X (Needed for EllipsisMenu)
+						X Multiple stop propagations need to be used for elments that shouldn't trigger the show input
+							Not sure if there is a better way to solve this right now
+            X Cancelation:
+                X Methods
+                    X Pressing escape 
+                    X Clicking outside of Hidden
             * Both selection and cancelation reset UI to initial state
             * Input text field
                 * Option to have automatic width based on current input,
@@ -38,6 +40,8 @@
     */
 
 	import { onMount } from 'svelte'
+	import { createEventDispatcher } from 'svelte'
+	import type { CanceledEvent } from './Events'
 
 	export let hidden: boolean = true
 
@@ -52,6 +56,8 @@
 
 	// Chosing reveal botton target
 	let target: HTMLDivElement
+
+	let canceledDispather: CanceledEvent = createEventDispatcher()
 
 	onMount(() => {
 		// Warns if no placeholder is explicitly set
@@ -73,15 +79,16 @@
 
 	function checkCancelOnClick(target: EventTarget | null) {
 		// Second conditional ensures that component is not immediatedly closed upon reveal
-		if (target != null && !container.contains(target as Node) && hidden == false) {
-			hidden = true
-		}
+		if (target != null && !container.contains(target as Node) && hidden == false) cancel()
 	}
 
 	function checkCancelOnKey(key: KeyboardEvent['key']) {
-		if (hidden == false && key == 'Escape') {
-			hidden = true
-		}
+		if (hidden == false && key == 'Escape') cancel()
+	}
+
+	function cancel() {
+		hidden = true
+		canceledDispather('canceled')
 	}
 </script>
 

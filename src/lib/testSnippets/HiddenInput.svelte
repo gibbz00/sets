@@ -8,26 +8,31 @@
     Combines Hidden.svelte uses it with SelectableInput.svelte
 
      Test:
-      * Enter on empty input dispatches canceled
-      * Passes up selected event 
-      * Can pass down input value
+      * Enter on empty input cancels the input and resets Hidden
+      * Passes up selected event and resets Hidden (done)
+      * Should clear previous input
+      * Shown input is autofocused
     */
 
 	// Used to forward select events from Selectable Input
 	let selectedDispatcher: SelectedEvent = createEventDispatcher()
-	let canceledDispatcher: CanceledEvent = createEventDispatcher()
+
+	// Bound to Hidden component in order to hide when a selected event is recieved
+	let hidden: boolean = true
+	let textFieldValue: string = ''
 
 	// Hoock checks that empty input is not regarded as valid.
-	// It it happens, it passes a cancled event intead
 	function selectedHook(value: HTMLInputElement['value']) {
-		if (value == '') {
-			canceledDispatcher('canceled')
-		} else {
-			selectedDispatcher('selected', value)
-		}
+		if (value != '') selectedDispatcher('selected', value)
+		// Resets ui either way
+		hidden = true
 	}
 </script>
 
-<Hidden>
-	<SelectableInput slot="hiddenContent" on:selected={(event) => selectedHook(event.detail)} />
+<Hidden bind:hidden on:canceled={() => (textFieldValue = '')}>
+	<SelectableInput
+		slot="hiddenContent"
+		on:selected={(event) => selectedHook(event.detail)}
+		bind:value={textFieldValue}
+	/>
 </Hidden>
