@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
+	import HiddenInput from './HiddenInput.svelte'
+	import type SelectableInput from './SelectableInput.svelte'
 
 	/*
         Description:
@@ -26,7 +28,7 @@
                 * Automatic width based on current input
     */
 
-	export let placeHolderText: string | undefined = ''
+	export let placeholderText: string = ''
 	// Array used for cross-referencing
 	export let data: string[] = []
 	// TODO: should throw an error when data is undefined by prop?
@@ -39,13 +41,8 @@
 	})
 
 	// DOM reference to input text field
-	let textField: HTMLInputElement
-
-	// Boolean state controlling whether input or placeholder is shown
-	let inputHidden: boolean
-
-	// Input value, synced with text field value
-	let inputValue: string
+	let textField: SelectableInput
+	let textFieldValue: string
 
 	// Selected autocomplete index
 	let selectedIndex: bigint | undefined = undefined
@@ -67,18 +64,16 @@
 
 	*/
 	function handleInputChange() {
-		matches = dataMatches(inputValue, data)
-		console.log(matches)
+		matches = dataMatches(textFieldValue, data)
 	}
 
 	// Move inside the ul selection logic
 	function selected(selected: string) {
-		textField.value = selected
+		textFieldValue = selected
 		inputChangeEventDispatcher('input')
 	}
 
 	function dataMatches(input: string, data: string[]): string[] {
-		console.log(inputValue)
 		// At first, every element in data is a potential match
 		// Then we iterate over each letter of the input and pick only those match charachter-wise
 		let potentialMatches: string[] = data
@@ -91,26 +86,33 @@
 		}
 		return potentialMatches
 	}
+
+	function handleSelectFromInput() {
+		matches = []
+	}
 </script>
 
-{#if inputHidden}
-	<slot name="placeholder">
-		<button class="text-2xl rounded-full hover:bg-gray-200 w-8 h-full"> + </button>
-	</slot>
-{:else}
-	<div class={`relative border-2 border-purple-500 w-min`}>
-		<!-- 
-			ORDER MATTERS!!!
-				* bind:value must come before on:input 
-					* otherwise on:input will use old value
-		-->
-		<input
-			placeholder={placeHolderText}
-			bind:value={inputValue}
-			bind:this={textField}
-			on:input={handleInputChange}
-			type="text"
-		/>
+<HiddenInput
+	{placeholderText}
+	bind:textFieldValue
+	on:input={handleInputChange}
+	on:selected={handleSelectFromInput}
+	hiddenContentClass="relative border-2 border-purple-500 w-min"
+>
+	<button
+		slot="placeholderContent"
+		class="
+				text-2xl 
+				rounded-full 
+				hover:bg-gray-200 
+				w-8 
+				h-full
+			"
+	>
+		+
+	</button>
+	<!-- Has to be place for it to be clickable without content becoming hidden -->
+	<div slot="list">
 		<!-- First conditional for when matches hasn't been initialized  -->
 		<!-- Second conditional required since an empty ul still renders its borders -->
 		{#if matches && matches.length > 0}
@@ -125,4 +127,4 @@
 			</ul>
 		{/if}
 	</div>
-{/if}
+</HiddenInput>

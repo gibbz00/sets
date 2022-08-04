@@ -1,5 +1,5 @@
 <script lang="ts">
-	import HiddenInput from '$lib/testSnippets/HiddenInput.svelte'
+	import AutoComplete from '$lib/testSnippets/AutoComplete.svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -9,10 +9,4 @@
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 </script>
 
-<!-- <AutoComplete data={dataStub} placeHolderText="Enter fruit" /> -->
-<!-- <AutoComplete data={dataStub} /> -->
-<HiddenInput
-	on:selected={() => {
-		console.log('fired selected event')
-	}}
-/>
+<AutoComplete data={dataStub} placeholderText="Enter fruit" />

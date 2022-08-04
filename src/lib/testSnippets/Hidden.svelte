@@ -14,17 +14,9 @@
                 X Methods
                     X Pressing escape 
                     X Clicking outside of Hidden
-            * Both selection and cancelation reset UI to initial state
-            * Input text field
-                * Option to have automatic width based on current input,
-                    see InputWidthAutoResize.ts action
-                * Option to se input to be of absolute positioning,
-                    see CenterToParent.ts action
-            * Ability to pass down inputStyles as prop
+				* Cancelation resets UI to initial state
 
             // TODO: add reaming requirements that overlap between intial AutoComplete and Hover change component
-
-
 
         Tests: 
             * No hidden content is supplied (done)
@@ -83,7 +75,9 @@
 	}
 
 	function checkCancelOnKey(key: KeyboardEvent['key']) {
-		if (hidden == false && key == 'Escape') cancel()
+		if (hidden == false && key == 'Escape') {
+			cancel()
+		}
 	}
 
 	function cancel() {
@@ -97,7 +91,7 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event.key)}
 />
 
-<!-- Hiding elements with class directives instead of svelte if statements to avoid having to readd event listeners -->
+<!-- Hiding elements with class directives instead of svelte if statements to avoid having to re-add event listeners -->
 <div bind:this={container}>
 	<div bind:this={defaultRevealTarget} class={`${hidden ? '' : 'hidden'}`}>
 		<slot name="placeholderContent">

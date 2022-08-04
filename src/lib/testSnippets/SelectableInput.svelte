@@ -4,9 +4,15 @@
 	/*
         Add a clickable arrow beside input element for mouse/tap driven users
 
+		* Option to have automatic width based on current input,
+			see InputWidthAutoResize.ts action
+		* Option to set input to be of absolute positioning,
+			see CenterToParent.ts action
+		* Ability to pass down inputStyles as prop
+
         Tests:
 			* Selected event can be dispatches by
-				* Pressing enter (done)
+			 	* Pressing enter (done)
 				* Clicking arrow icon (done)
             * Selected event can be listened to on parent component (done)
     */
@@ -15,6 +21,7 @@
 	import type { SelectedEvent } from './Events'
 
 	export let value: string = ''
+	export let placeholderText: string = ''
 	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 	let textField: HTMLInputElement
 </script>
@@ -33,7 +40,19 @@
 		}
 	}}
 >
-	<input class="focus-visible:outline-none" type="text" bind:value bind:this={textField} />
+	<!-- 
+		ORDER MATTERS!!!
+			* bind:value must come before on:input 
+				* otherwise on:input will use old value
+	-->
+	<input
+		class="focus-visible:outline-none"
+		type="text"
+		placeholder={placeholderText}
+		bind:value
+		bind:this={textField}
+		on:input
+	/>
 	<button
 		on:click={() => {
 			selectedDispatcher('selected', textField.value)
