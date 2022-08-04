@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
+	import HiddenInput from './HiddenInput.svelte'
 	import SelectableInput from './SelectableInput.svelte'
 
 	/*
@@ -58,7 +59,6 @@
 	*/
 	function handleInputChange() {
 		matches = dataMatches(textFieldValue, data)
-		console.log(matches)
 	}
 
 	// Move inside the ul selection logic
@@ -91,14 +91,28 @@
 	bind:textFieldValue
 	on:input={handleInputChange}
 	on:selected={handleSelectFromInput}
+	hiddenContentClass=""
 >
+	<button
+		slot="placeholderContent"
+		class="
+				text-2xl 
+				rounded-full 
+				hover:bg-gray-200 
+				w-8 
+				h-full
+			"
+	>
+		+
+	</button>
+	<!-- Has to be place for it to be clickable without content becoming hidden -->
 	<div slot="list">
 		<!-- First conditional for when matches hasn't been initialized  -->
 		<!-- Second conditional required since an empty ul still renders its borders -->
 		{#if matches && matches.length > 0}
 			<!-- Top offset calculated from action -->
 			<ul
-				class="text-left bg-white border-2 rounded-sm shadow-sm border-gray divide-y-2 divide-slate-100"
+				class="absolute z-10 inset-x-0 min-w-max text-left bg-white border-2 divide-y-2 rounded-sm shadow-sm border-gray divide-slate-100"
 			>
 				<!-- TODO: add class: class={`${index == selectedIndex ? 'bg-gray-100' : ''} px-3 py-2`}  -->
 				{#each matches as match, index}
