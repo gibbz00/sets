@@ -1,15 +1,7 @@
 <script lang="ts">
 	/*
-        Description:
-            Parent component to be used independently, or by AutoComplete and EllipsisMenu
+			Hides arbitrary content with the use of SpecifiedRevealTarget 
 
-            X Reveal
-                X Standard behaviour is to reveal the content when the component is clicked
-                X However, the is the option to explicitly define which element triggers the input reveal
-                X This should ovverride the standard behaviour
-                    X (Needed for EllipsisMenu)
-						X Multiple stop propagations need to be used for elments that shouldn't trigger the show input
-							Not sure if there is a better way to solve this right now
             X Cancelation:
                 X Methods
                     X Pressing escape 
@@ -34,39 +26,20 @@
 	import { onMount } from 'svelte'
 	import { createEventDispatcher } from 'svelte'
 	import type { CanceledEvent } from './Events'
+	import SpecifiedRevealTarget from './SpecifiedRevealTarget.svelte'
 
 	export let hidden: boolean = true
 
 	// Used for events targeting either visibility state
 	let container: HTMLDivElement
 
-	// Enables the ability to specify the use of slots an explicit reveal button
-	// Default behaviour is uses the entire component as click target
-	// Choise is done at onMount()
-	let optionalRevealTarget: HTMLDivElement
-	let defaultRevealTarget: HTMLDivElement
-
-	// Chosing reveal botton target
-	let target: HTMLDivElement
-
 	let canceledDispather: CanceledEvent = createEventDispatcher()
 
 	onMount(() => {
-		// Warns if no placeholder is explicitly set
-		if (!$$slots.placeholderContent) {
-			console.warn('Fallback placeholderContent is being used for Hidden and revealButton')
-		}
-
-		// Runtime error of no hidden content is supplied.
-		//		Check if this can be done at compile time, and with slot autocompletion
+		//TODO: Check if this can be done at compile time
 		if (!$$slots.hiddenContent) {
 			throw new Error('No hiddenContent slot found when attempting to mount Hidden.svelte')
 		}
-
-		target = $$slots.revealButton ? optionalRevealTarget : defaultRevealTarget
-		target.addEventListener('click', () => {
-			hidden = false
-		})
 	})
 
 	function checkCancelOnClick(target: EventTarget | null) {
@@ -82,17 +55,6 @@
 
 	function cancel() {
 		hidden = true
-		// hidden = true triggers a re-render of the contents within the {#if hidden} clause,
-		// Respective event-listeners must therefor be re-added
-		// This is done over hiding elements with class directives
-		// because the latter methods does not trigger necessary onMount logic of the child components
-		// TODO: remove this awful timout, should be triggered once the contents in hidden are rendered
-		setTimeout(() => {
-			target = $$slots.revealButton ? optionalRevealTarget : defaultRevealTarget
-			target.addEventListener('click', () => {
-				hidden = false
-			})
-		}, 100)
 		canceledDispather('canceled')
 	}
 </script>
@@ -104,16 +66,14 @@
 
 <div bind:this={container}>
 	{#if hidden}
-		<div bind:this={defaultRevealTarget}>
-			<slot name="placeholderContent">
-				<buton>Show Hidden</buton>
-			</slot>
-			{#if $$slots.revealButton}
-				<div bind:this={optionalRevealTarget}>
-					<slot name="revealButton" />
-				</div>
-			{/if}
-		</div>
+		<SpecifiedRevealTarget
+			on:reveal={() => {
+				hidden = false
+			}}
+		>
+			<slot slot="placeholderContent" name="placeholderContent" />
+			<slot slot="optionalRevealTarget" name="optionalRevealTarget" />
+		</SpecifiedRevealTarget>
 	{:else}
 		<slot name="hiddenContent" />
 	{/if}

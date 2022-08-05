@@ -41,10 +41,26 @@
 		}
 	})
 
-	let inputChangeEventDispatcher: (type: 'input') => boolean = createEventDispatcher()
 	function listItemSelected(listItem: string) {
 		textFieldValue = listItem
 		listItems = []
+	}
+
+	/* 
+		TODO: Would be nice to have integer types 
+			Possible solutions:
+				* Uint16Array with only one element
+				* BigInt
+				* Typescript type using modulo == 0
+	*/
+	let selectedListItemIndex: number | undefined = 0
+
+	function handleKeyUp(event: KeyboardEvent) {
+		switch (event.key) {
+			case 'Enter':
+				selectedDispatcher('selected', textFieldValue)
+				break
+		}
 	}
 </script>
 
@@ -57,11 +73,6 @@
             border-gray-500/20
             focus-within:border-blue-500
         "
-		on:keydown={(event) => {
-			if (event.key == 'Enter') {
-				selectedDispatcher('selected', textFieldValue)
-			}
-		}}
 	>
 		<!--
             ORDER MATTERS!!!
@@ -74,6 +85,7 @@
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
 			on:input
+			on:keyup={(event) => handleKeyUp(event)}
 		/>
 		<button
 			on:click={() => {
@@ -104,8 +116,13 @@
 				divide-slate-100
 			"
 		>
-			{#each listItems as listItem}
-				<li on:click={() => listItemSelected(listItem)}>
+			{#each listItems as listItem, index}
+				<li
+					on:click={() => listItemSelected(listItem)}
+					class={`cursor-pointer px-3 py-2 ${
+						selectedListItemIndex == index ? 'bg-gray-100' : ''
+					}`}
+				>
 					{listItem}
 				</li>
 			{/each}

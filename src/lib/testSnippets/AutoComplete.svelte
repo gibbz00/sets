@@ -48,16 +48,11 @@
 		}
 		return potentialMatches
 	}
-
-	function handleSelectFromInput() {
-		matches = []
-	}
 </script>
 
 <SelectableInput
 	{placeholderText}
 	bind:textFieldValue
 	on:input={handleInputChange}
-	on:selected={handleSelectFromInput}
 	bind:listItems={matches}
 />

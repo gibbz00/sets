@@ -30,6 +30,7 @@
 
 	// Hoock checks that empty input is not regarded as valid.
 	function selectedHook(value: HTMLInputElement['value']) {
+		console.log('rans')
 		if (value != '') {
 			selectedDispatcher('selected', value)
 			textFieldValue = ''
@@ -40,17 +41,14 @@
 </script>
 
 <Hidden bind:hidden on:canceled={() => (textFieldValue = '')}>
-	<div slot="placeholderContent">
-		<slot name="placeholderContent" />
-	</div>
-	<div slot="hiddenContent">
-		<slot name="hiddenContent">
-			<SelectableInput
-				{placeholderText}
-				on:selected={(event) => selectedHook(event.detail)}
-				bind:textFieldValue
-				on:input
-			/>
-		</slot>
-	</div>
+	<slot slot="placeholderContent" name="placeholderContent" />
+	<slot slot="optionalRevealTarget" name="optionalRevealTarget" />
+	<slot slot="hiddenContent" name="hiddenContent">
+		<SelectableInput
+			on:selected={(event) => selectedHook(event.detail)}
+			{placeholderText}
+			bind:textFieldValue
+			on:input
+		/>
+	</slot>
 </Hidden>
