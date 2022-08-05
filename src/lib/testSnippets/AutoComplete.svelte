@@ -55,4 +55,5 @@
 	bind:textFieldValue
 	on:input={handleInputChange}
 	bind:listItems={matches}
+	on:selected
 />

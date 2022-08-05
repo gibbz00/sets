@@ -97,7 +97,6 @@
 	</div>
 	<!-- Conditional required since an empty ul still renders its borders -->
 	{#if listItems.length > 0}
-		<!-- TODO: add class: class={`${index == selectedIndex ? 'bg-gray-100' : ''} px-3 py-2`}  -->
 		<!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
 		<ul
 			bind:this={list}
@@ -119,7 +118,7 @@
 			{#each listItems as listItem, index}
 				<li
 					on:click={() => listItemSelected(listItem)}
-					class={`cursor-pointer px-3 py-2 ${
+					class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${
 						selectedListItemIndex == index ? 'bg-gray-100' : ''
 					}`}
 				>
