@@ -13,6 +13,8 @@
 					* Clicking on list-item 
 					* Arrow up or down and pressing enter 
 				* Selection clear list
+			* List items is supplied by the data prop
+			* List items can be filterered with the filterFunction
 
         Tests:
             * Selected event can be dispatches by
@@ -29,6 +31,9 @@
 	export let textFieldValue: string = ''
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
+	export let listFilter: (textFieldValue: string) => string[]
+
+	let listFilterMatches: string[] = []
 
 	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 
@@ -43,7 +48,7 @@
 
 	function listItemSelected(listItem: string) {
 		textFieldValue = listItem
-		listItems = []
+		listFilterMatches = []
 	}
 
 	/* 
@@ -80,11 +85,11 @@
                     * otherwise on:input will use old value
         -->
 		<input
-			class="focus-visible:outline-none"
+			class="ml-2 focus-visible:outline-none"
 			type="text"
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
-			on:input
+			on:input={() => (listFilterMatches = listFilter(textFieldValue))}
 			on:keyup={(event) => handleKeyUp(event)}
 		/>
 		<button
@@ -96,11 +101,11 @@
 		</button>
 	</div>
 	<!-- Conditional required since an empty ul still renders its borders -->
-	{#if listItems.length > 0}
-		<!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
-		<ul
-			bind:this={list}
-			class="
+	<!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
+	<ul
+		bind:this={list}
+		class={`
+				${listFilterMatches.length == 0 ? 'hidden' : ''}
 				absolute
 				z-10
 				inset-x-0 
@@ -113,18 +118,17 @@
 				border-gray 
 				divide-y-2 
 				divide-slate-100
-			"
-		>
-			{#each listItems as listItem, index}
-				<li
-					on:click={() => listItemSelected(listItem)}
-					class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${
-						selectedListItemIndex == index ? 'bg-gray-100' : ''
-					}`}
-				>
-					{listItem}
-				</li>
-			{/each}
-		</ul>
-	{/if}
+			`}
+	>
+		{#each listFilterMatches as match, index}
+			<li
+				on:click={() => listItemSelected(match)}
+				class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${
+					selectedListItemIndex == index ? 'bg-gray-100' : ''
+				}`}
+			>
+				{match}
+			</li>
+		{/each}
+	</ul>
 </div>
