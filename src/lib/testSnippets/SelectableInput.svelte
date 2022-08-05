@@ -10,12 +10,18 @@
             see CenterToParent.ts action
         * Ability to pass down inputStyles as prop
         * Option to add a selectable list, used for autocompletes
+			* Selection of list item updates input value to item value, done by:
+				* Clicking on list-item 
+				* Arrow up or down and pressing enter 
+					/* Selection
+			* Does selection have to manyally trigger on input event?
+				* Autocomplete list is generated based on input, and listens to on:input
 
         Tests:
             * Selected event can be dispatches by
                  * Pressing enter (done)
                 * Clicking arrow icon (done)
-            * Selected event can be listened to on parent component (done)
+            * Selected event can be are heard by parent component (done)
     */
 
 	import { createEventDispatcher } from 'svelte'
@@ -24,16 +30,27 @@
 
 	export let textFieldValue: string = ''
 	export let placeholderText: string = ''
-	let selectedDispatcher: SelectedEvent = createEventDispatcher()
+	export let listItems: string[] = []
 
+	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
-	let list: HTMLDivElement
+	let list: HTMLUListElement
 	onMount(() => {
-		if ($$slots.list) {
+		if (listItems.length > 0) {
 			list.style.top = `${inputContainer.getBoundingClientRect().height}px`
 		}
 	})
+
+	// Event dispatcher for input changes, dispatchEvent(new Event("input")) not used since on: directive can't hear these
+	let inputChangeEventDispatcher: (type: 'input') => boolean = createEventDispatcher()
+	// Selected autocomplete index
+	let selectedIndex: bigint | undefined = undefined
+	// Move inside the ul selection logic
+	function selected(selected: string) {
+		textFieldValue = selected
+		inputChangeEventDispatcher('input')
+	}
 </script>
 
 <div bind:this={inputContainer} class="relative w-min">
@@ -71,9 +88,29 @@
 			<Icon type="arrowRightAlt" />
 		</button>
 	</div>
-	{#if $$slots.list}
-		<div bind:this={list} class="absolute z-10 inset-x-0 min-w-max ">
-			<slot name="list" />
-		</div>
+	<!-- Conditional required since an empty ul still renders its borders -->
+	{#if listItems.length > 0}
+		<!-- TODO: add class: class={`${index == selectedIndex ? 'bg-gray-100' : ''} px-3 py-2`}  -->
+		<ul
+			bind:this={list}
+			class="
+				absolute
+				z-10
+				inset-x-0 
+				min-w-max 
+				text-left 
+				bg-white 
+				border-2 
+				rounded-sm 
+				shadow-sm 
+				border-gray 
+				divide-y-2 
+				divide-slate-100
+			"
+		>
+			{#each listItems as listItem, index}
+				<li>{listItem}</li>
+			{/each}
+		</ul>
 	{/if}
 </div>

@@ -7,6 +7,10 @@
 	/* 
     Combines Hidden.svelte uses it with SelectableInput.svelte
 
+	Custom selection and cancelation logic:
+		* Enterering a empty input cancels the operation
+		* Selection or cancelation reset input value
+
      Test:
       * Enter on empty input cancels the input and resets Hidden (done)
       * Passes up selected event and resets Hidden (done)
