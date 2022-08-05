@@ -58,7 +58,6 @@
 	*/
 	function handleInputChange() {
 		matches = dataMatches(textFieldValue, data)
-		console.log(matches)
 	}
 
 	// Move inside the ul selection logic

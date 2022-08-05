@@ -18,8 +18,6 @@
 	// Used for Autocomplete
 	export let textFieldValue: string = ''
 
-	export let hiddenContentClass: string = ''
-
 	// Used to forward select events from Selectable Input
 	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 
@@ -41,14 +39,14 @@
 	<div slot="placeholderContent">
 		<slot name="placeholderContent" />
 	</div>
-	<div slot="hiddenContent" class={hiddenContentClass}>
-		<SelectableInput
-			{placeholderText}
-			on:selected={(event) => selectedHook(event.detail)}
-			bind:value={textFieldValue}
-			on:input
-		/>
-		<!-- Used to insert for example autocomplete list -->
-		<slot name="list" />
+	<div slot="hiddenContent">
+		<slot name="hiddenContent">
+			<SelectableInput
+				{placeholderText}
+				on:selected={(event) => selectedHook(event.detail)}
+				bind:textFieldValue
+				on:input
+			/>
+		</slot>
 	</div>
 </Hidden>

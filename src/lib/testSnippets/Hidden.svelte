@@ -82,6 +82,17 @@
 
 	function cancel() {
 		hidden = true
+		// hidden = true triggers a re-render of the contents within the {#if hidden} clause,
+		// Respective event-listeners must therefor be re-added
+		// This is done over hiding elements with class directives
+		// because the latter methods does not trigger necessary onMount logic of the child components
+		// TODO: remove this awful timout, should be triggered once the contents in hidden are rendered
+		setTimeout(() => {
+			target = $$slots.revealButton ? optionalRevealTarget : defaultRevealTarget
+			target.addEventListener('click', () => {
+				hidden = false
+			})
+		}, 100)
 		canceledDispather('canceled')
 	}
 </script>
@@ -91,19 +102,19 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event.key)}
 />
 
-<!-- Hiding elements with class directives instead of svelte if statements to avoid having to re-add event listeners -->
 <div bind:this={container}>
-	<div bind:this={defaultRevealTarget} class={`${hidden ? '' : 'hidden'}`}>
-		<slot name="placeholderContent">
-			<buton>Show Hidden</buton>
-		</slot>
-		{#if $$slots.revealButton}
-			<div bind:this={optionalRevealTarget}>
-				<slot name="revealButton" />
-			</div>
-		{/if}
-	</div>
-	<div class={`${hidden ? 'hidden' : ''}`}>
+	{#if hidden}
+		<div bind:this={defaultRevealTarget}>
+			<slot name="placeholderContent">
+				<buton>Show Hidden</buton>
+			</slot>
+			{#if $$slots.revealButton}
+				<div bind:this={optionalRevealTarget}>
+					<slot name="revealButton" />
+				</div>
+			{/if}
+		</div>
+	{:else}
 		<slot name="hiddenContent" />
-	</div>
+	{/if}
 </div>

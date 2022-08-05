@@ -1,5 +1,5 @@
 <script lang="ts">
-	import AutoComplete from '$lib/testSnippets/AutoComplete.svelte'
+	import HiddenAutoComplete from '$lib/testSnippets/HiddenAutoComplete.svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -9,4 +9,4 @@
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 </script>
 
-<AutoComplete data={dataStub} placeholderText="Enter fruit" />
+<HiddenAutoComplete data={dataStub} placeholderText="Enter fruit" />

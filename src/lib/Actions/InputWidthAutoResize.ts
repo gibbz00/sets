@@ -19,7 +19,6 @@ export function inputWidthAutoResize(inputElement: HTMLInputElement, dynamicInpu
 		inputElement.style.width = getInputWidthInPixels(inputElement)
 
 		inputElement.addEventListener('input', () => {
-			console.log(inputElement.value)
 			inputElement.style.width = getInputWidthInPixels(inputElement)
 		})
 
