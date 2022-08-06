@@ -20,13 +20,7 @@
 				* Done by:
 					* Clicking on list-item (done)
 					* Arrow up or down (done)
-
-		TODO:
         * Option to have automatic width based on current input,
-            see InputWidthAutoResize.ts action
-        * Option to set input to be of absolute positioning,
-            see CenterToParent.ts action
-
     */
 
 	import { afterUpdate, createEventDispatcher } from 'svelte'
