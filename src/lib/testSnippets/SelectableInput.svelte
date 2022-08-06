@@ -27,23 +27,20 @@
         * Option to set input to be of absolute positioning,
             see CenterToParent.ts action
 
-        Tests:
-            * Selected event can be dispatches by
-                 * Pressing enter (done)
-                * Clicking arrow icon (done)
-            * Selected event can be are heard by parent component (done)
     */
 
-	import { createEventDispatcher } from 'svelte'
+	import { afterUpdate, createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
 	import Icon from '$lib/Icon.svelte'
+	import { getInputWidthInPixels } from './dynamicInputWidth'
 
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
 	export let listFilter:
 		| ((textFieldValue: string, items: typeof listItems) => typeof listItems)
-		| undefined
+		| undefined = undefined
 	export let autofocus: boolean = false
+	export let dynamicWidth: boolean = false
 
 	let listMatches: string[] = []
 	let textFieldValue: string = ''
@@ -115,6 +112,13 @@
 		} else if (listItems.length > 0) listMatches = listItems
 		selectedListItemIndex = undefined
 	}
+
+	let input: HTMLInputElement
+	afterUpdate(() => {
+		if (dynamicWidth) {
+			input.style.width = getInputWidthInPixels(input)
+		}
+	})
 </script>
 
 <div bind:this={inputContainer} class="relative w-min">
@@ -138,6 +142,7 @@
 			{autofocus}
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
+			bind:this={input}
 			on:input={findListMatches}
 			on:keydown={(event) => handleKeyDown(event)}
 		/>

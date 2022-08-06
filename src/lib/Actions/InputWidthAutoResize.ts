@@ -14,6 +14,7 @@
 */
 
 type Pixels = `${number}px`
+
 export function inputWidthAutoResize(inputElement: HTMLInputElement, dynamicInputWidth: boolean) {
 	if (dynamicInputWidth) {
 		inputElement.style.width = getInputWidthInPixels(inputElement)

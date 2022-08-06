@@ -12,9 +12,10 @@
   */
 	export let placeholderText: string = ''
 
-	export let listItems: SelectableInput['listItems'] = []
+	export let listItems: SelectableInput['listItems'] = undefined
 	// Defealt filter is to show every list item
-	export let listFilter: SelectableInput['listFilter']
+	export let listFilter: SelectableInput['listFilter'] = undefined
+	export let dynamicWidth: boolean = false
 
 	// Bound to Hidden component in order to hide when a selected or canceled event is recieved
 	let hidden: boolean = true
@@ -25,6 +26,7 @@
 	<slot slot="optionalRevealTarget" name="optionalRevealTarget" />
 	<SelectableInput
 		autofocus
+		{dynamicWidth}
 		slot="hiddenContent"
 		on:selected={() => (hidden = true)}
 		on:canceled={() => (hidden = true)}

@@ -12,6 +12,7 @@
 </script>
 
 <HiddenSelectableInput
+	dynamicWidth
 	listItems={dataStub}
 	listFilter={autocompleteFilter}
 	placeholderText="Enter fruit"
