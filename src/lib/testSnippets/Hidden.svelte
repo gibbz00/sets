@@ -24,16 +24,12 @@
     */
 
 	import { onMount } from 'svelte'
-	import { createEventDispatcher } from 'svelte'
-	import type { CanceledEvent } from './Events'
 	import SpecifiedRevealTarget from './SpecifiedRevealTarget.svelte'
 
 	export let hidden: boolean = true
 
 	// Used for events targeting either visibility state
 	let container: HTMLDivElement
-
-	let canceledDispather: CanceledEvent = createEventDispatcher()
 
 	onMount(() => {
 		//TODO: Check if this can be done at compile time
@@ -44,18 +40,15 @@
 
 	function checkCancelOnClick(target: EventTarget | null) {
 		// Second conditional ensures that component is not immediatedly closed upon reveal
-		if (target != null && !container.contains(target as Node) && hidden == false) cancel()
+		if (target != null && !container.contains(target as Node) && hidden == false) {
+			hidden = true
+		}
 	}
 
 	function checkCancelOnKey(key: KeyboardEvent['key']) {
 		if (hidden == false && key == 'Escape') {
-			cancel()
+			hidden = true
 		}
-	}
-
-	function cancel() {
-		hidden = true
-		canceledDispather('canceled')
 	}
 </script>
 
@@ -64,7 +57,7 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event.key)}
 />
 
-<div bind:this={container}>
+<div class="w-min" bind:this={container}>
 	{#if hidden}
 		<SpecifiedRevealTarget
 			on:reveal={() => {

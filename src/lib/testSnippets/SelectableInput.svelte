@@ -6,7 +6,8 @@
             see InputWidthAutoResize.ts action
         * Option to set input to be of absolute positioning,
             see CenterToParent.ts action
-        * Ability to pass down inputStyles as prop
+		* Selection resets textfield
+		* Enterering a empty input sends a canceled event and not a selected event
         * Option to add a selectable list, used for things such as autocomplete
 			* Selection of list item updates input value to item value
 				* Done by:
@@ -15,7 +16,6 @@
 				* Selection clear list
 			* List items is supplied by the data prop
 			* List items can be filterered with the filterFunction
-
         Tests:
             * Selected event can be dispatches by
                  * Pressing enter (done)
@@ -26,16 +26,18 @@
 	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
 	import Icon from '$lib/Icon.svelte'
-	import type { SelectedEvent } from './Events'
 
-	export let textFieldValue: string = ''
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
-	export let listFilter: (textFieldValue: string) => string[]
+	// Defealt filter is to show every list item
+	export let listFilter: (textFieldValue: string) => string[] = () => listItems
+	export let autofocus: boolean = false
 
+	let textFieldValue: string = ''
 	let listFilterMatches: string[] = []
-
-	let selectedDispatcher: SelectedEvent = createEventDispatcher()
+	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
+		createEventDispatcher()
+	let canceledDispatcher: (type: 'canceled') => boolean = createEventDispatcher()
 
 	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
@@ -60,11 +62,21 @@
 	*/
 	let selectedListItemIndex: number | undefined = 0
 
-	function handleKeyUp(event: KeyboardEvent) {
+	function handleKeyDown(event: KeyboardEvent) {
 		switch (event.key) {
 			case 'Enter':
-				selectedDispatcher('selected', textFieldValue)
+				selectHandler()
 				break
+		}
+	}
+
+	// Empty selections are regarded as invalid
+	function selectHandler() {
+		if (textFieldValue != '') {
+			selectedDispatcher('selected', textFieldValue)
+			textFieldValue = ''
+		} else {
+			canceledDispatcher('canceled')
 		}
 	}
 </script>
@@ -87,14 +99,15 @@
 		<input
 			class="ml-2 focus-visible:outline-none"
 			type="text"
+			{autofocus}
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
 			on:input={() => (listFilterMatches = listFilter(textFieldValue))}
-			on:keyup={(event) => handleKeyUp(event)}
+			on:keydown={(event) => handleKeyDown(event)}
 		/>
 		<button
 			on:click={() => {
-				selectedDispatcher('selected', textFieldValue)
+				selectHandler()
 			}}
 		>
 			<Icon type="arrowRightAlt" />

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
-
 	import SelectableInput from './SelectableInput.svelte'
 
 	/*
@@ -41,4 +40,4 @@
 	}
 </script>
 
-<SelectableInput listItems={data} listFilter={filterFunction} {placeholderText} on:selected />
+<SelectableInput listItems={data} listFilter={filterFunction} {placeholderText} />
