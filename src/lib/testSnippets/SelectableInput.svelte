@@ -9,8 +9,8 @@
 		* Selection resets textfield (done)
 		* Enterering a empty input sends a canceled event and not a selected event (done)
         * Option to add a selectable list, used for things such as autocomplete
-			* List items is supplied by the data prop
-			* List items can be filterered with the filterFunction
+			* List items is supplied by the data prop (done)
+			* List items can be filterered with the filterFunction (done)
 			* Showing list items
 				* Pressing down arrow before any input shows all options (TODO)
 				* They're otherwise just shown after the first first input event, since the input event triggers the filter function
@@ -50,7 +50,7 @@
 	export let autofocus: boolean = false
 
 	let textFieldValue: string = ''
-	let listFilterMatches: string[] = []
+	let listMatches: string[] = []
 	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
 		createEventDispatcher()
 	let canceledDispatcher: (type: 'canceled') => boolean = createEventDispatcher()
@@ -66,7 +66,7 @@
 
 	function listItemSelected(listItem: string) {
 		textFieldValue = listItem
-		listFilterMatches = []
+		listMatches = []
 	}
 
 	/* 
@@ -83,6 +83,8 @@
 			case 'Enter':
 				selectHandler()
 				break
+			case 'ArrowDown':
+				if (textFieldValue == '') findListMatches()
 		}
 	}
 
@@ -94,6 +96,10 @@
 		} else {
 			canceledDispatcher('canceled')
 		}
+	}
+
+	function findListMatches() {
+		listMatches = listFilter(textFieldValue, listItems)
 	}
 </script>
 
@@ -118,7 +124,7 @@
 			{autofocus}
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
-			on:input={() => (listFilterMatches = listFilter(textFieldValue, listItems))}
+			on:input={findListMatches}
 			on:keydown={(event) => handleKeyDown(event)}
 		/>
 		<button
@@ -134,7 +140,7 @@
 	<ul
 		bind:this={list}
 		class={`
-				${listFilterMatches.length == 0 ? 'hidden' : ''}
+				${listMatches.length == 0 ? 'hidden' : ''}
 				absolute
 				z-10
 				inset-x-0 
@@ -149,7 +155,7 @@
 				divide-slate-100
 			`}
 	>
-		{#each listFilterMatches as match, index}
+		{#each listMatches as match, index}
 			<li
 				on:click={() => listItemSelected(match)}
 				class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${

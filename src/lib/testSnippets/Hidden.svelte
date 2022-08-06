@@ -8,8 +8,6 @@
                     X Clicking outside of Hidden
 				* Cancelation resets UI to initial state
 
-            // TODO: add reaming requirements that overlap between intial AutoComplete and Hover change component
-
         Tests: 
             * No hidden content is supplied (done)
             * fallback is being used (done)
@@ -17,7 +15,7 @@
             * fallback is being used with optionalRevealTarget (done)
             * fallback not used, optionalRevealTarget is (done)
 			* Pressing inside of component does not drigger cancelation (done)
-				* test with an absolute child element too (similar to menu) 
+				* test with an absolute child element too (similar to menu) (done)
 			* Pressing outisde of component triggers cancelation (done)
 				* Can be done more than once (done)
 			* Pressing escape cancels (done)
