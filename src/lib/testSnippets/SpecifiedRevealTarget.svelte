@@ -43,10 +43,7 @@
 	})
 </script>
 
-<div
-	class={`border-2 border-red-500 ${dedicatedRevealButton ? '' : 'cursor-pointer'}`}
-	bind:this={defaultRevealTarget}
->
+<div class={`${dedicatedRevealButton ? '' : 'cursor-pointer'}`} bind:this={defaultRevealTarget}>
 	<div bind:this={placeholderContentSlotWrapper}>
 		<slot name="placeholderContent" />
 	</div>
