@@ -14,7 +14,7 @@
 <HiddenSelectableInput
 	listItems={dataStub}
 	listFilter={autocompleteFilter}
-	placeholderText="Enterfruit"
+	placeholderText="Enter fruit"
 	on:selected={(event) => console.log('selected: ', event.detail)}
 >
 	<AddButton slot="placeholderContent" />

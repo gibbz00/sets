@@ -12,16 +12,14 @@
 			* List items is supplied by the data prop (done)
 			* List items can be filterered with the filterFunction (done)
 			* Showing list items
-				* Pressing down arrow before any input shows all options (TODO)
-				* They're otherwise just shown after the first first input event, since the input event triggers the filter function
-				* Reverting back to empty input shows all options
-			* List to textFieldValue
-				* Does not trigger selection immediatedly, 
-					* User might want to edit text before selecting (submitting)
-				Done by:
-					* Clicking on list-item 
-					* Arrow up or down and pressing enter 
-				* Selection clear list? (should be done automatically)
+				* Pressing down arrow before any input shows all options (done)
+				* They're otherwise just shown after the first first input event (done)
+				* Reverting back to empty input shows all options (done)
+			* List to textFieldValue does not trigger selection immediatedly (done)
+					User might want to edit text before selecting (submitting)
+				* Done by:
+					* Clicking on list-item (done)
+					* Arrow up or down (done)
 
 		TODO:
         * Option to have automatic width based on current input,
@@ -42,18 +40,25 @@
 
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
-	// Defealt filter is to show every list item
-	export let listFilter: (
-		textFieldValue: string,
-		items: typeof listItems
-	) => typeof listItems = () => listItems
+	export let listFilter:
+		| ((textFieldValue: string, items: typeof listItems) => typeof listItems)
+		| undefined
 	export let autofocus: boolean = false
 
-	let textFieldValue: string = ''
 	let listMatches: string[] = []
+	let textFieldValue: string = ''
 	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
 		createEventDispatcher()
 	let canceledDispatcher: (type: 'canceled') => boolean = createEventDispatcher()
+
+	/* 
+		TODO: Would be nice to have integer types 
+			Possible solutions:
+				* Uint16Array with only one element
+				* BigInt
+				* Typescript type using modulo == 0
+	*/
+	let selectedListItemIndex: number | undefined = undefined
 
 	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
@@ -69,22 +74,28 @@
 		listMatches = []
 	}
 
-	/* 
-		TODO: Would be nice to have integer types 
-			Possible solutions:
-				* Uint16Array with only one element
-				* BigInt
-				* Typescript type using modulo == 0
-	*/
-	let selectedListItemIndex: number | undefined = 0
-
 	function handleKeyDown(event: KeyboardEvent) {
-		switch (event.key) {
-			case 'Enter':
-				selectHandler()
-				break
-			case 'ArrowDown':
-				if (textFieldValue == '') findListMatches()
+		if (event.key == 'Enter') selectHandler()
+		else if (listItems.length > 0 || listFilter != undefined) {
+			switch (event.key) {
+				case 'ArrowDown':
+					if (selectedListItemIndex == undefined) {
+						if (listMatches.length > 0) {
+							selectedListItemIndex = 0
+							textFieldValue = listMatches[selectedListItemIndex]
+						} else findListMatches()
+					} else if (selectedListItemIndex + 1 != listMatches.length) {
+						textFieldValue = listMatches[++selectedListItemIndex]
+					}
+					break
+				case 'ArrowUp':
+					// event.preventDefault() called to prevent cursor jump to input beginning
+					event.preventDefault()
+					if (selectedListItemIndex != undefined && selectedListItemIndex > 0) {
+						textFieldValue = listMatches[--selectedListItemIndex]
+					}
+					break
+			}
 		}
 	}
 
@@ -99,7 +110,10 @@
 	}
 
 	function findListMatches() {
-		listMatches = listFilter(textFieldValue, listItems)
+		if (listFilter != undefined) {
+			listMatches = listFilter(textFieldValue, listItems)
+		} else if (listItems.length > 0) listMatches = listItems
+		selectedListItemIndex = undefined
 	}
 </script>
 
