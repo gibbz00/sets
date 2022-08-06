@@ -2,20 +2,33 @@
 	/*
         Add a clickable arrow beside input element for mouse/tap driven users
 
+		* Selection
+			* On input:
+				* Pressing enter (done)
+				* Clicking arrow icon (done)
+		* Selection resets textfield (done)
+		* Enterering a empty input sends a canceled event and not a selected event (done)
+        * Option to add a selectable list, used for things such as autocomplete
+			* List items is supplied by the data prop
+			* List items can be filterered with the filterFunction
+			* Showing list items
+				* Pressing down arrow before any input shows all options (TODO)
+				* They're otherwise just shown after the first first input event, since the input event triggers the filter function
+				* Reverting back to empty input shows all options
+			* List to textFieldValue
+				* Does not trigger selection immediatedly, 
+					* User might want to edit text before selecting (submitting)
+				Done by:
+					* Clicking on list-item 
+					* Arrow up or down and pressing enter 
+				* Selection clear list? (should be done automatically)
+
+		TODO:
         * Option to have automatic width based on current input,
             see InputWidthAutoResize.ts action
         * Option to set input to be of absolute positioning,
             see CenterToParent.ts action
-		* Selection resets textfield
-		* Enterering a empty input sends a canceled event and not a selected event
-        * Option to add a selectable list, used for things such as autocomplete
-			* Selection of list item updates input value to item value
-				* Done by:
-					* Clicking on list-item 
-					* Arrow up or down and pressing enter 
-				* Selection clear list
-			* List items is supplied by the data prop
-			* List items can be filterered with the filterFunction
+
         Tests:
             * Selected event can be dispatches by
                  * Pressing enter (done)
@@ -30,7 +43,10 @@
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
 	// Defealt filter is to show every list item
-	export let listFilter: (textFieldValue: string) => string[] = () => listItems
+	export let listFilter: (
+		textFieldValue: string,
+		items: typeof listItems
+	) => typeof listItems = () => listItems
 	export let autofocus: boolean = false
 
 	let textFieldValue: string = ''
@@ -102,7 +118,7 @@
 			{autofocus}
 			placeholder={placeholderText}
 			bind:value={textFieldValue}
-			on:input={() => (listFilterMatches = listFilter(textFieldValue))}
+			on:input={() => (listFilterMatches = listFilter(textFieldValue, listItems))}
 			on:keydown={(event) => handleKeyDown(event)}
 		/>
 		<button

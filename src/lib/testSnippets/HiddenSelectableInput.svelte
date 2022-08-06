@@ -12,6 +12,10 @@
   */
 	export let placeholderText: string = ''
 
+	export let listItems: SelectableInput['listItems'] = []
+	// Defealt filter is to show every list item
+	export let listFilter: SelectableInput['listFilter']
+
 	// Bound to Hidden component in order to hide when a selected or canceled event is recieved
 	let hidden: boolean = true
 </script>
@@ -22,9 +26,11 @@
 	<SelectableInput
 		autofocus
 		slot="hiddenContent"
-		on:seected={() => (hidden = true)}
+		on:selected={() => (hidden = true)}
 		on:canceled={() => (hidden = true)}
 		on:selected
 		{placeholderText}
+		{listItems}
+		{listFilter}
 	/>
 </Hidden>
