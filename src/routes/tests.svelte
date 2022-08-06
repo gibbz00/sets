@@ -3,6 +3,7 @@
 	import Hidden from '$lib/testSnippets/Hidden.svelte'
 	import HiddenSelectableInput from '$lib/testSnippets/HiddenSelectableInput.svelte'
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
+	import AddButton from '$lib/testSnippets/AddButton.svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -23,7 +24,7 @@
 	listItems={dataStub}
 	listFilter={autocompleteFilter}
 	placeholderText="Enterfruit"
-	on:selected={() => console.log('twice')}
+	on:selected={(event) => console.log('selected: ', event.detail)}
 >
-	<button slot="placeholderContent">HiddenPremade</button>
+	<AddButton slot="placeholderContent" />
 </HiddenSelectableInput>
