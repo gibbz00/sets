@@ -115,7 +115,9 @@
 
 	let input: HTMLInputElement
 	afterUpdate(() => {
-		if (dynamicWidth) {
+		// Null scenario can occur when component is destroyed
+		// Throws error unless checked for
+		if (dynamicWidth && input != null) {
 			input.style.width = getInputWidthInPixels(input)
 		}
 	})
@@ -137,7 +139,7 @@
                     * otherwise on:input will use old value
         -->
 		<input
-			class="ml-2 focus-visible:outline-none"
+			class="ml-2 px-2 py-2 focus-visible:outline-none"
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}

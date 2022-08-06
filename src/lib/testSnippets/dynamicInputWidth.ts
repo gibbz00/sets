@@ -10,7 +10,16 @@
 						input.style.width = getInputWidthInPixels(input)
 					}
 				})
-		This assures that the width is changed for those cases when no input event is emitted
+
+		This assures that the width is changed for those cases when no input event is emitted, 
+			which is the case for every time the property is set programatically.
+		Would be nice to have this as an action, but I could not find any way to listen to a property 
+			withouth adding more than the use:action directive in the svelte component.
+		I tried using MutationOberver and listening to the value attribute, 
+				but it's not changed when using the bind:value directive.
+		Most minimal option I found was to have a MutationObserver placed in the action which listens to an added a placeholder attribute
+				e.g valueX=vale as attribute in the input element
+		
 
         Basic concept:
             * Create a hidden span of the same input styling and value of the input
