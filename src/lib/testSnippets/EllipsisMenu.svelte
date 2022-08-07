@@ -29,7 +29,7 @@
 	<div on:click|stopPropagation slot="placeholderContent" class="flex">
 		<slot name="placeholderContent" />
 		<div class="relative">
-			<Hidden bind:hidden>
+			<Hidden hidden>
 				<svelte:fragment slot="placeholderContent">
 					<Icon type="more_vert" />
 				</svelte:fragment>
