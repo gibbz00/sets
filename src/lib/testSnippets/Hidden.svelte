@@ -1,6 +1,6 @@
 <script lang="ts">
 	/*
-			Hides arbitrary content with the use of SpecifiedRevealTarget 
+			Hides arbitrary content and reveal it with SpecifiedRevealTarget
 
             X Cancelation:
                 X Methods

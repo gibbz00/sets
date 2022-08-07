@@ -2,6 +2,7 @@
 	import HiddenSelectableInput from '$lib/testSnippets/HiddenSelectableInput.svelte'
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
 	import AddButton from '$lib/testSnippets/AddButton.svelte'
+	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -13,9 +14,11 @@
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 </script>
 
-<div class="grid grid-cols-3 justify-items-center">
-	<p id="hej">j</p>
-	<p id="hej">p</p>
+<!-- <div class="grid grid-cols-3 justify-items-center">
+	<p>j</p>
+	<p>p</p>
+	<p>p</p>
+	<p>p</p>
 	<HiddenSelectableInput
 		dynamicWidth
 		listItems={dataStub}
@@ -26,17 +29,6 @@
 		<AddButton slot="placeholderContent" />
 	</HiddenSelectableInput>
 	<p>j</p>
-	<HiddenSelectableInput
-		dynamicWidth
-		listItems={dataStub}
-		listFilter={autocompleteFilter}
-		placeholderText="Enter fruit"
-		on:selected={(event) => console.log('selected: ', event.detail)}
-	>
-		<svelte:fragment slot="placeholderContent">
-			Monday
-			<button id="revealTarget">special target</button>
-		</svelte:fragment>
-	</HiddenSelectableInput>
-	<p>j</p>
-</div>
+</div> -->
+
+<EllipsisMenu />

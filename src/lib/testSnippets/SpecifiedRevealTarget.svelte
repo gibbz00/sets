@@ -1,15 +1,18 @@
 <script lang="ts">
 	/*
-		Used to specify reveal target of the Hidden.svelte component
-		Default is the component as a whole.
-		Option is to add the id "revealTarget" to a element nested withing the placeholderContent slot of Hidden
+		* Default target is the component as a whole.
+		* The id "revealTarget" can optionally be used to explicity set the 
+		reveal target to a child-element of the fplaceholderContent slot 
+		* If multiple hidden nested components are used which eventually reveal a #revealTarget...
+		then don't forget to add on:click|stopPropagation to slot="placeHolderContent" in all the parents!
 
 		* The main reason behind the component separation is that content inside the {#if hidden} relies on onMount logic
 		* This means that a class="hidden" won't work.
 		* But then the event-lister that determines the reveal target must be added each time hidden is set to true
 		* Becomes cumbersomve since hidden is an export prop that can change outside of the control of Hidden.svelte 
-		* (could be done with and if hidden = true in afterUpdate(), but fragile so; meh)
-		* Hence a separate component.
+		* A afterUpdate() isn't used because it can't solve the cases such as when #revealTarget exists in the hiddenContent slot of a nested Hidden.
+		* *Upate() events aren't fired when a child component is udpated.
+		* Hence the separate component that with a MutationObserver
 	*/
 
 	import { onMount, createEventDispatcher } from 'svelte'
@@ -20,27 +23,40 @@
 	// SlotWrappers are instead used where existence is checkeck with .childElementCount > 0 contidion
 	let placeholderContentSlotWrapper: HTMLDivElement
 
+	let mutationObserver: MutationObserver
+
 	onMount(() => {
-		// Warns if no placeholder is explicitly set
 		if (placeholderContentSlotWrapper.childElementCount == 0) {
 			throw new Error('No placeholderContent is being used for RevealTarget.svelte')
 		}
 
-		let specifiedRevealTargets: NodeListOf<HTMLElement> =
-			placeholderContentSlotWrapper.querySelectorAll('#revealTarget')
+		chooseTarget()
 
-		if (specifiedRevealTargets.length > 1) {
-			throw new Error(
-				'Multiple reveal targets found for Hidden component, only one is currenlty suported'
-			)
-		}
-
-		;(specifiedRevealTargets.length == 1
-			? specifiedRevealTargets[0]
-			: placeholderContentSlotWrapper
-		).addEventListener('click', () => {
-			dispatcher('reveal')
+		mutationObserver = new MutationObserver(() => {
+			chooseTarget()
 		})
+		mutationObserver.observe(placeholderContentSlotWrapper, { childList: true, subtree: true })
+
+		function chooseTarget() {
+			// Conditional used becuase the observer is still trigered just before SpecifiedRevealTarget (this) is destroyed
+			if (placeholderContentSlotWrapper != null) {
+				let specifiedRevealTargets: NodeListOf<HTMLElement> =
+					placeholderContentSlotWrapper.querySelectorAll('#revealTarget')
+
+				if (specifiedRevealTargets.length > 1) {
+					throw new Error(
+						'Multiple reveal targets found for Hidden component, only one is currenlty suported'
+					)
+				}
+
+				;(specifiedRevealTargets.length == 1
+					? specifiedRevealTargets[0]
+					: placeholderContentSlotWrapper
+				).addEventListener('click', () => {
+					dispatcher('reveal')
+				})
+			}
+		}
 	})
 </script>
 
