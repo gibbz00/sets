@@ -12,6 +12,7 @@
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'
 	import type { ExercisePlan } from './ADTs/Types'
+	import { onMount } from 'svelte'
 
 	let modal: Modal
 	let confirmDeleteModal: Modal

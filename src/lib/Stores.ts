@@ -162,6 +162,9 @@ export const exercises: Writable<Exercises> = writable(new SetMap())
 export const groups: Writable<Groups> = writable(new SetMap())
 export const weekNames: Writable<WeekNames> = writable(new ThrowSet())
 export const workoutPrograms: Writable<WorkoutPrograms> = writable(new SetMap())
+export const selectedDay: Writable<string> = writable(get(workoutPrograms).keys().next().value)
+export const selectedGroup: Writable<string | null> = writable(get(groups).keys().next().value)
+export const refresh: Writable<Object> = writable(new Object())
 
 function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
 	// SetMap.set() checks for duplicates, no need to loop over them twice
@@ -177,6 +180,9 @@ function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
 		sets: sets ? sets : new Array(get(weekNames).size).fill(0),
 	}
 }
+
+// Select workoutday
+selectedDay.set('Monday')
 
 // Seed groupnames
 for (let groupSeed of seed.groups) {
@@ -195,10 +201,7 @@ for (let exercise of seed.exercises) {
 		for (let tag of exerciseProperty.tags) {
 			tempTags.add(tag)
 		}
-		tempProperties.set(
-			exerciseProperty.groupName,
-			tempTags
-		) as ExerciseProperties
+		tempProperties.set(exerciseProperty.groupName, tempTags) as ExerciseProperties
 	}
 	exercises.update((setmap) => setmap.set(exercise.name, tempProperties))
 }
@@ -212,17 +215,7 @@ for (let weekName of seed.weekNames) {
 for (let day of seed.program) {
 	let tempExercisePlans: ExercisePlan[] = []
 	for (let exercisePlan of day.exercisePlans) {
-		tempExercisePlans.push(
-			newExercisePlan(exercisePlan.exerciseName, exercisePlan.sets)
-		)
+		tempExercisePlans.push(newExercisePlan(exercisePlan.exerciseName, exercisePlan.sets))
 	}
 	workoutPrograms.update((setmap) => setmap.set(day.name, tempExercisePlans))
 }
-
-export const selectedDay: Writable<string> = writable(
-	get(workoutPrograms).keys().next().value
-)
-export const selectedGroup: Writable<string | null> = writable(
-	get(groups).keys().next().value
-)
-export const refresh: Writable<Object> = writable(new Object())

@@ -13,6 +13,8 @@
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
 
+	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
+		createEventDispatcher()
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 	let hidden: boolean
 
@@ -24,7 +26,11 @@
 	}
 </script>
 
-<HiddenSelectableInput on:selected placeholderText={inputPlaceholderText} {dynamicWidth}>
+<HiddenSelectableInput
+	on:selected={(event) => updateDispatcher('update', event.detail)}
+	placeholderText={inputPlaceholderText}
+	{dynamicWidth}
+>
 	<!-- stopPropagation because of the nested Hidden component -->
 	<div on:click|stopPropagation slot="placeholderContent" class="flex">
 		<slot name="placeholderContent" />

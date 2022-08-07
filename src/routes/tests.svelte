@@ -34,7 +34,7 @@
 <EllipsisMenu
 	dynamicWidth
 	inputPlaceholderText="New name"
-	on:selected={(event) => console.log('selected', event.detail)}
+	on:update={(event) => console.log('update', event.detail)}
 	on:delete={() => console.log('deleted')}
 >
 	<div class="w-max" slot="placeholderContent">Bench press</div>
