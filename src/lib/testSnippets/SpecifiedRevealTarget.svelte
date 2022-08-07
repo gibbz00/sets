@@ -1,11 +1,8 @@
 <script lang="ts">
 	/*
-		Used to specify reveal target. Either the component as a hole, or a child element of the component.
-
-		TODO: 
-		* A better way might be to create a slot prop that tags the component that should reveal hidden.
-			Might be done with checking fo a special id
-
+		Used to specify reveal target of the Hidden.svelte component
+		Default is the component as a whole.
+		Option is to add the id "revealTarget" to a element nested withing the placeholderContent slot of Hidden
 
 		* The main reason behind the component separation is that content inside the {#if hidden} relies on onMount logic
 		* This means that a class="hidden" won't work.
