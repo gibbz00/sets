@@ -31,4 +31,21 @@
 	<p>j</p>
 </div> -->
 
-<EllipsisMenu />
+<EllipsisMenu
+	dynamicWidth
+	inputPlaceholderText="New name"
+	on:selected={(event) => console.log('selected', event.detail)}
+	on:delete={() => console.log('deleted')}
+>
+	<div class="w-max" slot="placeholderContent">Bench press</div>
+</EllipsisMenu>
+
+<HiddenSelectableInput
+	dynamicWidth
+	listItems={dataStub}
+	listFilter={autocompleteFilter}
+	placeholderText="Enter fruit"
+	on:selected={(event) => console.log('selected: ', event.detail)}
+>
+	<AddButton slot="placeholderContent" />
+</HiddenSelectableInput>
