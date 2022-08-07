@@ -63,7 +63,6 @@
 			}}
 		>
 			<slot slot="placeholderContent" name="placeholderContent" />
-			<slot slot="optionalRevealTarget" name="optionalRevealTarget" />
 		</SpecifiedRevealTarget>
 	{:else}
 		<slot name="hiddenContent" />

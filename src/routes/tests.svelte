@@ -8,15 +8,14 @@
         TODO: remove route for production!
 
         Example of how absolute positioning is not needed
-
     */
 
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 </script>
 
 <div class="grid grid-cols-3 justify-items-center">
-	<p>j</p>
-	<p>j</p>
+	<p id="hej">j</p>
+	<p id="hej">p</p>
 	<HiddenSelectableInput
 		dynamicWidth
 		listItems={dataStub}
@@ -34,7 +33,10 @@
 		placeholderText="Enter fruit"
 		on:selected={(event) => console.log('selected: ', event.detail)}
 	>
-		<AddButton slot="placeholderContent" />
+		<svelte:fragment slot="placeholderContent">
+			Monday
+			<button id="revealTarget">special target</button>
+		</svelte:fragment>
 	</HiddenSelectableInput>
 	<p>j</p>
 </div>

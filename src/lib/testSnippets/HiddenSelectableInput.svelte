@@ -3,27 +3,24 @@
 	import SelectableInput from './SelectableInput.svelte'
 
 	/* 
-    Combines Hidden.svelte uses it with SelectableInput.svelte
+		Combines Hidden.svelte uses it with SelectableInput.svelte 
+			* Autofocuses input when revealed
+			* Hides selectable input when it dispatches selected or canceled events
 
-     Test:
-      * Both cancelation and selection hide input (done)
-      * Passes up selected event (done)
-      * Shown input is autofocused (done)
-  */
+		TODO:
+			preserve height of input based on button height? 
+				Believe it should be possible to get around with css
+	*/
 	export let placeholderText: string = ''
-
 	export let listItems: SelectableInput['listItems'] = undefined
-	// Defealt filter is to show every list item
 	export let listFilter: SelectableInput['listFilter'] = undefined
 	export let dynamicWidth: boolean = false
 
-	// Bound to Hidden component in order to hide when a selected or canceled event is recieved
 	let hidden: boolean = true
 </script>
 
 <Hidden bind:hidden>
 	<slot slot="placeholderContent" name="placeholderContent" />
-	<slot slot="optionalRevealTarget" name="optionalRevealTarget" />
 	<SelectableInput
 		autofocus
 		{dynamicWidth}

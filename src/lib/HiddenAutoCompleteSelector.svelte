@@ -89,7 +89,6 @@
 			case 'Enter':
 				console.log(input)
 				if (input != '') {
-					console.log('rans')
 					dispatch('selected', input)
 					resetUI()
 				}
@@ -122,7 +121,6 @@
 				}
 				break
 		}
-		console.log(selectedIndex, remaining[selectedIndex])
 	}
 
 	function resetUI() {
