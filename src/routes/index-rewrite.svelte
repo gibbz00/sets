@@ -73,19 +73,20 @@
 	<!-- Table container with add week button -->
 	<!-- TODO: change 50 to 160 when exercise plans are being rendered -->
 	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 50}>
-		<section class="pt-5 mx-2">
-			<div class="flex">
-				<!-- Sets table -->
-				<div
-					class="grid grid-flow-col w-full"
-					style:grid-template-rows={`repeat(${
-						$workoutPrograms.getDefined($selectedDay).length + 1
-					}, 30px)`}
-				>
-					<!-- Table header: Exercise title and week names -->
-					<div class="contents text-2xl">
-						<div>Exercise</div>
-						{#each [...$weekNames.values()] as weekName, index}
+		<section class="mx-4 pt-5">
+			<!-- Sets table -->
+			<div
+				class="grid justify-between items-center"
+				style:grid-template-rows={`repeat(${
+					$workoutPrograms.getDefined($selectedDay).length + 1
+				}, auto`}
+				style:grid-template-columns={`max-content repeat(${$weekNames.size}, 1fr) max-content`}
+			>
+				<!-- Table header: Exercise title and week names -->
+				<div class="contents text-2xl">
+					<div>Exercise</div>
+					{#each [...$weekNames.values()] as weekName, index}
+						<div class="justify-self-center">
 							<EllipsisMenu
 								dynamicWidth
 								inputPlaceholderText="New week name"
@@ -96,18 +97,26 @@
 									{weekName}
 								</svelte:fragment>
 							</EllipsisMenu>
-						{/each}
+						</div>
+					{/each}
+					<!-- Add week button -->
+					<div class="justify-self-end">
+						<HiddenSelectableInput
+							dynamicWidth
+							placeholderText="Add week"
+							on:selected={(event) => console.log('selected: ', event.detail)}
+						>
+							<AddButton slot="placeholderContent" />
+						</HiddenSelectableInput>
 					</div>
 				</div>
-				<!-- Add week button -->
-				<HiddenSelectableInput
-					dynamicWidth
-					placeholderText="Add week"
-					on:selected={(event) => console.log('selected: ', event.detail)}
-				>
-					<AddButton slot="placeholderContent" />
-				</HiddenSelectableInput>
+
+				<!-- Header separator -->
+				<div class="row-start-2 pt-3 col-span-full">
+					<hr />
+				</div>
 			</div>
+
 			<!-- Add exercise plan to workout day -->
 			<HiddenSelectableInput
 				placeholderText="Add exercise plan"
