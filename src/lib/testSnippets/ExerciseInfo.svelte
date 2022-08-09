@@ -17,7 +17,8 @@
 <div
 	id="drop-right-menu"
 	class="
-            min-w-[40rem]
+	max-w-sm 
+	w-max
             p-3 
             text-black 
             bg-white 
@@ -31,7 +32,7 @@
 	<!-- Groups -->
 	<span class="space-y-2">
 		{#each [...$groups.keys()] as groupName}
-			<div class="text-2xl mb-1">
+			<div class="text-2xl mb-1 w-fit">
 				{groupName}
 			</div>
 			<!-- Tags for given group  -->
@@ -73,12 +74,13 @@
 		class="
             flex
             flex-col
-            space-x-2
-            [button]:bg-green-800
-            [button:hover]:bg-green-900
-            [button]:px-2
-            [button]:rounded-sm
-            [button]:py-4
+            space-y-2
+            [&_button]:bg-green-800
+            [&_button:hover]:bg-green-900
+            [&_button]:px-2
+            [&_button]:rounded-sm
+            [&_button]:py-4
+            [&_*]:w-full
             text-white
             font-medium
             mt-3
