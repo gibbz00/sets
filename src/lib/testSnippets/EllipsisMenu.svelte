@@ -44,36 +44,39 @@
 	<div on:click|stopPropagation slot="placeholderContent" class="flex content-center min-w-max">
 		<slot name="placeholderContent" />
 		<div class="relative">
-			<DropMenu iconType="more_vert">
-				<div
-					class={`${
-						absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
-					} grid place-content-center`}
-					slot="placeholderContent"
-				/>
-				<div
-					slot="dropRightWindow"
-					class="font-normal 
-                        text-black 
-                        bg-white 
-                        border-2 
-                        divide-y-2 
-                        rounded-sm 
-                        shadow-sm 
-                        border-gray 
-                        divide-slate-100"
-				>
-					<button id="revealTarget" class="w-full px-1 py-1 text-left hover:bg-slate-100">
-						Edit
-					</button>
-					<button
-						class="w-full px-1 py-1 text-left hover:bg-slate-100"
-						on:click={deleteHandler}
+			<div
+				class={`${
+					absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
+				} grid place-content-center`}
+			>
+				<DropMenu iconType="more_vert">
+					<div
+						slot="dropRightWindow"
+						class="font-normal 
+										text-black 
+										bg-white 
+										border-2 
+										divide-y-2 
+										rounded-sm 
+										shadow-sm 
+										border-gray 
+										divide-slate-100"
 					>
-						Remove
-					</button>
-				</div>
-			</DropMenu>
+						<button
+							id="revealTarget"
+							class="w-full px-1 py-1 text-left hover:bg-slate-100"
+						>
+							Edit
+						</button>
+						<button
+							class="w-full px-1 py-1 text-left hover:bg-slate-100"
+							on:click={deleteHandler}
+						>
+							Remove
+						</button>
+					</div>
+				</DropMenu>
+			</div>
 		</div>
 	</div>
 </HiddenSelectableInput>

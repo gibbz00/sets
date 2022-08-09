@@ -79,13 +79,17 @@
 />
 
 <!-- hover outside dropRightWindow when opneded should fill icon black -->
-<div bind:this={dropRightContainer} class="flex relative max-w-max">
-	<div class="contents group">
-		<slot name="placeholderContent" />
+<div bind:this={dropRightContainer} class="relative max-w-max">
+	<div class="flex group rounded-full hover:bg-zinc-300/20">
+		{#if $$slots.placeholderContent}
+			<div class="ml-3 my-1">
+				<slot name="placeholderContent" />
+			</div>
+		{/if}
 		<Icon
 			type={iconType}
 			class={`
-                    w-8 h-8 group-hover:fill-black 
+                    w-8 group-hover:fill-black 
                     ${iconClass}
                     ${
 						opened
