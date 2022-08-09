@@ -18,7 +18,6 @@
 	id="drop-right-menu"
 	class="
             min-w-[40rem]
-            
             p-3 
             text-black 
             bg-white 

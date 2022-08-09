@@ -19,11 +19,10 @@
             * mouseover opened menu
                 gray if inside menu, black if outside of menu
 			
-		
-
         TODO:
         change gray and black to exported props enabled, disabled
             // use in Exercise info window
+		open menu on mouse location
         
         Throws error if dropRightSlot isn't defined
     */
@@ -33,12 +32,18 @@
 	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
 	let opened: boolean = false
+	let overDropRight: boolean = false
 	let dropRightWindow: HTMLDivElement
 	let dropRightContainer: HTMLDivElement
+	type AbsoluteOffset = {
+		offsetX: number
+		offsetY: number
+	}
+	let absoluteOffset: AbsoluteOffset
 
 	function checkOpenToggle(event: MouseEvent) {
 		if (!opened && dropRightContainer.contains(event.target as Node)) {
-			opened = true
+			openMenu(event)
 			return
 		}
 
@@ -49,13 +54,22 @@
 		}
 	}
 
+	function openMenu(event: MouseEvent) {
+		// "polyfill" for the layerX and layerY shitshow
+		let offsetX = event.clientX - dropRightContainer.getBoundingClientRect().x
+		let offsetY = event.clientY - dropRightContainer.getBoundingClientRect().y
+		absoluteOffset = {
+			offsetX,
+			offsetY,
+		}
+		opened = true
+	}
+
 	function checkClose(event: KeyboardEvent) {
 		if (opened == true && event.key == 'Escape') {
 			opened = false
 		}
 	}
-
-	let overDropRight: boolean = false
 </script>
 
 <!-- Capture since component might have been removed further down the event stack -->
@@ -88,7 +102,9 @@
 			on:mouseenter={() => (overDropRight = true)}
 			on:mouseleave={() => (overDropRight = false)}
 			bind:this={dropRightWindow}
-			class="absolute top-1/2 left-[95%] z-10"
+			class={`absolute z-10`}
+			style:top={`${absoluteOffset.offsetY}px`}
+			style:left={`${absoluteOffset.offsetX}px`}
 		>
 			<slot name="dropRightWindow" />
 		</div>

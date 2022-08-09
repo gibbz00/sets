@@ -3,7 +3,7 @@
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
 	import AddButton from '$lib/testSnippets/AddButton.svelte'
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
-	import DropRight from '$lib/testSnippets/DropRight.svelte'
+	import DropMenu from '$lib/testSnippets/DropMenu.svelte'
 	import ExerciseInfo from '$lib/testSnippets/ExerciseInfo.svelte'
 
 	/*
@@ -52,10 +52,10 @@
 	<AddButton slot="placeholderContent" />
 </HiddenSelectableInput> -->
 
-<DropRight iconType="arrowRight" iconClass="transition-transform" iconClassForOpened="rotate-180">
+<DropMenu iconType="arrowRight" iconClass="transition-transform" iconClassForOpened="rotate-180">
 	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
 	<ExerciseInfo slot="dropRightWindow" exerciseName="Bench press" exercisePlanIndex={0} />
-</DropRight>
+</DropMenu>
 
 <hr />
 

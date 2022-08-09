@@ -10,7 +10,7 @@
 	import HiddenSelectableInput from './HiddenSelectableInput.svelte'
 	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
-	import DropRight from './DropRight.svelte'
+	import DropMenu from './DropMenu.svelte'
 
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
@@ -44,7 +44,7 @@
 	<div on:click|stopPropagation slot="placeholderContent" class="flex content-center min-w-max">
 		<slot name="placeholderContent" />
 		<div class="relative">
-			<DropRight iconType="more_vert">
+			<DropMenu iconType="more_vert">
 				<div
 					class={`${
 						absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
@@ -73,7 +73,7 @@
 						Remove
 					</button>
 				</div>
-			</DropRight>
+			</DropMenu>
 		</div>
 	</div>
 </HiddenSelectableInput>
