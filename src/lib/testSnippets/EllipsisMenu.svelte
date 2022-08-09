@@ -8,13 +8,16 @@
     */
 
 	import HiddenSelectableInput from './HiddenSelectableInput.svelte'
-	import { createEventDispatcher } from 'svelte'
+	import { createEventDispatcher, SvelteComponentTyped } from 'svelte'
 	import { onMount } from 'svelte'
 	import DropMenu from './DropMenu.svelte'
 
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
 	export let absoluteEllipsisPositioning: boolean = true
+	export let iconClass: (DropMenu extends SvelteComponentTyped<infer Prop>
+		? Prop
+		: never)['iconClass'] = {}
 
 	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
 		createEventDispatcher()
@@ -49,7 +52,7 @@
 					absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
 				} grid place-content-center`}
 			>
-				<DropMenu iconType="more_vert">
+				<DropMenu iconType="more_vert" {iconClass}>
 					<div
 						slot="dropMenuWindow"
 						class="font-normal 

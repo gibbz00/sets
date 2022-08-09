@@ -6,6 +6,7 @@
 	import DropMenu from '$lib/testSnippets/DropMenu.svelte'
 	import ExerciseInfo from '$lib/testSnippets/ExerciseInfo.svelte'
 	import type { SvelteComponentTyped } from 'svelte'
+	import Icon from '$lib/Icon.svelte'
 
 	/*
         Playground for testing snippets in dev environment

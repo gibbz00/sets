@@ -43,6 +43,10 @@
 						<div class="bg-green-800 py-1 px-2 rounded-md font-medium">
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
+								iconClass={{
+									enabled: 'fill-red-500',
+									disabled: 'fill-blue-500',
+								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}
 								on:update={(event) => model.updateTag(groupName, tag, event.detail)}

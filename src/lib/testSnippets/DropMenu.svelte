@@ -62,9 +62,22 @@
 		if (iconClass[key] == undefined) {
 			iconClass[key] = defaultIconClass[key]
 		} else {
+			// do not add defaultIconClass if iconClass[key] contains 'fill-'
+			// generally, any competing 	$: extracted = class in defaultIconClass
+			if (iconClass[key] != undefined && iconClass[key]!.includes('fill-')) return
+
 			iconClass[key] = `${defaultIconClass[key]} ${iconClass[key]}`
 		}
 	})
+	let iconClassString: string
+	// BUG: group-hover:${fill} for svg classes works very unreliably, some colors work, others don't
+	// TODO: FIX: fills should be passed down as path class?
+	let fill = iconClass.enabled?.match(/fill\-(\w*\-)*\w*(\/\d*)?/g)?.toString()
+	$: iconClassString = `${iconClass.default} w-8 group-hover:${fill} ${
+		opened
+			? `${overDropRight ? iconClass.disabled : iconClass.enabled} ${iconClass.opened}`
+			: `${iconClass.disabled}`
+	} `
 
 	onMount(() => {
 		if (!$$slots.dropMenuWindow) {
@@ -117,20 +130,7 @@
 				<slot name="placeholderContent" />
 			</div>
 		{/if}
-		<Icon
-			type={iconType}
-			class={`
-                    w-8 group-hover:${iconClass.enabled}
-                    ${iconClass}
-                    ${
-						opened
-							? `${iconClass.opened} ${
-									overDropRight ? iconClass.disabled : iconClass.enabled
-							  }`
-							: `${iconClass.disabled}`
-					}
-                `}
-		/>
+		<Icon type={iconType} class={iconClassString} />
 	</div>
 	{#if opened}
 		<div

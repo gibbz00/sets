@@ -13,6 +13,6 @@
 	}
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" class={`fill-black w-7 ${cls}`} viewBox="0 0 48 48">
+<svg xmlns="http://www.w3.org/2000/svg" class={`w-7 ${cls}`} viewBox="0 0 48 48">
 	<path d={paths[type]} />
 </svg>
