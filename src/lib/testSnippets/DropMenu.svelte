@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte'
 	import type { SvelteComponentTyped } from 'svelte'
+	import { onMount } from 'svelte'
 
 	/*
         In component use:
@@ -10,6 +11,7 @@
 
 		* Icon of choice next to placeholderContent with iconType prop
         * Pressing inside dropRightContainer opens menu
+		* Menu is opened on mouse location
         * Clicking outisde of menu hides it
 		* Pressing escape hides menu
 
@@ -19,13 +21,16 @@
             * mouseover opened menu
                 gray if inside menu, black if outside of menu
 			
-        TODO:
-        change gray and black to exported props enabled, disabled
-            // use in Exercise info window
-		open menu on mouse location
+		Icon class can also be supplied classes for the following states:
+			default
+			opened
+			enabled
+			disabled
         
-        Throws error if dropRightSlot isn't defined
     */
+
+	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
+	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
 	type IconClass = {
 		default?: string | undefined
@@ -34,13 +39,24 @@
 		disabled?: string | undefined
 	}
 	export let iconClass: IconClass = {}
+
+	let opened: boolean = false
+	let overDropRight: boolean = false
+	let dropMenuWindow: HTMLDivElement
+	let dropRightContainer: HTMLDivElement
+
+	type AbsoluteOffset = {
+		offsetX: number
+		offsetY: number
+	}
+	let absoluteOffset: AbsoluteOffset
+
 	let defaultIconClass: IconClass = {
 		default: '',
 		opened: '',
 		enabled: 'fill-black',
 		disabled: 'fill-gray-400',
 	}
-
 	Object.keys(defaultIconClass).forEach((value) => {
 		let key: keyof IconClass = value as any
 		if (iconClass[key] == undefined) {
@@ -50,18 +66,11 @@
 		}
 	})
 
-	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
-	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
-
-	let opened: boolean = false
-	let overDropRight: boolean = false
-	let dropRightWindow: HTMLDivElement
-	let dropRightContainer: HTMLDivElement
-	type AbsoluteOffset = {
-		offsetX: number
-		offsetY: number
-	}
-	let absoluteOffset: AbsoluteOffset
+	onMount(() => {
+		if (!$$slots.dropMenuWindow) {
+			throw new Error('No menu window supplied to DropMenu.svelte')
+		}
+	})
 
 	function checkOpenToggle(event: MouseEvent) {
 		if (!opened && dropRightContainer.contains(event.target as Node)) {
@@ -70,7 +79,7 @@
 		}
 
 		if (opened) {
-			if (!dropRightWindow.contains(event.target as Node)) {
+			if (!dropMenuWindow.contains(event.target as Node)) {
 				opened = false
 			}
 		}
@@ -100,7 +109,7 @@
 	on:keydown={(event) => checkClose(event)}
 />
 
-<!-- hover outside dropRightWindow when opneded should fill icon black -->
+<!-- hover outside dropMenuWindow when opneded should fill icon black -->
 <div bind:this={dropRightContainer} class="relative max-w-max">
 	<div class="flex group rounded-full hover:bg-zinc-300/20">
 		{#if $$slots.placeholderContent}
@@ -127,12 +136,12 @@
 		<div
 			on:mouseenter={() => (overDropRight = true)}
 			on:mouseleave={() => (overDropRight = false)}
-			bind:this={dropRightWindow}
+			bind:this={dropMenuWindow}
 			class={`absolute z-10`}
 			style:top={`${absoluteOffset.offsetY}px`}
 			style:left={`${absoluteOffset.offsetX}px`}
 		>
-			<slot name="dropRightWindow" />
+			<slot name="dropMenuWindow" />
 		</div>
 	{/if}
 </div>

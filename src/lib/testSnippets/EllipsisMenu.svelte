@@ -51,7 +51,7 @@
 			>
 				<DropMenu iconType="more_vert">
 					<div
-						slot="dropRightWindow"
+						slot="dropMenuWindow"
 						class="font-normal 
 										text-black 
 										bg-white 

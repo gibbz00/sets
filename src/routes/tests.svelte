@@ -60,7 +60,7 @@
 
 <DropMenu iconType="arrowRight" iconClass={dropMenuIconClass}>
 	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
-	<ExerciseInfo slot="dropRightWindow" exerciseName="Bench press" exercisePlanIndex={0} />
+	<ExerciseInfo slot="dropMenuWindow" exerciseName="Bench press" exercisePlanIndex={0} />
 </DropMenu>
 
 <hr />
