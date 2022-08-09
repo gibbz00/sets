@@ -17,7 +17,8 @@
 <div
 	id="drop-right-menu"
 	class="
-            w-lg
+            min-w-[40rem]
+            
             p-3 
             text-black 
             bg-white 
@@ -39,15 +40,17 @@
 				{#if $exercises.getDefined(exerciseName).has(groupName)}
 					{#each [...$exercises.getDefined(exerciseName).getDefined(groupName)] as tag}
 						<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
-						<div class="bg-green-800 py-1 pl-2 pr-4 rounded-xl font-medium">
+						<div class="bg-green-800 py-1 px-2 rounded-md font-medium">
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
 								dynamicWidth
-								ellipsisIconClass="fill-gray-100 hover-fill-white"
+								absoluteEllipsisPositioning={false}
 								on:update={(event) => model.updateTag(groupName, tag, event.detail)}
 								on:delete={() =>
 									model.deleteExerciseTag(exerciseName, groupName, tag)}
-							/>
+							>
+								<svelte:fragment slot="placeholderContent">{tag}</svelte:fragment>
+							</EllipsisMenu>
 						</div>
 					{/each}
 				{/if}

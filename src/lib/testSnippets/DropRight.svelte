@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte'
-	import { afterUpdate } from 'svelte'
-	import { beforeUpdate } from 'svelte'
+	import type { SvelteComponentTyped } from 'svelte'
 
 	/*
         In component use:
@@ -21,8 +20,12 @@
         uses opened state variable instead of focuss-withing to allow for toggling functionality
 
         (cancelable by pressing escape?)
-            should not current hidden input, might need to add a stopp propagation there in selectable inpu
+            should not ovverdie current hidden input, might need to add a stopp propagation there in selectable inpu
     */
+	export let iconClass: string = ''
+	export let iconClassForOpened: string = ''
+	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
+	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
 	let opened: boolean = false
 	let dropRightWindow: HTMLDivElement
@@ -52,13 +55,15 @@
 	<div class="contents group">
 		<slot name="placeholderContent" />
 		<Icon
-			type="arrowRight"
+			type={iconType}
 			class={`
                     w-8 h-8 group-hover:fill-black 
-                    transition-transform 
+                    ${iconClass}
                     ${
 						opened
-							? `rotate-180 ${overDropRight ? 'fill-gray-400' : 'fill-black'}`
+							? `${iconClassForOpened} ${
+									overDropRight ? 'fill-gray-400' : 'fill-black'
+							  }`
 							: 'fill-gray-400'
 					}
                 `}

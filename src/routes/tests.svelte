@@ -52,7 +52,17 @@
 	<AddButton slot="placeholderContent" />
 </HiddenSelectableInput> -->
 
-<DropRight>
+<DropRight iconType="arrowRight" iconClass="transition-transform" iconClassForOpened="rotate-180">
 	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
 	<ExerciseInfo slot="dropRightWindow" exerciseName="Bench press" exercisePlanIndex={0} />
 </DropRight>
+
+<hr />
+
+<EllipsisMenu
+	dynamicWidth
+	inputPlaceholderText="New name"
+	on:update={(event) => console.log('update', event.detail)}
+	on:delete={() => console.log('deleted')}
+	><div class="w-max" slot="placeholderContent">Bench press</div></EllipsisMenu
+>
