@@ -5,6 +5,7 @@
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
 	import DropMenu from '$lib/testSnippets/DropMenu.svelte'
 	import ExerciseInfo from '$lib/testSnippets/ExerciseInfo.svelte'
+	import type { SvelteComponentTyped } from 'svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -14,6 +15,11 @@
     */
 
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
+
+	let dropMenuIconClass = {
+		default: 'transition-transform',
+		opened: 'rotate-180',
+	}
 </script>
 
 <!-- <div class="grid grid-cols-3 justify-items-center">
@@ -52,7 +58,7 @@
 	<AddButton slot="placeholderContent" />
 </HiddenSelectableInput> -->
 
-<DropMenu iconType="arrowRight" iconClass="transition-transform" iconClassForOpened="rotate-180">
+<DropMenu iconType="arrowRight" iconClass={dropMenuIconClass}>
 	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
 	<ExerciseInfo slot="dropRightWindow" exerciseName="Bench press" exercisePlanIndex={0} />
 </DropMenu>

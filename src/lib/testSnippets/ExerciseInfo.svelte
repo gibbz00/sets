@@ -49,7 +49,7 @@
 								on:delete={() =>
 									model.deleteExerciseTag(exerciseName, groupName, tag)}
 							>
-								<svelte:fragment slot="placeholderContent">{tag}</svelte:fragment>
+								<div class="text-white pl-2" slot="placeholderContent">{tag}</div>
 							</EllipsisMenu>
 						</div>
 					{/each}

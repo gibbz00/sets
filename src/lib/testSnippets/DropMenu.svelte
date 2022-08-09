@@ -26,8 +26,30 @@
         
         Throws error if dropRightSlot isn't defined
     */
-	export let iconClass: string = ''
-	export let iconClassForOpened: string = ''
+
+	type IconClass = {
+		default?: string | undefined
+		opened?: string | undefined
+		enabled?: string | undefined
+		disabled?: string | undefined
+	}
+	export let iconClass: IconClass = {}
+	let defaultIconClass: IconClass = {
+		default: '',
+		opened: '',
+		enabled: 'fill-black',
+		disabled: 'fill-gray-400',
+	}
+
+	Object.keys(defaultIconClass).forEach((value) => {
+		let key: keyof IconClass = value as any
+		if (iconClass[key] == undefined) {
+			iconClass[key] = defaultIconClass[key]
+		} else {
+			iconClass[key] = `${defaultIconClass[key]} ${iconClass[key]}`
+		}
+	})
+
 	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
 	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
@@ -89,14 +111,14 @@
 		<Icon
 			type={iconType}
 			class={`
-                    w-8 group-hover:fill-black 
+                    w-8 group-hover:${iconClass.enabled}
                     ${iconClass}
                     ${
 						opened
-							? `${iconClassForOpened} ${
-									overDropRight ? 'fill-gray-400' : 'fill-black'
+							? `${iconClass.opened} ${
+									overDropRight ? iconClass.disabled : iconClass.enabled
 							  }`
-							: 'fill-gray-400'
+							: `${iconClass.disabled}`
 					}
                 `}
 		/>
