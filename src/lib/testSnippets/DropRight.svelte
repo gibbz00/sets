@@ -5,20 +5,23 @@
 	/*
         In component use:
             placeholderContent is wrapped in a div where max-w-sm and truncate is defined
+		
+		Description:
 
-        Pressing inside dropRightContainer opens menu
-        Clicking outisde of menu hides it
-        Has Icon of choice next to placeholderContent
+		* Icon of choice next to placeholderContent with iconType prop
+        * Pressing inside dropRightContainer opens menu
+        * Clicking outisde of menu hides it
+		* Pressing escape hides menu
 
         Icon fill color is gray by default but based on the following states:
             * dropRightContainer hove
                 from gray to black
             * mouseover opened menu
                 gray if inside menu, black if outside of menu
+			
+		
 
         TODO:
-        should be closed with escape
-            should not ovverdie current hidden input, might need to add a stopp propagation there in selectable inpu
         change gray and black to exported props enabled, disabled
             // use in Exercise info window
         
@@ -46,11 +49,20 @@
 		}
 	}
 
+	function checkClose(event: KeyboardEvent) {
+		if (opened == true && event.key == 'Escape') {
+			opened = false
+		}
+	}
+
 	let overDropRight: boolean = false
 </script>
 
 <!-- Capture since component might have been removed further down the event stack -->
-<svelte:window on:click|capture={(event) => checkOpenToggle(event)} />
+<svelte:window
+	on:click|capture={(event) => checkOpenToggle(event)}
+	on:keydown={(event) => checkClose(event)}
+/>
 
 <!-- hover outside dropRightWindow when opneded should fill icon black -->
 <div bind:this={dropRightContainer} class="flex relative max-w-max">

@@ -43,16 +43,18 @@
 		}
 	}
 
-	function checkCancelOnKey(key: KeyboardEvent['key']) {
-		if (hidden == false && key == 'Escape') {
+	function checkCancelOnKey(event: KeyboardEvent) {
+		if (hidden == false && event.key == 'Escape') {
 			hidden = true
+			// For those cases when component is nested in other Hidden componenents etc.
+			event.stopPropagation()
 		}
 	}
 </script>
 
 <svelte:window
 	on:click|capture={(event) => checkCancelOnClick(event.target)}
-	on:keydown|capture={(event) => checkCancelOnKey(event.key)}
+	on:keydown|capture={(event) => checkCancelOnKey(event)}
 />
 
 <div class="w-min" bind:this={container}>
