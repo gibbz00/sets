@@ -1,16 +1,18 @@
 <script lang="ts">
 	import { weekNames, workoutPrograms, selectedDay, exercises } from '$lib/Stores'
 	import Model from '$lib/Model.svelte'
+	import Exercise from '$lib/Exercise.svelte'
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
 	import HiddenSelectableInput from '$lib/testSnippets/HiddenSelectableInput.svelte'
 	import AddButton from '$lib/testSnippets/AddButton.svelte'
 	import Icon from '$lib/Icon.svelte'
 
-	import { crossfade } from 'svelte/transition'
+	import { crossfade, fade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
 
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
 	import HeightTransition from '$lib/HeightTransition.svelte'
+	import SetNumberInput from '$lib/SetNumberInput.svelte'
 
 	let model: Model
 
@@ -32,6 +34,12 @@
 			}
 		},
 	})
+
+	// TODO: move to HeightTransition?
+	const fadeInDelay: number = 100
+	const fadeInDuration: number = 100
+	const fadeOutDelay: number = 0
+	const fadeOutDuration: number = 100
 </script>
 
 <Model bind:this={model} />
@@ -44,7 +52,7 @@
 	>
 		<span class="text-2xl font-medium text-white h-min">Set analysis</span>
 		<span class="w-8 h-8">
-			<Icon cls="fill-white" type="arrowRightAlt" />
+			<Icon class="fill-white" type="arrowRightAlt" />
 		</span>
 	</a>
 </header>
@@ -71,20 +79,17 @@
 	</nav>
 
 	<!-- Table container with add week button -->
-	<!-- TODO: change 50 to 160 when exercise plans are being rendered -->
-	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 50}>
+	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 150}>
 		<section class="mx-4 pt-5">
 			<!-- Sets table -->
+
 			<div
-				class="grid justify-between items-center"
-				style:grid-template-rows={`repeat(${
-					$workoutPrograms.getDefined($selectedDay).length + 1
-				}, auto`}
-				style:grid-template-columns={`max-content repeat(${$weekNames.size}, 1fr) max-content`}
+				class="grid items-center text-xl gap-y-3"
+				style:grid-template-columns={`min-content repeat(${$weekNames.size}, 1fr) min-content`}
 			>
 				<!-- Table header: Exercise title and week names -->
 				<div class="contents text-2xl">
-					<div>Exercise</div>
+					<div class="max-w-min">Exercise</div>
 					{#each [...$weekNames.values()] as weekName, index}
 						<div class="justify-self-center">
 							<EllipsisMenu
@@ -112,9 +117,31 @@
 				</div>
 
 				<!-- Header separator -->
-				<div class="row-start-2 pt-3 col-span-full">
-					<hr />
-				</div>
+				<hr class="row-start-2 col-span-full" />
+
+				<!-- table rows -->
+				{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
+					<div
+						class="contents"
+						in:fade={{
+							delay: fadeInDelay,
+							duration: fadeInDuration,
+						}}
+						out:fade={{
+							delay: fadeOutDelay,
+							duration: fadeOutDuration,
+						}}
+					>
+						<Exercise {exerciseName} {index} />
+						<!-- sets grid -->
+						<!-- Last sets should self align left due to add for proper add week button placement -->
+						{#each sets as set}
+							<div class="justify-self-center">
+								<SetNumberInput bind:set />
+							</div>
+						{/each}
+					</div>
+				{/each}
 			</div>
 
 			<!-- Add exercise plan to workout day -->

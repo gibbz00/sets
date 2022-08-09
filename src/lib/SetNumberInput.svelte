@@ -1,11 +1,10 @@
 <script lang="ts">
 	export let set: number
 	//TODO: proper type-settings
-	export let justify: string
 </script>
 
 <!-- "BUG": cant pass tailwind classes to class:directive in at least HMR dev mode -->
-<div class={`group flex ${justify}`}>
+<div class={`group flex`}>
 	<button
 		class="text-gray-400 w-7 group-hover:text-black"
 		disabled={set == 0 ? true : false}
@@ -19,8 +18,5 @@
 		type="number"
 		bind:value={set}
 	/>
-	<button
-		class="text-gray-400 w-7 group-hover:text-black"
-		on:click={() => set++}>+</button
-	>
+	<button class="text-gray-400 w-7 group-hover:text-black" on:click={() => set++}>+</button>
 </div>

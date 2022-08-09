@@ -3,6 +3,8 @@
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
 	import AddButton from '$lib/testSnippets/AddButton.svelte'
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
+	import DropRight from '$lib/testSnippets/DropRight.svelte'
+	import ExerciseInfo from '$lib/testSnippets/ExerciseInfo.svelte'
 
 	/*
         Playground for testing snippets in dev environment
@@ -31,7 +33,7 @@
 	<p>j</p>
 </div> -->
 
-<EllipsisMenu
+<!-- <EllipsisMenu
 	dynamicWidth
 	inputPlaceholderText="New name"
 	on:update={(event) => console.log('update', event.detail)}
@@ -48,4 +50,9 @@
 	on:selected={(event) => console.log('selected: ', event.detail)}
 >
 	<AddButton slot="placeholderContent" />
-</HiddenSelectableInput>
+</HiddenSelectableInput> -->
+
+<DropRight>
+	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
+	<ExerciseInfo slot="dropRightWindow" exerciseName="Bench press" exercisePlanIndex={0} />
+</DropRight>

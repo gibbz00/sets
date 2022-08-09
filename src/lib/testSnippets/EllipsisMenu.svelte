@@ -12,11 +12,11 @@
 
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
+	export let ellipsisIconClass: string = ''
 
 	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
 		createEventDispatcher()
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
-	let hidden: boolean
 
 	// TODO: hidden = true might not be needed since the item itself is removed
 	// If that is the case, then I probably don't need this component at all
@@ -36,9 +36,12 @@
 		<slot name="placeholderContent" />
 		<div class="relative">
 			<Hidden hidden>
-				<svelte:fragment slot="placeholderContent">
-					<Icon type="more_vert" />
-				</svelte:fragment>
+				<div
+					class="absolute left-full inset-y-0 grid place-content-center"
+					slot="placeholderContent"
+				>
+					<Icon class={ellipsisIconClass} type="more_vert" />
+				</div>
 				<div
 					slot="hiddenContent"
 					class="

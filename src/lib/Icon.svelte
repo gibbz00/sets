@@ -1,6 +1,7 @@
 <script lang="ts">
 	export let type: keyof typeof paths
-	export let cls: string = 'fill-black w-7 h-7'
+	let cls: string = ''
+	export { cls as class }
 
 	const paths = {
 		arrowRightAlt: 'm28.05 35.9-2.15-2.1 8.4-8.4H8v-3h26.3l-8.45-8.45 2.15-2.1L40.05 23.9Z',
@@ -12,6 +13,6 @@
 	}
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" class={cls} viewBox="0 0 48 48">
+<svg xmlns="http://www.w3.org/2000/svg" class={`fill-black w-7 h-7 ${cls}`} viewBox="0 0 48 48">
 	<path d={paths[type]} />
 </svg>
