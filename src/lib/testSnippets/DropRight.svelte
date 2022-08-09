@@ -6,21 +6,23 @@
         In component use:
             placeholderContent is wrapped in a div where max-w-sm and truncate is defined
 
+        Pressing inside dropRightContainer opens menu
+        Clicking outisde of menu hides it
+        Has Icon of choice next to placeholderContent
 
-        Has arrow next to placeholder content
-        Pressing placeholder or arrow shows the dropright window next to the arrow
-        Clicking outisde of dropright cancels operation 
-        has an arrow 
-            turned right when hidden
-        turned left when not hidden
-        turning is an transition
+        Icon fill color is gray by default but based on the following states:
+            * dropRightContainer hove
+                from gray to black
+            * mouseover opened menu
+                gray if inside menu, black if outside of menu
 
+        TODO:
         should be closed with escape
-        throws error if slots aren't defined
-        uses opened state variable instead of focuss-withing to allow for toggling functionality
-
-        (cancelable by pressing escape?)
             should not ovverdie current hidden input, might need to add a stopp propagation there in selectable inpu
+        change gray and black to exported props enabled, disabled
+            // use in Exercise info window
+        
+        Throws error if dropRightSlot isn't defined
     */
 	export let iconClass: string = ''
 	export let iconClassForOpened: string = ''
