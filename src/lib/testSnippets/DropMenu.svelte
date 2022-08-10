@@ -2,6 +2,7 @@
 	import Icon from '$lib/Icon.svelte'
 	import type { SvelteComponentTyped } from 'svelte'
 	import { onMount } from 'svelte'
+	import { beforeUpdate } from 'svelte'
 
 	/*
         In component use:
@@ -69,21 +70,27 @@
 			iconClass[key] = `${defaultIconClass[key]} ${iconClass[key]}`
 		}
 	})
-	let iconClassString: string
-	// BUG: group-hover:${fill} for svg classes works very unreliably, some colors work, others don't
-	// TODO: FIX: fills should be passed down as path class?
-	let fill = iconClass.enabled?.match(/fill\-(\w*\-)*\w*(\/\d*)?/g)?.toString()
-	$: iconClassString = `${iconClass.default} w-8 group-hover:${fill} ${
-		opened
-			? `${overDropRight ? iconClass.disabled : iconClass.enabled} ${iconClass.opened}`
-			: `${iconClass.disabled}`
-	} `
+
+	let iconClassString: string = buildIconString()
 
 	onMount(() => {
 		if (!$$slots.dropMenuWindow) {
 			throw new Error('No menu window supplied to DropMenu.svelte')
 		}
+		console.log(iconClass, iconClassString)
 	})
+
+	beforeUpdate(() => {
+		iconClassString = buildIconString()
+	})
+
+	function buildIconString(): string {
+		return `${iconClass.default} w-8 ${
+			opened
+				? `${overDropRight ? iconClass.disabled : iconClass.enabled} ${iconClass.opened}`
+				: `${iconClass.disabled}`
+		} group-hover:${iconClass.enabled}`
+	}
 
 	function checkOpenToggle(event: MouseEvent) {
 		if (!opened && dropRightContainer.contains(event.target as Node)) {

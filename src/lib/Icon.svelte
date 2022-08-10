@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { beforeUpdate } from 'svelte'
+
 	export let type: keyof typeof paths
 	let cls: string = ''
 	export { cls as class }
@@ -11,8 +13,23 @@
 			'M24 40q-1 0-1.7-.7t-.7-1.7q0-1 .7-1.7t1.7-.7q1 0 1.7.7t.7 1.7q0 1-.7 1.7T24 40Zm0-13.6q-1 0-1.7-.7t-.7-1.7q0-1 .7-1.7t1.7-.7q1 0 1.7.7t.7 1.7q0 1-.7 1.7t-1.7.7Zm0-13.6q-1 0-1.7-.7t-.7-1.7q0-1 .7-1.7T24 8q1 0 1.7.7t.7 1.7q0 1-.7 1.7t-1.7.7Z',
 		arrowRight: 'M20 34V14l10 10Z',
 	}
+	// BUG: group-hover:${fill} for svg classes works very unreliably, sometimes some colors work, whilst others don't
+	// REASON:  something todo about how tailwind doesn't really support dynamic classes
+	// TODO: I thought that a fix was placing group-hover:fill-* as the path class, hence that logic below. Might be ok to remove.
+
+	// Extract group-hover string from class
+	let groupHoverClass: string | undefined
+
+	//BUG: won't work with nested groups
+	if (cls.includes('group-hover')) {
+		groupHoverClass = cls.match(/group-hover:fill\-(\w*\-)*\w*(\/\d*)?/g)?.toString()
+		if (groupHoverClass != undefined) {
+			// Doesn't remove the trailng whitespace but works anyways
+			cls = cls.replace(groupHoverClass, '').replace('  ', ' ')
+		}
+	}
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" class={`w-7 ${cls}`} viewBox="0 0 48 48">
-	<path d={paths[type]} />
-</svg>
+	<path d={paths[type]} class={groupHoverClass != undefined ? groupHoverClass : ''} /></svg
+>
