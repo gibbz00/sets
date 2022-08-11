@@ -44,8 +44,8 @@
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
 								iconClass={{
-									enabled: 'fill-green-500',
 									disabled: 'fill-white',
+									enabled: 'fill-red-500',
 								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}

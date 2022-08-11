@@ -20,7 +20,6 @@
 	// Extract group-hover string from class
 	let groupHoverClass: string | undefined
 
-	//BUG: won't work with nested groups
 	if (cls.includes('group-hover')) {
 		groupHoverClass = cls.match(/group-hover:fill\-(\w*\-)*\w*(\/\d*)?/g)?.toString()
 		if (groupHoverClass != undefined) {

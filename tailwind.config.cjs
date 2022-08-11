@@ -1,6 +1,14 @@
 /** @type {import('tailwindcss').Config} */
+
+let dynamicClasses = require('./src/lib/utils/RegisterDynamicTailwindClass.cjs')
+
+console.log([...dynamicClasses])
 module.exports = {
-	content: ['./src/**/*.{html,js,svelte,ts,txt}', '.src/dynamicTailwindClasses.txt'],
+	variants: {
+		fill: ['group-hover'],
+	},
+	content: ['./src/**/*.{html,js,svelte,ts}'],
+	safelist: [...dynamicClasses],
 	theme: {
 		extend: {},
 	},

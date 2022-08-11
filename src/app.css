@@ -2,13 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Input appearence resets, create arrows inside input type number unless added */
 @layer utilities {
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-    }
-    input[type=number] {
-    -moz-appearance: textfield;
-    }
+	input::-webkit-outer-spin-button,
+	input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	input[type='number'] {
+		-moz-appearance: textfield;
+	}
 }
