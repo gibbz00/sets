@@ -73,5 +73,3 @@
 	on:delete={() => console.log('deleted')}
 	><div class="w-max" slot="placeholderContent">Bench press</div></EllipsisMenu
 >
-
-<ExerciseInfo slot="dropMenuWindow" exerciseName="Bench press" exercisePlanIndex={0} />

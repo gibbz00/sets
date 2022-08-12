@@ -133,7 +133,7 @@
                     * otherwise on:input will use old value
         -->
 		<input
-			class="ml-2 px-2 py-2 focus-visible:outline-none"
+			class="ml-2 focus-visible:outline-none"
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}

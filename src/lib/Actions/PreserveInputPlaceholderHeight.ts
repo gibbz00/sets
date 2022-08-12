@@ -1,3 +1,5 @@
+/*
+ */
 //Solely used for the HiddenAutoCompleteSelector, it presumes that a button and an input exist
 //TODO: create a type check and throw an error if the node type is wrong
 

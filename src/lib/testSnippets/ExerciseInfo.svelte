@@ -39,14 +39,13 @@
 			<div class="flex flex-wrap gap-2">
 				{#if $exercises.getDefined(exerciseName).has(groupName)}
 					{#each [...$exercises.getDefined(exerciseName).getDefined(groupName)] as tag}
-						<!-- Asymetrical horizontal padding of HoverChange provoked by positioning of the elippsis -->
-						<div class="bg-green-800 py-1 px-2 rounded-md font-medium">
+						<div class="bg-green-800 px-2 rounded-md font-medium">
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
 								iconClass={{
-									disabled: 'fill-white',
-									enabled: 'fill-green-500',
-									groupHover: 'group-hover:fill-red-500',
+									disabled: 'fill-gray-300',
+									enabled: 'fill-white',
+									groupHover: 'group-hover:fill-white',
 								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}
@@ -54,7 +53,9 @@
 								on:delete={() =>
 									model.deleteExerciseTag(exerciseName, groupName, tag)}
 							>
-								<div class="text-white pl-2" slot="placeholderContent">{tag}</div>
+								<div class="text-white pl-2 " slot="placeholderContent">
+									{tag}
+								</div>
 							</EllipsisMenu>
 						</div>
 					{/each}

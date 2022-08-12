@@ -87,7 +87,6 @@
 		if (!$$slots.dropMenuWindow) {
 			throw new Error('No menu window supplied to DropMenu.svelte')
 		}
-		console.log(iconClass, iconClassString)
 	})
 
 	beforeUpdate(() => {

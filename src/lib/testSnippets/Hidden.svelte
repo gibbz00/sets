@@ -8,6 +8,8 @@
                     X Clicking outside of Hidden
 				* Cancelation resets UI to initial state
 
+			// Option to preserve placeholderContent to the same height as hiddenContent in those case where the height is not explicitly set.
+
         Tests: 
             * No hidden content is supplied (done)
             * fallback is being used (done)
@@ -21,18 +23,57 @@
 			* Pressing escape cancels (done)
     */
 
-	import { onMount } from 'svelte'
+	import { onMount, afterUpdate } from 'svelte'
 	import SpecifiedRevealTarget from './SpecifiedRevealTarget.svelte'
 
 	export let hidden: boolean = true
+	export let preserveInputPlaceholderHeight: boolean = true
+
+	/* 
+	Should only work when hidden prop is set to true on mount
+*/
+	//Solely used for the HiddenAutoCompleteSelector, it presumes that a button and an input exist
+	//TODO: create a type check and throw an error if the node type is wrong
+
+	// queryselector used instead of papameters because the button can be sent in a a prop with unknown structure
+	export function temp(node: Node, preserveInputPlaceholderHeight: boolean) {
+		if (preserveInputPlaceholderHeight) {
+			let buttonHeight = (node as HTMLElement).querySelector('button')?.clientHeight
+			// height added as a style attribute since the input ins't rendered
+			let input: HTMLInputElement = (node as HTMLElement).querySelector('input')!
+			input.style.height = `${buttonHeight}px`
+		}
+	}
 
 	// Used for events targeting either visibility state
 	let container: HTMLDivElement
+	let placeholderContent: HTMLDivElement
+	let placeholderContentHeight: number
+	let hiddenContent: HTMLDivElement
 
 	onMount(() => {
 		//TODO: Check if this can be done at compile time
 		if (!$$slots.hiddenContent) {
 			throw new Error('No hiddenContent slot found when attempting to mount Hidden.svelte')
+		}
+
+		// IMPROVEMENT the functionality should be possible to implement by using invisible components,
+		// similar to how DynamicInputWitdh works.
+		if (preserveInputPlaceholderHeight == true) {
+			if (hidden == false) {
+				throw new Error(
+					'Preserving hiddenContent height currently not posssible when hiddenContent is shown by default'
+				)
+			} else {
+				placeholderContentHeight = placeholderContent.clientHeight
+			}
+		}
+	})
+
+	afterUpdate(() => {
+		if (hidden == false) {
+			console.log('hidden false')
+			hiddenContent.style.height = `${placeholderContentHeight}px`
 		}
 	})
 
@@ -57,16 +98,20 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event)}
 />
 
-<div class="w-min" bind:this={container}>
+<div class="w-min my-auto" bind:this={container}>
 	{#if hidden}
-		<SpecifiedRevealTarget
-			on:reveal={() => {
-				hidden = false
-			}}
-		>
-			<slot slot="placeholderContent" name="placeholderContent" />
-		</SpecifiedRevealTarget>
+		<div bind:this={placeholderContent}>
+			<SpecifiedRevealTarget
+				on:reveal={() => {
+					hidden = false
+				}}
+			>
+				<slot slot="placeholderContent" name="placeholderContent" />
+			</SpecifiedRevealTarget>
+		</div>
 	{:else}
-		<slot name="hiddenContent" />
+		<div bind:this={hiddenContent}>
+			<slot name="hiddenContent" />
+		</div>
 	{/if}
 </div>
