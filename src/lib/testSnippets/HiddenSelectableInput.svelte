@@ -14,7 +14,9 @@
 	export let placeholderText: string = ''
 	export let listItems: SelectableInput['listItems'] = undefined
 	export let listFilter: SelectableInput['listFilter'] = undefined
-	export let dynamicWidth: boolean = false
+	export let dynamicWidth: boolean = true
+	export let inputClass: string = ''
+	export let iconClass: string = ''
 
 	let hidden: boolean = true
 </script>
@@ -23,6 +25,8 @@
 	<slot slot="placeholderContent" name="placeholderContent" />
 	<SelectableInput
 		autofocus
+		{inputClass}
+		{iconClass}
 		{dynamicWidth}
 		slot="hiddenContent"
 		on:selected={() => (hidden = true)}

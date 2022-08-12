@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Model from '$lib/Controller.svelte'
+	import Controller from '$lib/Controller.svelte'
 	import { groups, exercises, selectedDay } from '$lib/Model'
 	import AddButton from './AddButton.svelte'
 	import { autocompleteFilter } from './autoCompleteFilter'
@@ -9,10 +9,10 @@
 	export let exerciseName: string
 	export let exercisePlanIndex: number
 
-	let model: Model
+	let controller: Controller
 </script>
 
-<Model bind:this={model} />
+<Controller bind:this={controller} />
 
 <div
 	id="drop-right-menu"
@@ -36,12 +36,16 @@
 				{groupName}
 			</div>
 			<!-- Tags for given group  -->
-			<div class="flex flex-wrap gap-2">
+			<div class="flex items-center flex-wrap gap-2">
 				{#if $exercises.getDefined(exerciseName).has(groupName)}
 					{#each [...$exercises.getDefined(exerciseName).getDefined(groupName)] as tag}
-						<div class="bg-green-800 px-2 rounded-md font-medium">
+						<div
+							class="bg-green-800 p-2 rounded-sm font-medium grid place-content-center"
+						>
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
+								inputClass="bg-green-800 text-white placeholder:text-gray-300"
+								inputIconClass="fill-white"
 								iconClass={{
 									disabled: 'fill-gray-300',
 									enabled: 'fill-white',
@@ -49,11 +53,12 @@
 								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}
-								on:update={(event) => model.updateTag(groupName, tag, event.detail)}
+								on:update={(event) =>
+									controller.updateTag(groupName, tag, event.detail)}
 								on:delete={() =>
-									model.deleteExerciseTag(exerciseName, groupName, tag)}
+									controller.deleteExerciseTag(exerciseName, groupName, tag)}
 							>
-								<div class="text-white pl-2 " slot="placeholderContent">
+								<div class="text-white pl-2 text-center" slot="placeholderContent">
 									{tag}
 								</div>
 							</EllipsisMenu>
@@ -66,7 +71,7 @@
 					listItems={[...$groups.getDefined(groupName).values()]}
 					listFilter={autocompleteFilter}
 					on:selected={(event) =>
-						model.createExerciseTag(event.detail, groupName, exerciseName)}
+						controller.createExerciseTag(event.detail, groupName, exerciseName)}
 				>
 					<AddButton slot="placeholderContent" />
 				</HiddenSelectableInput>
@@ -80,13 +85,14 @@
 		class="
             flex
             flex-col
+			grow-0
             space-y-2
             [&_button]:bg-green-800
             [&_button:hover]:bg-green-900
             [&_button]:px-2
-            [&_button]:rounded-sm
+            [&>button]:rounded-sm
             [&_button]:py-4
-            [&_*]:w-full
+            [&_button]:w-full
             text-white
             font-medium
             mt-3
@@ -95,25 +101,31 @@
 		<!-- Add group button -->
 		<HiddenSelectableInput
 			placeholderText="Enter group name"
-			on:selected={(event) => model.createGroup(event.detail)}
+			iconClass="fill-white"
+			dynamicWidth={false}
+			inputClass="text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white"
+			on:selected={(event) => controller.createGroup(event.detail)}
 		>
 			<button slot="placeholderContent">Add group</button>
 		</HiddenSelectableInput>
 
 		<!-- Change exercise -->
 		<HiddenSelectableInput
+			iconClass="fill-white"
+			inputClass="text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white"
+			dynamicWidth={false}
 			listItems={[...$exercises.keys()]}
 			listFilter={autocompleteFilter}
-			on:selected={(event) => model.updatePlanExercise(event.detail, exercisePlanIndex)}
+			on:selected={(event) => controller.updatePlanExercise(event.detail, exercisePlanIndex)}
 			placeholderText="New exercise name"
-			on:selected={(event) => model.createGroup(event.detail)}
 		>
 			<button slot="placeholderContent">Change exercise</button>
 		</HiddenSelectableInput>
 
 		<!-- Delete exercise -->
 		<button
-			on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, exercisePlanIndex)}
+			on:click={() =>
+				controller.deleteExercisePlan($selectedDay, exerciseName, exercisePlanIndex)}
 		>
 			Delete exercise plan
 		</button>

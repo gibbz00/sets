@@ -1,4 +1,8 @@
 <script lang="ts">
+	// Group-hover key must unfortunately be passed as an explicit hard-coded string.
+	// Won't otherwise be registered by the Tailwind Regexer.
+	// Even though it more often than not the same fill as same as in IconClass.enabled
+
 	export let type: keyof typeof paths
 	let cls: string = ''
 	export { cls as class }
@@ -13,6 +17,6 @@
 	}
 </script>
 
-<svg xmlns="http://www.w3.org/2000/svg" class={`w-7 ${cls}`} viewBox="0 0 48 48">
+<svg xmlns="http://www.w3.org/2000/svg" class={`w-7 h-full my-auto ${cls}`} viewBox="0 0 48 48">
 	<path d={paths[type]} /></svg
 >

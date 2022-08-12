@@ -72,7 +72,6 @@
 
 	afterUpdate(() => {
 		if (hidden == false) {
-			console.log('hidden false')
 			hiddenContent.style.height = `${placeholderContentHeight}px`
 		}
 	})
@@ -98,7 +97,7 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event)}
 />
 
-<div class="w-min my-auto" bind:this={container}>
+<div bind:this={container}>
 	{#if hidden}
 		<div bind:this={placeholderContent}>
 			<SpecifiedRevealTarget

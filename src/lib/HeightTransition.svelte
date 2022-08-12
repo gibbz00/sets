@@ -10,7 +10,7 @@
 
 	// in (ms), these values to not fill requirements, all because I don't want the height transition delay be non-zero
 	const heightTransitionDelay: number = 0
-	const heightTransitionDuration: number = 100
+	const heightTransitionDuration: number = 1000
 	// TODO: not used since fade for child elements isn't implemented
 	// const fadeInDelay: number = 100
 	// const fadeInDuration: number = 100

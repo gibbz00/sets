@@ -33,9 +33,6 @@
 	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
 	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
-	// Group-hover key must unfortunately be passed as an explicit hard-coded string.
-	// Won't otherwise be registered by the Tailwind Regexer.
-	// Even though it more often than not the same fill as same as in IconClass.enabled
 	type IconClass = {
 		default?: string
 		opened?: string

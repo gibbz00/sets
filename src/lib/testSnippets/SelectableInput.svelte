@@ -1,4 +1,6 @@
 <script lang="ts">
+	import Icon from '$lib/Icon.svelte'
+
 	/*
         Add a clickable arrow beside input element for mouse/tap driven users
 
@@ -25,7 +27,6 @@
 
 	import { afterUpdate, createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
-	import Icon from '$lib/Icon.svelte'
 	import { getInputWidthInPixels } from './dynamicInputWidth'
 
 	export let placeholderText: string = ''
@@ -35,6 +36,8 @@
 		| undefined = undefined
 	export let autofocus: boolean = false
 	export let dynamicWidth: boolean = false
+	export let inputClass: string = ''
+	export let iconClass: string = ''
 
 	let listMatches: string[] = []
 	let textFieldValue: string = ''
@@ -117,11 +120,12 @@
 	})
 </script>
 
-<div bind:this={inputContainer} class="relative w-min">
+<div bind:this={inputContainer} class="relative w-min h-full">
 	<div
 		class="
             w-max
             flex
+			h-full
             border-2
             border-gray-500/20
             focus-within:border-blue-500
@@ -133,7 +137,7 @@
                     * otherwise on:input will use old value
         -->
 		<input
-			class="ml-2 focus-visible:outline-none"
+			class={`focus-visible:outline-none ${inputClass}`}
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}
@@ -146,8 +150,9 @@
 			on:click={() => {
 				selectHandler()
 			}}
+			class="w-min"
 		>
-			<Icon type="arrowRightAlt" />
+			<Icon class={iconClass} type="arrowRightAlt" />
 		</button>
 	</div>
 	<!-- Conditional required since an empty ul still renders its borders -->

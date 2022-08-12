@@ -8,16 +8,19 @@
     */
 
 	import HiddenSelectableInput from './HiddenSelectableInput.svelte'
-	import { createEventDispatcher, SvelteComponentTyped } from 'svelte'
+	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
 	import DropMenu from './DropMenu.svelte'
+	import type { SvelteComponentTyped } from 'svelte'
 
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
 	export let absoluteEllipsisPositioning: boolean = true
+	export let inputClass: string = ''
 	export let iconClass: (DropMenu extends SvelteComponentTyped<infer Prop>
 		? Prop
 		: never)['iconClass'] = {}
+	export let inputIconClass: string = ''
 
 	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
 		createEventDispatcher()
@@ -41,7 +44,8 @@
 <HiddenSelectableInput
 	on:selected={(event) => updateDispatcher('update', event.detail)}
 	placeholderText={inputPlaceholderText}
-	{dynamicWidth}
+	{inputClass}
+	iconClass={inputIconClass}
 >
 	<!-- stopPropagation because of the nested Hidden component -->
 	<div on:click|stopPropagation slot="placeholderContent" class="flex content-center min-w-max">

@@ -17,10 +17,7 @@
 
 	const dataStub = ['Banana', 'Bluebery', 'Apple', 'Citrusfruits']
 
-	let dropMenuIconClass = {
-		default: 'transition-transform',
-		opened: 'rotate-180',
-	}
+	let dropMenuIconClass = { default: 'transition-transform', opened: 'rotate-180' }
 </script>
 
 <!-- <div class="grid grid-cols-3 justify-items-center">
@@ -60,7 +57,7 @@
 </HiddenSelectableInput> -->
 
 <DropMenu iconType="arrowRight" iconClass={dropMenuIconClass}>
-	<div slot="placeholderContent" class="max-w-sm truncate">Bench press</div>
+	<div slot="placeholderContent" class="max-w-sm truncate">Ellipsis menu</div>
 	<ExerciseInfo slot="dropMenuWindow" exerciseName="Bench press" exercisePlanIndex={0} />
 </DropMenu>
 
@@ -71,5 +68,10 @@
 	inputPlaceholderText="New name"
 	on:update={(event) => console.log('update', event.detail)}
 	on:delete={() => console.log('deleted')}
-	><div class="w-max" slot="placeholderContent">Bench press</div></EllipsisMenu
+	><div class="w-max" slot="placeholderContent">Ellipsis menu</div></EllipsisMenu
 >
+
+<div class="w-full flex">
+	<div class="border-2 border-red-500 w-full">Test</div>
+	<button class="border-2 border-blue-500">Hejs</button>
+</div>

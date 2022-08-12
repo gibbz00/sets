@@ -13,6 +13,8 @@
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
 	import HeightTransition from '$lib/HeightTransition.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
+	import DropMenu from '$lib/testSnippets/DropMenu.svelte'
+	import ExerciseInfo from '$lib/testSnippets/ExerciseInfo.svelte'
 
 	let controller: Controller
 
@@ -79,7 +81,7 @@
 	</nav>
 
 	<!-- Table container with add week button -->
-	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 150}>
+	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 110}>
 		<section class="mx-4 pt-5">
 			<!-- Sets table -->
 
@@ -89,7 +91,7 @@
 			>
 				<!-- Table header: Exercise title and week names -->
 				<div class="contents text-2xl">
-					<div class="max-w-min">Exercise</div>
+					<div class="pl-3 max-w-min">Exercise</div>
 					{#each [...$weekNames.values()] as weekName, index}
 						<div class="justify-self-center">
 							<EllipsisMenu
@@ -105,11 +107,11 @@
 						</div>
 					{/each}
 					<!-- Add week button -->
-					<div class="justify-self-end">
+					<div class="pr-3">
 						<HiddenSelectableInput
 							dynamicWidth
 							placeholderText="Add week"
-							on:selected={(event) => console.log('selected: ', event.detail)}
+							on:selected={(event) => controller.createWeek(event.detail)}
 						>
 							<AddButton slot="placeholderContent" />
 						</HiddenSelectableInput>
@@ -132,8 +134,24 @@
 							duration: fadeOutDuration,
 						}}
 					>
-						<Exercise {exerciseName} {index} />
-						<!-- sets grid -->
+						<div class="col-start-1">
+							<DropMenu
+								iconType="arrowRight"
+								iconClass={{
+									default: 'transition-transform',
+									opened: 'rotate-180',
+								}}
+							>
+								<div slot="placeholderContent" class="max-w-sm truncate">
+									{exerciseName}
+								</div>
+								<ExerciseInfo
+									slot="dropMenuWindow"
+									{exerciseName}
+									exercisePlanIndex={index}
+								/>
+							</DropMenu>
+						</div>
 						<!-- Last sets should self align left due to add for proper add week button placement -->
 						{#each sets as set}
 							<div class="justify-self-center">
@@ -145,14 +163,16 @@
 			</div>
 
 			<!-- Add exercise plan to workout day -->
-			<HiddenSelectableInput
-				placeholderText="Add exercise plan"
-				listItems={[...$exercises.keys()]}
-				listFilter={autocompleteFilter}
-				on:selected={(event) => controller.createExercisePlan(event.detail)}
-			>
-				<AddButton slot="placeholderContent" />
-			</HiddenSelectableInput>
+			<div class="pl-3 mt-2">
+				<HiddenSelectableInput
+					placeholderText="Add exercise plan"
+					listItems={[...$exercises.keys()]}
+					listFilter={autocompleteFilter}
+					on:selected={(event) => controller.createExercisePlan(event.detail)}
+				>
+					<AddButton slot="placeholderContent" />
+				</HiddenSelectableInput>
+			</div>
 		</section>
 	</HeightTransition>
 </main>
