@@ -1,10 +1,27 @@
 <script lang="ts">
+	import { fade } from 'svelte/transition'
+	import {
+		fadeInDelay,
+		fadeInDuration,
+		fadeOutDelay,
+		fadeOutDuration,
+	} from '$lib/transitionConstants'
+
 	export let set: number
-	//TODO: proper type-settings
 </script>
 
-<!-- "BUG": cant pass tailwind classes to class:directive in at least HMR dev mode -->
-<div class={`group flex`}>
+<!-- in/out:fade transition used for in table that has height transtion, see HeightTransition for more on why -->
+<div
+	class="group flex"
+	in:fade={{
+		delay: fadeInDelay,
+		duration: fadeInDuration,
+	}}
+	out:fade={{
+		delay: fadeOutDelay,
+		duration: fadeOutDuration,
+	}}
+>
 	<button
 		class="text-gray-400 w-7 group-hover:text-black"
 		disabled={set == 0 ? true : false}

@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { weekNames, workoutPrograms, selectedDay, exercises } from '$lib/Model'
 	import Controller from '$lib/Controller.svelte'
-	import Exercise from '$lib/Exercise.svelte'
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
 	import HiddenSelectableInput from '$lib/testSnippets/HiddenSelectableInput.svelte'
 	import AddButton from '$lib/testSnippets/AddButton.svelte'
 	import Icon from '$lib/Icon.svelte'
 
-	import { crossfade, fade } from 'svelte/transition'
+	import { crossfade } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
 
 	import { autocompleteFilter } from '$lib/testSnippets/autoCompleteFilter'
@@ -36,12 +35,6 @@
 			}
 		},
 	})
-
-	// TODO: move to HeightTransition?
-	const fadeInDelay: number = 100
-	const fadeInDuration: number = 100
-	const fadeOutDelay: number = 0
-	const fadeOutDuration: number = 100
 </script>
 
 <Controller bind:this={controller} />
@@ -87,7 +80,7 @@
 
 			<div
 				class="grid items-center text-xl gap-y-3"
-				style:grid-template-columns={`min-content repeat(${$weekNames.size}, 1fr) min-content`}
+				style:grid-template-columns={`14rem repeat(${$weekNames.size}, 1fr) min-content`}
 			>
 				<!-- Table header: Exercise title and week names -->
 				<div class="contents text-2xl">
@@ -123,17 +116,7 @@
 
 				<!-- table rows -->
 				{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
-					<div
-						class="contents"
-						in:fade={{
-							delay: fadeInDelay,
-							duration: fadeInDuration,
-						}}
-						out:fade={{
-							delay: fadeOutDelay,
-							duration: fadeOutDuration,
-						}}
-					>
+					<div class="contents">
 						<div class="col-start-1">
 							<DropMenu
 								iconType="arrowRight"

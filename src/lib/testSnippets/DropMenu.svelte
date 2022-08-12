@@ -3,6 +3,13 @@
 	import type { SvelteComponentTyped } from 'svelte'
 	import { onMount } from 'svelte'
 	import { beforeUpdate } from 'svelte'
+	import { fade } from 'svelte/transition'
+	import {
+		fadeInDelay,
+		fadeInDuration,
+		fadeOutDelay,
+		fadeOutDuration,
+	} from '$lib/transitionConstants'
 
 	/*
         In component use:
@@ -136,7 +143,19 @@
 />
 
 <!-- hover outside dropMenuWindow when opneded should fill icon black -->
-<div bind:this={dropRightContainer} class="relative max-w-max">
+<!-- in/out:fade transition used for in table that has height transtion, see HeightTransition for more on why -->
+<div
+	bind:this={dropRightContainer}
+	class="relative max-w-max"
+	in:fade={{
+		delay: fadeInDelay,
+		duration: fadeInDuration,
+	}}
+	out:fade={{
+		delay: fadeOutDelay,
+		duration: fadeOutDuration,
+	}}
+>
 	<div class="flex group rounded-full hover:bg-zinc-300/20">
 		{#if $$slots.placeholderContent}
 			<div class="ml-3 my-1">
