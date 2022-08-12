@@ -46,7 +46,7 @@
 								iconClass={{
 									disabled: 'fill-white',
 									enabled: 'fill-green-500',
-									groupHover: 'group-hover:fill-green-500',
+									groupHover: 'group-hover:fill-red-500',
 								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}

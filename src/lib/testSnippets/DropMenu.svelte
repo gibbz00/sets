@@ -95,11 +95,11 @@
 	})
 
 	function buildIconString(): string {
-		return `${iconClass.default} w-8 ${
+		return `${iconClass.default} ${iconClass.groupHover} w-8 ${
 			opened
 				? `${overDropRight ? iconClass.disabled : iconClass.enabled} ${iconClass.opened}`
 				: `${iconClass.disabled}`
-		} group-hover:${iconClass.enabled}`
+		}`
 	}
 
 	function checkOpenToggle(event: MouseEvent) {
