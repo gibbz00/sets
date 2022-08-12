@@ -125,7 +125,7 @@
 									opened: 'rotate-180',
 								}}
 							>
-								<div slot="placeholderContent" class="max-w-sm truncate">
+								<div slot="placeholderContent" class="max-w-[11rem] truncate">
 									{exerciseName}
 								</div>
 								<ExerciseInfo
