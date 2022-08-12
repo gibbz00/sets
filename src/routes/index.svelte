@@ -1,7 +1,7 @@
 <script lang="ts">
 	import WeekNames from '$lib/WeekNames.svelte'
-	import { weekNames, workoutPrograms, exercises, selectedDay } from '$lib/Stores'
-	import Model from '$lib/Model.svelte'
+	import { weekNames, workoutPrograms, exercises, selectedDay } from '$lib/Model'
+	import Controller from '$lib/Controller.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
 	import Icon from '$lib/Icon.svelte'
@@ -27,7 +27,7 @@
 		},
 	})
 
-	let model: Model
+	let controller: Controller
 
 	/*
 		Section height animaiton:
@@ -46,7 +46,7 @@
 	const fadeOutDuration: number = 100
 </script>
 
-<Model bind:this={model} />
+<Controller bind:this={controller} />
 
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
@@ -135,7 +135,7 @@
 				inputStyling="border-2 border-yellow-500"
 				placeholder="Add exercise plan"
 				data={Array.from($exercises.keys())}
-				on:selected={(event) => model.createExercisePlan(event.detail)}
+				on:selected={(event) => controller.createExercisePlan(event.detail)}
 			/>
 		</div>
 	</section>

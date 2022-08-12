@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { weekNames } from '$lib/Stores'
-	import Model from '$lib/Model.svelte'
+	import { weekNames } from '$lib/Model'
+	import Controller from '$lib/Controller.svelte'
 	import HoverChange from '$lib/HoverChange.svelte'
 	import HiddenAutoCompleteSelector from '$lib/HiddenAutoCompleteSelector.svelte'
 
-	let model: Model
+	let controller: Controller
 </script>
 
-<Model bind:this={model} />
+<Controller bind:this={controller} />
 
 {#each [...$weekNames.values()] as weekName, index}
 	<HoverChange
 		updatePlaceholder="New week name"
 		absoluteInputPositioning
 		inputStyling="border-2 border-yellow-500"
-		on:update={(event) => model.updateWeek(weekName, event.detail)}
-		on:delete={() => model.deleteWeek(weekName, index)}
+		on:update={(event) => controller.updateWeek(weekName, event.detail)}
+		on:delete={() => controller.deleteWeek(weekName, index)}
 	>
 		{weekName}
 		<!-- WORK-AROUND for svelte conditional slots: https://github.com/sveltejs/svelte/issues/5604 -->
@@ -25,7 +25,7 @@
 					<HiddenAutoCompleteSelector
 						inputStyling="text-center border-2 border-yellow-500"
 						placeholder="Add week"
-						on:selected={(event) => model.createWeek(event.detail)}
+						on:selected={(event) => controller.createWeek(event.detail)}
 					/>
 				</div>
 			{/if}

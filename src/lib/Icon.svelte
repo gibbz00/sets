@@ -1,6 +1,4 @@
 <script lang="ts">
-	import { beforeUpdate } from 'svelte'
-
 	export let type: keyof typeof paths
 	let cls: string = ''
 	export { cls as class }

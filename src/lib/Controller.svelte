@@ -7,7 +7,7 @@
 		weekNames,
 		workoutPrograms,
 		refresh,
-	} from '$lib/Stores'
+	} from '$lib/Model'
 	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'

@@ -1,10 +1,12 @@
-module.exports = ['group-hover:fill-black', 'group-hover:fill-red-500']
-
-// export let test = 'group-hover:fill-red-500'
-
 /*
+
+    Won't work, tailwind config and regexer is inherently executed during compile-time. 
+
+
+
     Dynamic tailwind classes are usually not allowed since Tailwind extracts the classes to ship by regexing source code.
     https://tailwindcss.com/docs/content-configuration#dynamic-class-names
+
 
     But sometimes it is possible for the developer to know in-beforehand if class can be statically rendered, 
     appearing only dynamic for a descent API experience. 
@@ -33,3 +35,36 @@ module.exports = ['group-hover:fill-black', 'group-hover:fill-red-500']
         Think it is something about how this file can't be compiled as an isolated module. 
         Shooting myself in the food for each expression it is. 
 */
+
+class RegisterDynamicTailwindClass {
+	// TODO: typeset and make private
+	static #tailwindClasses = []
+
+	/**
+	 * @param {string} className
+	 */
+	static addClass(className) {
+		this.#tailwindClasses.push(className)
+	}
+
+	/**
+	 *
+	 * @returns String[]
+	 */
+	static getClasses() {
+		return this.#tailwindClasses
+	}
+}
+
+RegisterDynamicTailwindClass.addClass('group-hover:fill-black')
+
+let tailwindClasses = [
+	'group-hover:fill-black',
+	'group-hover:fill-red-500',
+	'group-hover:fill-green-500',
+]
+
+module.exports = {
+	tailwindClasses,
+	test: RegisterDynamicTailwindClass.getClasses(),
+}

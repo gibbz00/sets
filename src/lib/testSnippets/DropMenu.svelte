@@ -33,11 +33,15 @@
 	// https://stackoverflow.com/questions/70103438/typescript-get-svelte-components-prop-type
 	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type']
 
+	// Group-hover key must unfortunately be passed as an explicit hard-coded string.
+	// Won't otherwise be registered by the Tailwind Regexer.
+	// Even though it more often than not the same fill as same as in IconClass.enabled
 	type IconClass = {
-		default?: string | undefined
-		opened?: string | undefined
-		enabled?: string | undefined
-		disabled?: string | undefined
+		default?: string
+		opened?: string
+		enabled?: string
+		disabled?: string
+		groupHover?: `group-hover:${string}`
 	}
 	export let iconClass: IconClass = {}
 
@@ -57,17 +61,23 @@
 		opened: '',
 		enabled: 'fill-black',
 		disabled: 'fill-gray-400',
+		groupHover: 'group-hover:fill-black',
 	}
 	Object.keys(defaultIconClass).forEach((value) => {
 		let key: keyof IconClass = value as any
 		if (iconClass[key] == undefined) {
-			iconClass[key] = defaultIconClass[key]
+			// TODO: feels quite redundant
+			if (key != 'groupHover') {
+				iconClass[key] = defaultIconClass[key]
+			} else iconClass[key] = defaultIconClass[key]
 		} else {
 			// do not add defaultIconClass if iconClass[key] contains 'fill-'
 			// generally, any competing 	$: extracted = class in defaultIconClass
 			if (iconClass[key] != undefined && iconClass[key]!.includes('fill-')) return
 
-			iconClass[key] = `${defaultIconClass[key]} ${iconClass[key]}`
+			if (key != 'groupHover') {
+				iconClass[key] = `${defaultIconClass[key]} ${iconClass[key]}`
+			}
 		}
 	})
 

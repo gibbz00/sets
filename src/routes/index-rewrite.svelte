@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { weekNames, workoutPrograms, selectedDay, exercises } from '$lib/Stores'
-	import Model from '$lib/Model.svelte'
+	import { weekNames, workoutPrograms, selectedDay, exercises } from '$lib/Model'
+	import Controller from '$lib/Controller.svelte'
 	import Exercise from '$lib/Exercise.svelte'
 	import EllipsisMenu from '$lib/testSnippets/EllipsisMenu.svelte'
 	import HiddenSelectableInput from '$lib/testSnippets/HiddenSelectableInput.svelte'
@@ -14,7 +14,7 @@
 	import HeightTransition from '$lib/HeightTransition.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
 
-	let model: Model
+	let controller: Controller
 
 	// Animation setup for chosen tab indicator
 	const [send, receive] = crossfade({
@@ -42,7 +42,7 @@
 	const fadeOutDuration: number = 100
 </script>
 
-<Model bind:this={model} />
+<Controller bind:this={controller} />
 
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
@@ -95,8 +95,8 @@
 							<EllipsisMenu
 								dynamicWidth
 								inputPlaceholderText="New week name"
-								on:update={(event) => model.updateWeek(weekName, event.detail)}
-								on:delete={() => model.deleteWeek(weekName, index)}
+								on:update={(event) => controller.updateWeek(weekName, event.detail)}
+								on:delete={() => controller.deleteWeek(weekName, index)}
 							>
 								<svelte:fragment slot="placeholderContent">
 									{weekName}
@@ -149,7 +149,7 @@
 				placeholderText="Add exercise plan"
 				listItems={[...$exercises.keys()]}
 				listFilter={autocompleteFilter}
-				on:selected={(event) => model.createExercisePlan(event.detail)}
+				on:selected={(event) => controller.createExercisePlan(event.detail)}
 			>
 				<AddButton slot="placeholderContent" />
 			</HiddenSelectableInput>

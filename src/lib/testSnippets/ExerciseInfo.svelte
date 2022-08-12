@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Model from '$lib/Model.svelte'
-	import { groups, exercises, selectedDay } from '$lib/Stores'
+	import Model from '$lib/Controller.svelte'
+	import { groups, exercises, selectedDay } from '$lib/Model'
 	import AddButton from './AddButton.svelte'
 	import { autocompleteFilter } from './autoCompleteFilter'
 	import EllipsisMenu from './EllipsisMenu.svelte'
@@ -45,7 +45,8 @@
 								inputPlaceholderText="Change tag name"
 								iconClass={{
 									disabled: 'fill-white',
-									enabled: 'fill-red-500',
+									enabled: 'fill-green-500',
+									groupHover: 'group-hover:fill-green-500',
 								}}
 								dynamicWidth
 								absoluteEllipsisPositioning={false}

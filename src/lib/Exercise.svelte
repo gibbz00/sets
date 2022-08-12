@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte'
-	import { selectedDay, groups, exercises } from '$lib/Stores'
-	import Model from '$lib/Model.svelte'
+	import { selectedDay, groups, exercises } from '$lib/Model'
+	import Controller from '$lib/Controller.svelte'
 	import HoverChange from './HoverChange.svelte'
 	import HiddenAutoCompleteSelector from './HiddenAutoCompleteSelector.svelte'
 
@@ -10,7 +10,7 @@
 
 	let opened: boolean = false
 
-	let model: Model
+	let controller: Controller
 	let dropRightContainer: HTMLDivElement
 
 	function open() {
@@ -66,7 +66,7 @@
 	}
 </script>
 
-<Model bind:this={model} />
+<Controller bind:this={controller} />
 <svelte:window
 	on:click|capture={(event) => {
 		// close if click was outside of dropright
@@ -143,9 +143,9 @@
 												hover: 'fill-white',
 											}}
 											on:update={(event) =>
-												model.updateTag(groupName, tag, event.detail)}
+												controller.updateTag(groupName, tag, event.detail)}
 											on:delete={() =>
-												model.deleteExerciseTag(
+												controller.deleteExerciseTag(
 													exerciseName,
 													groupName,
 													tag
@@ -163,7 +163,11 @@
 								data={Array.from($groups.getDefined(groupName).values())}
 								placeholder="Add tag"
 								on:selected={(event) =>
-									model.createExerciseTag(event.detail, groupName, exerciseName)}
+									controller.createExerciseTag(
+										event.detail,
+										groupName,
+										exerciseName
+									)}
 							/>
 						</div>
 					{/each}
@@ -186,7 +190,7 @@
 					<HiddenAutoCompleteSelector
 						inputStyling="border-2 border-yellow-500 text-black mb-2 min-w-full text-center"
 						placeholder="Enter group name"
-						on:selected={(event) => model.createGroup(event.detail)}
+						on:selected={(event) => controller.createGroup(event.detail)}
 					>
 						<button class="hover:bg-green-900 mb-2 w-full" slot="placeholder"
 							>Add group</button
@@ -198,7 +202,7 @@
 						inputStyling="border-2 border-yellow-500 text-black mb-2 min-w-full text-center"
 						placeholder="New exercise name"
 						data={Array.from($exercises.keys())}
-						on:selected={(event) => model.updatePlanExercise(event.detail, index)}
+						on:selected={(event) => controller.updatePlanExercise(event.detail, index)}
 					>
 						<button class="hover:bg-green-900 mb-2 w-full" slot="placeholder"
 							>Change exercise</button
@@ -207,7 +211,8 @@
 
 					<!-- Delete exercise -->
 					<button
-						on:click={() => model.deleteExercisePlan($selectedDay, exerciseName, index)}
+						on:click={() =>
+							controller.deleteExercisePlan($selectedDay, exerciseName, index)}
 						class="hover:bg-green-900"
 					>
 						Delete exercise plan
