@@ -80,11 +80,11 @@
 
 			<div
 				class="grid items-center text-xl gap-y-3"
-				style:grid-template-columns={`14rem repeat(${$weekNames.size}, 1fr) min-content`}
+				style:grid-template-columns={`minmax(10rem, min-content) repeat(${$weekNames.size}, 1fr) min-content`}
 			>
 				<!-- Table header: Exercise title and week names -->
 				<div class="contents text-2xl">
-					<div class="pl-3 max-w-min">Exercise</div>
+					<div class="pl-3 max-w-[24rem]">Exercise</div>
 					{#each [...$weekNames.values()] as weekName, index}
 						<div class="justify-self-center">
 							<EllipsisMenu
@@ -125,7 +125,7 @@
 									opened: 'rotate-180',
 								}}
 							>
-								<div slot="placeholderContent" class="max-w-[11rem] truncate">
+								<div slot="placeholderContent" class="max-w-[22rem] max-w truncate">
 									{exerciseName}
 								</div>
 								<ExerciseInfo

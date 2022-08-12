@@ -160,6 +160,7 @@
 				z-10
 				inset-x-0 
 				min-w-max 
+				max-w-sm
 				text-left 
 				bg-white 
 				border-2 
