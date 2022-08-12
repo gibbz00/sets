@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { SvelteComponent, SvelteComponentTyped } from 'svelte'
+
 	import Hidden from './Hidden.svelte'
 	import SelectableInput from './SelectableInput.svelte'
 
@@ -15,8 +17,9 @@
 	export let listItems: SelectableInput['listItems'] = undefined
 	export let listFilter: SelectableInput['listFilter'] = undefined
 	export let dynamicWidth: boolean = true
-	export let inputClass: string = ''
-	export let iconClass: string = ''
+	export let elementClasses: (SelectableInput extends SvelteComponentTyped<infer Prop>
+		? Prop
+		: never)['elementClasses'] = {}
 
 	let hidden: boolean = true
 </script>
@@ -25,8 +28,7 @@
 	<slot slot="placeholderContent" name="placeholderContent" />
 	<SelectableInput
 		autofocus
-		{inputClass}
-		{iconClass}
+		{elementClasses}
 		{dynamicWidth}
 		slot="hiddenContent"
 		on:selected={() => (hidden = true)}

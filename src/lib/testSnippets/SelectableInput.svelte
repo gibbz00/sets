@@ -36,8 +36,12 @@
 		| undefined = undefined
 	export let autofocus: boolean = false
 	export let dynamicWidth: boolean = false
-	export let inputClass: string = ''
-	export let iconClass: string = ''
+	type ElementClasses = {
+		input?: string
+		icon?: string
+		list?: string
+	}
+	export let elementClasses: ElementClasses = {}
 
 	let listMatches: string[] = []
 	let textFieldValue: string = ''
@@ -120,24 +124,15 @@
 	})
 </script>
 
-<div bind:this={inputContainer} class="relative w-min h-full">
-	<div
-		class="
-            w-max
-            flex
-			h-full
-            border-2
-            border-gray-500/20
-            focus-within:border-blue-500
-        "
-	>
+<div bind:this={inputContainer} class="relative h-full">
+	<div class="flex h-full">
 		<!--
             ORDER MATTERS!!!
                 * bind:value must come before on:input
                     * otherwise on:input will use old value
         -->
 		<input
-			class={`focus-visible:outline-none ${inputClass}`}
+			class={`focus-visible:outline-none ${elementClasses.input}`}
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}
@@ -150,9 +145,9 @@
 			on:click={() => {
 				selectHandler()
 			}}
-			class="w-min"
+			class="max-w-min"
 		>
-			<Icon class={iconClass} type="arrowRightAlt" />
+			<Icon class={elementClasses.icon} type="arrowRightAlt" />
 		</button>
 	</div>
 	<!-- Conditional required since an empty ul still renders its borders -->
@@ -173,7 +168,7 @@
 				border-gray 
 				divide-y-2 
 				divide-slate-100
-			`}
+			${elementClasses.list}`}
 	>
 		{#each listMatches as match, index}
 			<li

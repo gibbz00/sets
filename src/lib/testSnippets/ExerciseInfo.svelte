@@ -17,17 +17,16 @@
 <div
 	id="drop-right-menu"
 	class="
-	max-w-sm 
-	w-max
-            p-3 
-            text-black 
-            bg-white 
-            border-2 
-            rounded-sm 
-            shadow-sm 
-            border-gray 
-            cursor-default
-        "
+		w-max
+		p-3 
+		text-black 
+		bg-white 
+		border-2 
+		rounded-sm 
+		shadow-sm 
+		border-gray 
+		cursor-default
+	"
 >
 	<!-- Groups -->
 	<span class="space-y-2">
@@ -44,8 +43,10 @@
 						>
 							<EllipsisMenu
 								inputPlaceholderText="Change tag name"
-								inputClass="bg-green-800 text-white placeholder:text-gray-300"
-								inputIconClass="fill-white"
+								inputElementClasses={{
+									input: 'bg-green-800 text-white placeholder:text-gray-300',
+									icon: 'fill-white',
+								}}
 								iconClass={{
 									disabled: 'fill-gray-300',
 									enabled: 'fill-white',
@@ -85,7 +86,6 @@
 		class="
             flex
             flex-col
-			grow-0
             space-y-2
             [&_button]:bg-green-800
             [&_button:hover]:bg-green-900
@@ -101,9 +101,11 @@
 		<!-- Add group button -->
 		<HiddenSelectableInput
 			placeholderText="Enter group name"
-			iconClass="fill-white"
+			elementClasses={{
+				input: 'w-full text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white',
+				icon: 'fill-white',
+			}}
 			dynamicWidth={false}
-			inputClass="text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white"
 			on:selected={(event) => controller.createGroup(event.detail)}
 		>
 			<button slot="placeholderContent">Add group</button>
@@ -111,8 +113,11 @@
 
 		<!-- Change exercise -->
 		<HiddenSelectableInput
-			iconClass="fill-white"
-			inputClass="text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white"
+			elementClasses={{
+				input: 'w-full text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white',
+				icon: 'fill-white',
+				list: 'text-black',
+			}}
 			dynamicWidth={false}
 			listItems={[...$exercises.keys()]}
 			listFilter={autocompleteFilter}
