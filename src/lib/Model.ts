@@ -2,14 +2,23 @@ import { SetMap } from './ADTs/SetMap'
 import { ThrowSet } from './ADTs/ThowSet'
 import { writable, type Writable, get } from 'svelte/store'
 import { KeyAlreadyExistsError } from './ADTs/SetErrors'
-import type {
-	ExercisePlan,
-	Exercises,
-	Groups,
-	ExerciseProperties,
-	WeekNames,
-	WorkoutPrograms,
-} from './ADTs/Types'
+
+export type WeekNames = ThrowSet<string>
+export type ExerciseProperties = SetMap<string, ThrowSet<string>>
+export type Exercises = SetMap<string, ExerciseProperties>
+export type Groups = SetMap<string, ThrowSet<string>>
+export type ExercisePlan = {
+	exerciseName: string
+	sets: number[]
+}
+export type WorkoutPrograms = SetMap<string, ExercisePlan[]>
+
+export const exercises: Writable<Exercises> = writable(new SetMap())
+export const groups: Writable<Groups> = writable(new SetMap())
+export const weekNames: Writable<WeekNames> = writable(new ThrowSet())
+export const workoutPrograms: Writable<WorkoutPrograms> = writable(new SetMap())
+export const selectedDay: Writable<string> = writable()
+export const selectedGroup: Writable<string | null> = writable()
 
 const muscleGroups = [
 	'Quad', //0
@@ -158,14 +167,6 @@ const seed = {
 	],
 }
 
-export const exercises: Writable<Exercises> = writable(new SetMap())
-export const groups: Writable<Groups> = writable(new SetMap())
-export const weekNames: Writable<WeekNames> = writable(new ThrowSet())
-export const workoutPrograms: Writable<WorkoutPrograms> = writable(new SetMap())
-export const selectedDay: Writable<string> = writable(get(workoutPrograms).keys().next().value)
-export const selectedGroup: Writable<string | null> = writable(get(groups).keys().next().value)
-export const refresh: Writable<Object> = writable(new Object())
-
 function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
 	// SetMap.set() checks for duplicates, no need to loop over them twice
 	try {
@@ -180,9 +181,6 @@ function newExercisePlan(exerciseName: string, sets?: number[]): ExercisePlan {
 		sets: sets ? sets : new Array(get(weekNames).size).fill(0),
 	}
 }
-
-// Select workoutday
-selectedDay.set('Monday')
 
 // Seed groupnames
 for (let groupSeed of seed.groups) {
@@ -219,3 +217,7 @@ for (let day of seed.program) {
 	}
 	workoutPrograms.update((setmap) => setmap.set(day.name, tempExercisePlans))
 }
+
+// Select initial weekday and week
+selectedDay.set('Monday')
+selectedGroup.set('Primary')

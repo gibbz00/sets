@@ -6,14 +6,14 @@
 		selectedGroup,
 		weekNames,
 		workoutPrograms,
-		refresh,
+		type ExercisePlan,
 	} from '$lib/Model'
 	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'
-	import type { ExercisePlan } from './ADTs/Types'
 	import { onMount } from 'svelte'
 
+	let refresh = {}
 	let modal: Modal
 	let confirmDeleteModal: Modal
 	//TODO: fix this awful API
@@ -281,7 +281,7 @@
 	}
 
 	function resetUI() {
-		$refresh = new Object()
+		refresh = new Object()
 	}
 </script>
 
