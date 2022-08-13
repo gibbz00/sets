@@ -22,6 +22,7 @@
 				* Done by:
 					* Clicking on list-item (done)
 					* Arrow up or down (done)
+					* Arrow up on first index moved index to last.
         * Option to have automatic width based on current input,
     */
 
@@ -84,13 +85,21 @@
 						} else findListMatches()
 					} else if (selectedListItemIndex + 1 != listMatches.length) {
 						textFieldValue = listMatches[++selectedListItemIndex]
+					} else {
+						selectedListItemIndex = 0
+						textFieldValue = listMatches[selectedListItemIndex]
 					}
 					break
 				case 'ArrowUp':
 					// event.preventDefault() called to prevent cursor jump to input beginning
 					event.preventDefault()
-					if (selectedListItemIndex != undefined && selectedListItemIndex > 0) {
-						textFieldValue = listMatches[--selectedListItemIndex]
+					if (selectedListItemIndex != undefined) {
+						if (selectedListItemIndex == 0) {
+							selectedListItemIndex = listMatches.length - 1
+							textFieldValue = listMatches[selectedListItemIndex]
+						} else {
+							textFieldValue = listMatches[--selectedListItemIndex]
+						}
 					}
 					break
 			}
