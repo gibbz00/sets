@@ -49,7 +49,7 @@
 	}
 	export let iconClass: IconClass = {}
 
-	let opened: boolean = false
+	export let opened: boolean = false
 	let overDropRight: boolean = false
 	let dropMenuWindow: HTMLDivElement
 	let dropRightContainer: HTMLDivElement

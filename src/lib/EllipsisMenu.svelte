@@ -34,11 +34,12 @@
 	})
 
 	// TODO: hidden = true might not be needed since the item itself is removed
-	// If that is the case, then I probably don't need this component at all
 	let hidden: boolean
+	let dropMenuOpened: boolean
 	function deleteHandler() {
 		deleteDispatcher('delete')
 		hidden = true
+		dropMenuOpened = false
 	}
 </script>
 
@@ -57,7 +58,7 @@
 					absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
 				} grid place-content-center`}
 			>
-				<DropMenu iconType="more_vert" {iconClass}>
+				<DropMenu opened={dropMenuOpened} iconType="more_vert" {iconClass}>
 					<div
 						slot="dropMenuWindow"
 						class="font-normal 

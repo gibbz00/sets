@@ -11,8 +11,10 @@
 </script>
 
 <!-- in/out:fade transition used for in table that has height transtion, see HeightTransition for more on why -->
+<!-- Same height as tag in analyis, simplifies row heights -->
+<!-- (Using grid-auto-rows:minmax(2.5rem, max-content) creates a tricky situation with the <hr/>) -->
 <div
-	class="group flex"
+	class="group flex h-10"
 	in:fade={{
 		delay: fadeInDelay,
 		duration: fadeInDuration,

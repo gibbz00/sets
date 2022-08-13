@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { weekNames, workoutPrograms, selectedDay, exercises } from '$lib/Model'
+	import { workoutPrograms, selectedDay, exercises } from '$lib/Model'
 	import Controller from '$lib/Controller.svelte'
-	import EllipsisMenu from '$lib/EllipsisMenu.svelte'
 	import HiddenSelectableInput from '$lib/HiddenSelectableInput.svelte'
 	import AddButton from '$lib/AddButton.svelte'
 	import Icon from '$lib/Icon.svelte'
@@ -14,6 +13,7 @@
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
 	import DropMenu from '$lib/DropMenu.svelte'
 	import ExerciseInfo from '$lib/ExerciseInfo.svelte'
+	import TableTemplate from '$lib/TableTemplate.svelte'
 
 	let controller: Controller
 
@@ -42,21 +42,50 @@
 <header class="flex justify-between mb-10">
 	<h1 class="text-6xl">Set planner</h1>
 	<a
-		class="flex items-center justify-around px-4 py-3 bg-green-800 hover:bg-green-900 rounded-sm"
+		class="
+			flex 
+			items-center 
+			justify-around 
+			px-4 
+			py-3 
+			bg-green-800 
+			hover:bg-green-900 
+			rounded-sm
+		"
 		href="/analysis"
 	>
-		<span class="text-2xl font-medium text-white h-min">Set analysis</span>
-		<span class="w-8 h-8">
-			<Icon class="fill-white" type="arrowRightAlt" />
+		<span
+			class="
+				text-2xl
+				font-medium 
+				text-white
+				h-min
+			"
+		>
+			Set analysis
 		</span>
+		<div class="ml-2">
+			<Icon class="fill-white" type="arrowRightAlt" />
+		</div>
 	</a>
 </header>
 
-<main class="pb-5 rounded-md shadow-sm">
-	<nav class="flex text-2xl text-center rounded-md bg-slate-50">
+<main class="pb-5 rounded-md shadow-md">
+	<!-- Weekday tabs -->
+	<!-- h-[4.8rem set based on analysis, in which all tabs can risk being removed] -->
+	<nav
+		class="
+			flex
+			text-2xl
+			text-center
+			rounded-md
+			bg-slate-50
+			h-[4.8rem]
+		"
+	>
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
-				class="flex flex-col w-full hover:bg-slate-100"
+				class="flex justify-center flex-col w-full hover:bg-slate-100"
 				on:click={() => {
 					$selectedDay = weekday
 				}}
@@ -76,86 +105,53 @@
 	<!-- Table container with add week button -->
 	<HeightTransition maxHeight={($workoutPrograms.getDefined($selectedDay).length + 1) * 110}>
 		<section class="mx-4 pt-5">
-			<!-- Sets table -->
-
-			<div
-				class="grid items-center text-xl gap-y-3"
-				style:grid-template-columns={`minmax(10rem, min-content) repeat(${$weekNames.size}, 1fr) min-content`}
-			>
-				<!-- Table header: Exercise title and week names -->
-				<div class="contents text-2xl">
-					<div class="pl-3 max-w-[24rem]">Exercise</div>
-					{#each [...$weekNames.values()] as weekName, index}
-						<div class="justify-self-center">
-							<EllipsisMenu
-								dynamicWidth
-								inputPlaceholderText="New week name"
-								on:update={(event) => controller.updateWeek(weekName, event.detail)}
-								on:delete={() => controller.deleteWeek(weekName, index)}
-							>
-								<svelte:fragment slot="placeholderContent">
-									{weekName}
-								</svelte:fragment>
-							</EllipsisMenu>
+			<TableTemplate>
+				<svelte:fragment slot="headerColumnOne">Exercise</svelte:fragment>
+				<svelte:fragment slot="body">
+					{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
+						<div class="contents">
+							<div class="col-start-1">
+								<DropMenu
+									iconType="arrowRight"
+									iconClass={{
+										default: 'transition-transform',
+										opened: 'rotate-180',
+									}}
+								>
+									<div
+										slot="placeholderContent"
+										class="max-w-[22rem] max-w truncate"
+									>
+										{exerciseName}
+									</div>
+									<ExerciseInfo
+										slot="dropMenuWindow"
+										{exerciseName}
+										exercisePlanIndex={index}
+									/>
+								</DropMenu>
+							</div>
+							<!-- Last sets should self align left due to add for proper add week button placement -->
+							{#each sets as set}
+								<div class="justify-self-center">
+									<SetNumberInput bind:set />
+								</div>
+							{/each}
 						</div>
 					{/each}
-					<!-- Add week button -->
-					<div class="pr-3">
+					<!-- Add exercise plan to workout day -->
+					<div class="col-start-1 pl-3 mt-2">
 						<HiddenSelectableInput
-							dynamicWidth
-							placeholderText="Add week"
-							on:selected={(event) => controller.createWeek(event.detail)}
+							placeholderText="Add exercise plan"
+							listItems={[...$exercises.keys()]}
+							listFilter={autocompleteFilter}
+							on:selected={(event) => controller.createExercisePlan(event.detail)}
 						>
 							<AddButton slot="placeholderContent" />
 						</HiddenSelectableInput>
 					</div>
-				</div>
-
-				<!-- Header separator -->
-				<hr class="row-start-2 col-span-full" />
-
-				<!-- table rows -->
-				{#each $workoutPrograms.getDefined($selectedDay) as { exerciseName, sets }, index}
-					<div class="contents">
-						<div class="col-start-1">
-							<DropMenu
-								iconType="arrowRight"
-								iconClass={{
-									default: 'transition-transform',
-									opened: 'rotate-180',
-								}}
-							>
-								<div slot="placeholderContent" class="max-w-[22rem] max-w truncate">
-									{exerciseName}
-								</div>
-								<ExerciseInfo
-									slot="dropMenuWindow"
-									{exerciseName}
-									exercisePlanIndex={index}
-								/>
-							</DropMenu>
-						</div>
-						<!-- Last sets should self align left due to add for proper add week button placement -->
-						{#each sets as set}
-							<div class="justify-self-center">
-								<SetNumberInput bind:set />
-							</div>
-						{/each}
-					</div>
-				{/each}
-			</div>
-
-			<!-- Add exercise plan to workout day -->
-			<div class="pl-3 mt-2">
-				<HiddenSelectableInput
-					placeholderText="Add exercise plan"
-					listItems={[...$exercises.keys()]}
-					listFilter={autocompleteFilter}
-					on:selected={(event) => controller.createExercisePlan(event.detail)}
-				>
-					<AddButton slot="placeholderContent" />
-				</HiddenSelectableInput>
-			</div>
+				</svelte:fragment>
+			</TableTemplate>
 		</section>
 	</HeightTransition>
 </main>

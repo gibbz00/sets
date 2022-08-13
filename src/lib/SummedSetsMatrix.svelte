@@ -2,7 +2,7 @@
 	import { weekNames, workoutPrograms, groups, exercises, selectedGroup } from '$lib/Model'
 	import { SetMap } from '$lib/ADTs/SetMap'
 	import Controller from '$lib/Controller.svelte'
-	import PenBinHover from './PenBinHover.svelte'
+	import EllipsisMenu from './EllipsisMenu.svelte'
 
 	let controller: Controller
 
@@ -20,61 +20,33 @@
                     for each tag in correct group
                         add the sets of exercise plan to sets of tag
     */
-	//Improvement: be a bit smarter in when to recalculate tagsSets
+	//Improvement: be a bit smarter in when to recalculate tagsSets,
+	// the entire matrix is currently being calculated for a small change
+	// TODO: make sure that this is exectured if $selectedGroup is null
 	$: tagSets = (() => {
-		if ($selectedGroup != null) {
-			let tempTagSets: SetMap<string, number[]> = new SetMap()
-			for (let tagName of $groups.getDefined($selectedGroup).values()) {
-				tempTagSets.set(tagName, new Array($weekNames.size).fill(0))
-			}
-			for (let exercisesPlans of $workoutPrograms.values()) {
-				for (let exercisePlan of exercisesPlans) {
-					let exerciseGroups = $exercises.getDefined(exercisePlan.exerciseName)
-					if (exerciseGroups.has($selectedGroup)) {
-						for (let exerciseTag of exerciseGroups.getDefined($selectedGroup)) {
-							tempTagSets.update(
-								exerciseTag,
-								tempTagSets
-									.getDefined(exerciseTag)
-									.map(
-										(setCount, weekIndex) =>
-											setCount + exercisePlan.sets[weekIndex]
-									)
-							)
-						}
+		let tempTagSets: SetMap<string, number[]> = new SetMap()
+		for (let tagName of $groups.getDefined($selectedGroup).values()) {
+			tempTagSets.set(tagName, new Array($weekNames.size).fill(0))
+		}
+		for (let exercisesPlans of $workoutPrograms.values()) {
+			for (let exercisePlan of exercisesPlans) {
+				let exerciseGroups = $exercises.getDefined(exercisePlan.exerciseName)
+				if (exerciseGroups.has($selectedGroup)) {
+					for (let exerciseTag of exerciseGroups.getDefined($selectedGroup)) {
+						tempTagSets.update(
+							exerciseTag,
+							tempTagSets
+								.getDefined(exerciseTag)
+								.map(
+									(setCount, weekIndex) => setCount + exercisePlan.sets[weekIndex]
+								)
+						)
 					}
 				}
 			}
-			return tempTagSets
 		}
+		return tempTagSets
 	})()
-
-	// Currently only used in HoverChange on:update,
-	// which is nested an if statement that checks if tagSets is undefined,
-	// which is only possible if $selected group is undefined
-	// Hence it can not be null, but svelte doesn't support this reassurence with the ! notation
-	// Don't use the variable outside if tagSets
-	$: notNullSelectedGroup = $selectedGroup!
 </script>
 
 <Controller bind:this={controller} />
-
-{#if tagSets != undefined}
-	{#each [...tagSets.entries()] as [tagName, sets]}
-		<!-- Tag name -->
-		<div class="inline-block px-2 py-1 text-white bg-blue-800 rounded-full w-max font-semi">
-			<PenBinHover
-				svgClass="fill-white"
-				updatePlaceholder="New tag name"
-				on:update={(event) =>
-					controller.updateTag(notNullSelectedGroup, tagName, event.detail)}
-				on:delete={() => controller.deleteTag(tagName)}
-			>
-				<span slot="placeholder" class="w-max">{tagName}</span>
-			</PenBinHover>
-		</div>
-		{#each sets as setCount}
-			<div>{setCount}</div>
-		{/each}
-	{/each}
-{/if}

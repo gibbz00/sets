@@ -141,7 +141,7 @@
                     * otherwise on:input will use old value
         -->
 		<input
-			class={`focus-visible:outline-none ${elementClasses.input}`}
+			class={`bg-inherit focus-visible:outline-none ${elementClasses.input}`}
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}
