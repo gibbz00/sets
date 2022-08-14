@@ -39,6 +39,7 @@
 					<div class="contents">
 						<div class="col-start-1">
 							<DropMenu
+								fadeTransition
 								iconType="arrowRight"
 								iconClass={{
 									default: 'transition-transform',
@@ -55,7 +56,6 @@
 								/>
 							</DropMenu>
 						</div>
-						<!-- Last sets should self align left due to add for proper add week button placement -->
 						{#each sets as set}
 							<div class="justify-self-center">
 								<SetNumberInput bind:set />

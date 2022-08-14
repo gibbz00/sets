@@ -20,11 +20,12 @@
 	export let elementClasses: (SelectableInput extends SvelteComponentTyped<infer Prop>
 		? Prop
 		: never)['elementClasses'] = {}
+	export let fadeTransition: boolean = false
 
 	let hidden: boolean = true
 </script>
 
-<Hidden bind:hidden>
+<Hidden {fadeTransition} bind:hidden>
 	<slot slot="placeholderContent" name="placeholderContent" />
 	<SelectableInput
 		autofocus

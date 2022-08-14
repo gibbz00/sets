@@ -3,7 +3,7 @@
 	import type { SvelteComponentTyped } from 'svelte'
 	import { onMount } from 'svelte'
 	import { beforeUpdate } from 'svelte'
-	import { fade } from 'svelte/transition'
+	import { fade, type FadeParams } from 'svelte/transition'
 	import {
 		fadeInDelay,
 		fadeInDuration,
@@ -50,6 +50,12 @@
 	export let iconClass: IconClass = {}
 
 	export let opened: boolean = false
+	export let fadeTransition: boolean = false
+	function emptyTransition(node: Element, emptyParameter: FadeParams): Object {
+		return {}
+	}
+	let chosenTransition = fadeTransition ? fade : emptyTransition
+
 	let overDropRight: boolean = false
 	let dropMenuWindow: HTMLDivElement
 	let dropRightContainer: HTMLDivElement
@@ -141,17 +147,15 @@
 	on:click|capture={(event) => checkOpenToggle(event)}
 	on:keydown={(event) => checkClose(event)}
 />
-
-<!-- hover outside dropMenuWindow when opneded should fill icon black -->
 <!-- in/out:fade transition used for in table that has height transtion, see HeightTransition for more on why -->
 <div
 	bind:this={dropRightContainer}
 	class="relative max-w-max"
-	in:fade={{
+	in:chosenTransition={{
 		delay: fadeInDelay,
 		duration: fadeInDuration,
 	}}
-	out:fade={{
+	out:chosenTransition={{
 		delay: fadeOutDelay,
 		duration: fadeOutDuration,
 	}}

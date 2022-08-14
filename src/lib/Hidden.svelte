@@ -24,7 +24,14 @@
     */
 
 	import { onMount, afterUpdate } from 'svelte'
+	import { fade, type FadeParams } from 'svelte/transition'
 	import SpecifiedRevealTarget from './SpecifiedRevealTarget.svelte'
+	import {
+		fadeInDelay,
+		fadeOutDelay,
+		fadeInDuration,
+		fadeOutDuration,
+	} from './transitionConstants'
 
 	export let hidden: boolean = true
 	export let preserveInputPlaceholderHeight: boolean = true
@@ -44,6 +51,7 @@
 			input.style.height = `${buttonHeight}px`
 		}
 	}
+	export let fadeTransition: boolean = false
 
 	// Used for events targeting either visibility state
 	let container: HTMLDivElement
@@ -90,6 +98,11 @@
 			event.stopPropagation()
 		}
 	}
+
+	function emptyTransition(node: Element, emptyParameter: FadeParams): Object {
+		return {}
+	}
+	let chosenTransition = fadeTransition ? fade : emptyTransition
 </script>
 
 <svelte:window
@@ -97,7 +110,17 @@
 	on:keydown|capture={(event) => checkCancelOnKey(event)}
 />
 
-<div bind:this={container}>
+<div
+	bind:this={container}
+	in:chosenTransition={{
+		delay: fadeInDelay,
+		duration: fadeInDuration,
+	}}
+	out:chosenTransition={{
+		delay: fadeOutDelay,
+		duration: fadeOutDuration,
+	}}
+>
 	{#if hidden}
 		<div bind:this={placeholderContent}>
 			<SpecifiedRevealTarget

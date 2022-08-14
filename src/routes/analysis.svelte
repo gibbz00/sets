@@ -7,11 +7,15 @@
 	import { selectedGroup, groups, weekNames, exercises, workoutPrograms } from '$lib/Model'
 	import AppTemplate from '$lib/AppTemplate.svelte'
 	import TableTemplate from '$lib/TableTemplate.svelte'
+	import { fade } from 'svelte/transition'
+	import {
+		fadeInDelay,
+		fadeInDuration,
+		fadeOutDelay,
+		fadeOutDuration,
+	} from '$lib/transitionConstants'
 
 	let controller: Controller
-	/*
-		TEST: clicking tabs changes selected tab
-	 */
 
 	/*
         Algorithm:
@@ -102,6 +106,7 @@
 						<div class="col-start-1">
 							<!-- BUG: ignore $selectedGroup being null warning, component within if-clause that checks for this  -->
 							<EllipsisMenu
+								fadeTransition
 								dynamicWidth
 								inputPlaceholderText="Updated tag name"
 								on:update={(event) =>
@@ -109,7 +114,10 @@
 								on:delete={() => controller.deleteTag(tagName)}
 							>
 								<!-- Possible move this restrictiong to be set in TableTemplate, currently just duplicate code -->
-								<div slot="placeholderContent" class="max-w-[22rem] max-w truncate">
+								<div
+									slot="placeholderContent"
+									class="max-w-[22rem] max-w truncate pl-3"
+								>
 									{tagName}
 								</div>
 							</EllipsisMenu>
@@ -117,12 +125,21 @@
 						{#each sets as setCount}
 							<!-- Same height as SetNumberInput, simplifies row heights -->
 							<!-- (Using grid-auto-rows:minmax(2.5rem, max-content) creates a tricky situation with the <hr/>) -->
-							<div class="justify-self-center grid place-content-center h-10">
+							<div
+								class="justify-self-center grid place-content-center h-10"
+								in:fade={{
+									delay: fadeInDelay,
+									duration: fadeInDuration,
+								}}
+								out:fade={{
+									delay: fadeOutDelay,
+									duration: fadeOutDuration,
+								}}
+							>
 								{setCount}
 							</div>
 						{/each}
 					{/each}
-					<!-- Add exercise plan to workout day -->
 					<div class="col-start-1 pl-3 mt-2">
 						<HiddenSelectableInput
 							placeholderText="New tag name"

@@ -22,6 +22,7 @@
 	export let iconClass: (DropMenu extends SvelteComponentTyped<infer Prop>
 		? Prop
 		: never)['iconClass'] = {}
+	export let fadeTransition: boolean = false
 
 	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
 		createEventDispatcher()
@@ -48,6 +49,7 @@
 	placeholderText={inputPlaceholderText}
 	elementClasses={inputElementClasses}
 	{dynamicWidth}
+	{fadeTransition}
 >
 	<!-- stopPropagation because of the nested Hidden component -->
 	<div on:click|stopPropagation slot="placeholderContent" class="flex content-center min-w-max">

@@ -4,7 +4,6 @@
 
 	import { quintOut } from 'svelte/easing'
 	import { crossfade } from 'svelte/transition'
-	import HeightTransition from './HeightTransition.svelte'
 
 	type Content = {
 		title: string
@@ -41,8 +40,9 @@
 	// TODO: warnings for each slot that isn't provided? might be done with typesetting instead
 </script>
 
+<Controller bind:this={controller} />
+
 <body class="p-10 m-10 bg-white shadow-sm">
-	<Controller bind:this={controller} />
 	<header class="flex justify-between mb-10">
 		<h1 class="text-6xl">
 			{content.title}
@@ -113,13 +113,8 @@
 			{/each}
 			<slot name="navOptionalContent" />
 		</nav>
-		<!-- Table container with add week button -->
-		<!-- TODO: add padding for so that add button is to close to the border,
-					and refine max height value -->
-		<HeightTransition maxHeight={content.heightTransitionMultiplier * 110}>
-			<section class="mx-4 mt-5">
-				<slot name="main-section" />
-			</section>
-		</HeightTransition>
+		<section class="mx-4 mt-5">
+			<slot name="main-section" />
+		</section>
 	</main>
 </body>
