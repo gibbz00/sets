@@ -34,7 +34,7 @@
 	} from './transitionConstants'
 
 	export let hidden: boolean = true
-	export let preservePlaceholderHeight: boolean = false
+	export let preservePlaceholderHeight: boolean = true
 	export let fadeTransition: boolean = false
 
 	// Used for events targeting either visibility state
@@ -95,11 +95,11 @@
 
 <div
 	bind:this={container}
-	in:chosenTransition={{
+	in:chosenTransition|local={{
 		delay: fadeInDelay,
 		duration: fadeInDuration,
 	}}
-	out:chosenTransition={{
+	out:chosenTransition|local={{
 		delay: fadeOutDelay,
 		duration: fadeOutDuration,
 	}}

@@ -15,11 +15,11 @@
 <!-- (Using grid-auto-rows:minmax(2.5rem, max-content) creates a tricky situation with the <hr/>) -->
 <div
 	class="group flex h-10"
-	in:fade={{
+	in:fade|local={{
 		delay: fadeInDelay,
 		duration: fadeInDuration,
 	}}
-	out:fade={{
+	out:fade|local={{
 		delay: fadeOutDelay,
 		duration: fadeOutDuration,
 	}}

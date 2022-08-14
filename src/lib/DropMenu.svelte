@@ -151,11 +151,11 @@
 <div
 	bind:this={dropRightContainer}
 	class="relative max-w-max"
-	in:chosenTransition={{
+	in:chosenTransition|local={{
 		delay: fadeInDelay,
 		duration: fadeInDuration,
 	}}
-	out:chosenTransition={{
+	out:chosenTransition|local={{
 		delay: fadeOutDelay,
 		duration: fadeOutDuration,
 	}}

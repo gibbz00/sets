@@ -1,3 +1,7 @@
+<script context="module">
+	export const prerender = true
+</script>
+
 <script lang="ts">
 	import AddButton from '$lib/AddButton.svelte'
 	import { SetMap } from '$lib/ADTs/SetMap'
@@ -127,11 +131,11 @@
 							<!-- (Using grid-auto-rows:minmax(2.5rem, max-content) creates a tricky situation with the <hr/>) -->
 							<div
 								class="justify-self-center grid place-content-center h-10"
-								in:fade={{
+								in:fade|local={{
 									delay: fadeInDelay,
 									duration: fadeInDuration,
 								}}
-								out:fade={{
+								out:fade|local={{
 									delay: fadeOutDelay,
 									duration: fadeOutDuration,
 								}}

@@ -15,7 +15,7 @@
 		* Hence the separate component that with a MutationObserver
 	*/
 
-	import { onMount, createEventDispatcher, onDestroy } from 'svelte'
+	import { onMount, createEventDispatcher } from 'svelte'
 
 	let dispatcher = createEventDispatcher()
 

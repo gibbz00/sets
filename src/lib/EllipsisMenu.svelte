@@ -35,11 +35,9 @@
 	})
 
 	// TODO: hidden = true might not be needed since the item itself is removed
-	let hidden: boolean
 	let dropMenuOpened: boolean
 	function deleteHandler() {
 		deleteDispatcher('delete')
-		hidden = true
 		dropMenuOpened = false
 	}
 </script>
@@ -48,7 +46,6 @@
 	on:selected={(event) => updateDispatcher('update', event.detail)}
 	placeholderText={inputPlaceholderText}
 	elementClasses={inputElementClasses}
-	{hidden}
 	{dynamicWidth}
 	{fadeTransition}
 >
