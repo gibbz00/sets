@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { SvelteComponent, SvelteComponentTyped } from 'svelte'
+	import type { SvelteComponentTyped } from 'svelte'
 
 	import Hidden from './Hidden.svelte'
 	import SelectableInput from './SelectableInput.svelte'
@@ -8,10 +8,6 @@
 		Combines Hidden.svelte uses it with SelectableInput.svelte 
 			* Autofocuses input when revealed
 			* Hides selectable input when it dispatches selected or canceled events
-
-		TODO:
-			preserve height of input based on button height? 
-				Believe it should be possible to get around with css
 	*/
 	export let placeholderText: string = ''
 	export let listItems: SelectableInput['listItems'] = undefined

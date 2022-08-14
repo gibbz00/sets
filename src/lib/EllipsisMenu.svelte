@@ -48,6 +48,7 @@
 	on:selected={(event) => updateDispatcher('update', event.detail)}
 	placeholderText={inputPlaceholderText}
 	elementClasses={inputElementClasses}
+	{hidden}
 	{dynamicWidth}
 	{fadeTransition}
 >

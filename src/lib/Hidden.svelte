@@ -34,23 +34,7 @@
 	} from './transitionConstants'
 
 	export let hidden: boolean = true
-	export let preserveInputPlaceholderHeight: boolean = true
-
-	/* 
-	Should only work when hidden prop is set to true on mount
-*/
-	//Solely used for the HiddenAutoCompleteSelector, it presumes that a button and an input exist
-	//TODO: create a type check and throw an error if the node type is wrong
-
-	// queryselector used instead of papameters because the button can be sent in a a prop with unknown structure
-	export function temp(node: Node, preserveInputPlaceholderHeight: boolean) {
-		if (preserveInputPlaceholderHeight) {
-			let buttonHeight = (node as HTMLElement).querySelector('button')?.clientHeight
-			// height added as a style attribute since the input ins't rendered
-			let input: HTMLInputElement = (node as HTMLElement).querySelector('input')!
-			input.style.height = `${buttonHeight}px`
-		}
-	}
+	export let preservePlaceholderHeight: boolean = false
 	export let fadeTransition: boolean = false
 
 	// Used for events targeting either visibility state
@@ -67,14 +51,13 @@
 
 		// IMPROVEMENT the functionality should be possible to implement by using invisible components,
 		// similar to how DynamicInputWitdh works.
-		if (preserveInputPlaceholderHeight == true) {
+		if (preservePlaceholderHeight == true) {
 			if (hidden == false) {
 				throw new Error(
 					'Preserving hiddenContent height currently not posssible when hiddenContent is shown by default'
 				)
-			} else {
-				placeholderContentHeight = placeholderContent.clientHeight
 			}
+			placeholderContentHeight = placeholderContent.clientHeight
 		}
 	})
 

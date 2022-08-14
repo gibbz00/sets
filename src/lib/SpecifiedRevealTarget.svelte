@@ -15,7 +15,7 @@
 		* Hence the separate component that with a MutationObserver
 	*/
 
-	import { onMount, createEventDispatcher } from 'svelte'
+	import { onMount, createEventDispatcher, onDestroy } from 'svelte'
 
 	let dispatcher = createEventDispatcher()
 
@@ -24,6 +24,7 @@
 	let placeholderContentSlotWrapper: HTMLDivElement
 
 	let mutationObserver: MutationObserver
+	let revealed = false
 
 	onMount(() => {
 		if (placeholderContentSlotWrapper.childElementCount == 0) {
@@ -53,6 +54,11 @@
 					? specifiedRevealTargets[0]
 					: placeholderContentSlotWrapper
 				).addEventListener('click', () => {
+					mutationObserver.disconnect()
+					// The dispatched event will cause the parent to update and show hiddenContent first by default, not entirely sure why
+					// (debugging shows that it becomes "dirty first")
+					// Anyways, having the revealed boolean set to true before the dispatcher ensures that SpecifiedRevealTarget becomes "dirty" before parent.
+					revealed = true
 					dispatcher('reveal')
 				})
 			}
@@ -60,6 +66,8 @@
 	})
 </script>
 
-<div bind:this={placeholderContentSlotWrapper}>
-	<slot name="placeholderContent" />
-</div>
+{#if !revealed}
+	<div bind:this={placeholderContentSlotWrapper}>
+		<slot name="placeholderContent" />
+	</div>
+{/if}

@@ -94,6 +94,7 @@
             [&>button]:rounded-sm
             [&_button]:py-4
             [&_button]:w-full
+            [&_input]:bg-green-800
             text-white
             font-medium
             mt-3
@@ -103,7 +104,7 @@
 		<HiddenSelectableInput
 			placeholderText="Enter group name"
 			elementClasses={{
-				input: 'w-full text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white',
+				input: 'w-full text-center placeholder:text-gray-300 pl-2 text-white',
 				icon: 'fill-white',
 			}}
 			dynamicWidth={false}
@@ -115,7 +116,7 @@
 		<!-- Change exercise -->
 		<HiddenSelectableInput
 			elementClasses={{
-				input: 'w-full text-center bg-green-800 placeholder:text-gray-300 pl-2 text-white',
+				input: 'w-full text-center placeholder:text-gray-300 pl-2 text-white',
 				icon: 'fill-white',
 				list: 'text-black',
 			}}

@@ -68,6 +68,15 @@
 		}
 	})
 
+	let input: HTMLInputElement
+	afterUpdate(() => {
+		// Null scenario can occur when component is destroyed
+		// Throws error unless checked for
+		if (dynamicWidth && input != null) {
+			input.style.width = getInputWidthInPixels(input)
+		}
+	})
+
 	function listItemSelected(listItem: string) {
 		textFieldValue = listItem
 		listMatches = []
@@ -122,15 +131,6 @@
 		} else if (listItems.length > 0) listMatches = listItems
 		selectedListItemIndex = undefined
 	}
-
-	let input: HTMLInputElement
-	afterUpdate(() => {
-		// Null scenario can occur when component is destroyed
-		// Throws error unless checked for
-		if (dynamicWidth && input != null) {
-			input.style.width = getInputWidthInPixels(input)
-		}
-	})
 </script>
 
 <div bind:this={inputContainer} class="relative h-full">
