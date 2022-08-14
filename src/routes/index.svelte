@@ -85,7 +85,13 @@
 	>
 		{#each [...$workoutPrograms.keys()] as weekday (weekday)}
 			<div
-				class="flex justify-center flex-col w-full hover:bg-slate-100"
+				class="
+					flex 
+					flex-col 
+					justify-center 
+					w-full 
+					hover:bg-slate-100
+				"
 				on:click={() => {
 					$selectedDay = weekday
 				}}
