@@ -28,7 +28,7 @@
 
 	import { afterUpdate, createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
-	import { getInputWidthInPixels } from '$lib/actions/dynamicInputWidth'
+	import { getInputWidthInPixels } from '$lib/utils/dynamicInputWidth'
 
 	export let placeholderText: string = ''
 	export let listItems: string[] = []
