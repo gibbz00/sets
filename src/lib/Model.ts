@@ -11,7 +11,11 @@ export type ExercisePlan = {
 	exerciseName: string
 	sets: number[]
 }
-export type WorkoutPrograms = SetMap<string, ExercisePlan[]>
+type WorkoutProgramInfo = {
+	description: string
+	exercises: ExercisePlan[]
+}
+export type WorkoutPrograms = SetMap<string, WorkoutProgramInfo>
 
 export const exercises: Writable<Exercises> = writable(new SetMap())
 export const groups: Writable<Groups> = writable(new SetMap())
@@ -102,49 +106,70 @@ const seed = {
 	program: [
 		{
 			name: 'Monday',
-			exercisePlans: [
-				{
-					exerciseName: 'Bench press',
-					sets: [1, 2, 3, 3, 4],
-				},
-				{
-					exerciseName: 'T-bar row',
-					sets: [1, 1, 3, 2, 4],
-				},
-			],
+			info: {
+				description: 'Strength - Chest and Back',
+				exercisePlans: [
+					{
+						exerciseName: 'Bench press',
+						sets: [1, 2, 3, 3, 4],
+					},
+					{
+						exerciseName: 'T-bar row',
+						sets: [1, 1, 3, 2, 4],
+					},
+				],
+			},
 		},
 		{
 			name: 'Tuesday',
-			exercisePlans: [
-				{
-					exerciseName: 'Squat',
-					sets: [1, 2, 3, 3, 4],
-				},
-				{
-					exerciseName: 'Deadlift',
-					sets: [1, 2, 1, 2, 4],
-				},
-			],
+			info: {
+				description: 'Strength - Legs',
+				exercisePlans: [
+					{
+						exerciseName: 'Squat',
+						sets: [1, 2, 3, 3, 4],
+					},
+					{
+						exerciseName: 'Deadlift',
+						sets: [1, 2, 1, 2, 4],
+					},
+				],
+			},
 		},
 		{
 			name: 'Wednesday',
-			exercisePlans: [],
+			info: {
+				description: '',
+				exercisePlans: [],
+			},
 		},
 		{
 			name: 'Thursday',
-			exercisePlans: [],
+			info: {
+				description: '',
+				exercisePlans: [],
+			},
 		},
 		{
 			name: 'Friday',
-			exercisePlans: [],
+			info: {
+				description: '',
+				exercisePlans: [],
+			},
 		},
 		{
 			name: 'Saturday',
-			exercisePlans: [],
+			info: {
+				description: '',
+				exercisePlans: [],
+			},
 		},
 		{
 			name: 'Sunday',
-			exercisePlans: [],
+			info: {
+				description: '',
+				exercisePlans: [],
+			},
 		},
 	],
 	groups: [
@@ -211,11 +236,14 @@ for (let weekName of seed.weekNames) {
 
 // Seed weekdays
 for (let day of seed.program) {
-	let tempExercisePlans: ExercisePlan[] = []
-	for (let exercisePlan of day.exercisePlans) {
-		tempExercisePlans.push(newExercisePlan(exercisePlan.exerciseName, exercisePlan.sets))
+	let info: { description: string; exercises: ExercisePlan[] } = {
+		description: day.info?.description,
+		exercises: [],
 	}
-	workoutPrograms.update((setmap) => setmap.set(day.name, tempExercisePlans))
+	for (let exercisePlan of day.info?.exercisePlans) {
+		info.exercises.push(newExercisePlan(exercisePlan.exerciseName, exercisePlan.sets))
+	}
+	workoutPrograms.update((setmap) => setmap.set(day.name, info))
 }
 
 // Select initial weekday and week

@@ -11,13 +11,14 @@
 	import { selectedGroup, groups, weekNames, exercises, workoutPrograms } from '$lib/Model'
 	import AppTemplate from '$lib/AppTemplate.svelte'
 	import TableTemplate from '$lib/TableTemplate.svelte'
-	import { fade } from 'svelte/transition'
+	import { crossfade, fade } from 'svelte/transition'
 	import {
 		fadeInDelay,
 		fadeInDuration,
 		fadeOutDelay,
 		fadeOutDuration,
 	} from '$lib/transitionConstants'
+	import { quintOut } from 'svelte/easing'
 
 	let controller: Controller
 
@@ -37,8 +38,8 @@
 			for (let tagName of $groups.getDefined($selectedGroup).values()) {
 				tempTagSets.set(tagName, new Array($weekNames.size).fill(0))
 			}
-			for (let exercisesPlans of $workoutPrograms.values()) {
-				for (let exercisePlan of exercisesPlans) {
+			for (let exerciseInfo of $workoutPrograms.values()) {
+				for (let exercisePlan of exerciseInfo.exercises) {
 					let exerciseGroups = $exercises.getDefined(exercisePlan.exerciseName)
 					if (exerciseGroups.has($selectedGroup)) {
 						for (let exerciseTag of exerciseGroups.getDefined($selectedGroup)) {
@@ -58,46 +59,95 @@
 		}
 		return tempTagSets
 	})()
+
+	// Tab transition
+	const [send, receive] = crossfade({
+		duration: (d) => Math.sqrt(d * 200),
+
+		fallback(node, params) {
+			const style = getComputedStyle(node)
+			const transform = style.transform === 'none' ? '' : style.transform
+
+			return {
+				duration: 600,
+				easing: quintOut,
+				css: (t) => `
+					transform: ${transform} scale(${t});
+					opacity: ${t}
+				`,
+			}
+		},
+	})
 </script>
 
 <Controller bind:this={controller} />
 
 <AppTemplate
 	content={{
-		title: 'Set Analysis',
 		redirectPlaceholder: 'Set Planner',
-		redirectRef: '/',
-		tabNames: [...$groups.keys()],
-		selectedTab: $selectedGroup,
-		onTabSelection: (tabName) => {
-			$selectedGroup = tabName
-		},
+		redirectRef: '/planning',
 		heightTransitionMultiplier: $selectedGroup
 			? $groups.getDefined($selectedGroup).size + 1
 			: 1,
 	}}
 >
-	<svelte:fragment slot="navTabContent" let:tabName={groupName}>
-		<EllipsisMenu
-			dynamicWidth
-			inputPlaceholderText="Updated group name"
-			on:update={(event) => controller.updateGroup(groupName, event.detail)}
-			on:delete={() => controller.deleteGroup(groupName)}
-		>
-			<div class="py-5" slot="placeholderContent">
-				{groupName}
-			</div>
-		</EllipsisMenu>
+	<svelte:fragment slot="header">
+		<h1 class="text-6xl">Set Analysis</h1>
 	</svelte:fragment>
-	<span slot="navOptionalContent" class="px-4 w-min my-auto justify-self-center">
-		<HiddenSelectableInput
-			placeholderText="New group name"
-			on:selected={(event) => controller.createGroup(event.detail)}
-		>
-			<AddButton slot="placeholderContent" />
-		</HiddenSelectableInput>
-	</span>
 
+	<svelte:fragment slot="nav">
+		<!-- Tabs -->
+		<!-- h-[4.8rem as fallback height for the case when all tabs risk being removed] -->
+		<nav
+			class="
+				flex 
+				text-2xl 
+				text-center 
+				bg-slate-50
+				h-[4.8rem]
+				rounded-t-md
+			"
+		>
+			{#each [...$groups.keys()] as groupName (groupName)}
+				<div
+					class="
+						grid
+						place-content-center
+						w-full 
+						hover:bg-slate-100
+						relative
+					"
+					on:click|capture={() => ($selectedGroup = groupName)}
+				>
+					<EllipsisMenu
+						dynamicWidth
+						inputPlaceholderText="Updated group name"
+						on:update={(event) => controller.updateGroup(groupName, event.detail)}
+						on:delete={() => controller.deleteGroup(groupName)}
+					>
+						<div class="py-5" slot="placeholderContent">
+							{groupName}
+						</div>
+					</EllipsisMenu>
+					{#if $selectedGroup == groupName}
+						<div
+							in:receive|local={{ key: groupName }}
+							out:send|local={{ key: groupName }}
+							class="absolute bottom-0 inset-x-0 h-1 w-full bg-green-900"
+						/>
+					{/if}
+				</div>
+			{/each}
+			<span class="px-4 w-min my-auto justify-self-center">
+				<HiddenSelectableInput
+					placeholderText="New group name"
+					on:selected={(event) => controller.createGroup(event.detail)}
+				>
+					<AddButton slot="placeholderContent" />
+				</HiddenSelectableInput>
+			</span>
+		</nav>
+	</svelte:fragment>
 	<svelte:fragment slot="main-section">
 		{#if $selectedGroup == null}
 			<p>Begin by adding a new group!</p>
