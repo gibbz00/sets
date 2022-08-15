@@ -8,5 +8,5 @@
 
 <!-- <Radar /> -->
 
-<!-- <SelectDay /> -->
+<SelectDay />
 <!-- <InteractiveList listItems={[...$exercises.keys()]} filterKey="" /> -->

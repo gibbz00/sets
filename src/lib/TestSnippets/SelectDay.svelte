@@ -1,26 +1,36 @@
-<script>
-	import Hidden from '$lib/Hidden.svelte'
-
+<script lang="ts">
 	import Icon from '$lib/Icon.svelte'
 	import { selectedDay } from '$lib/Model'
 	import InteractiveList from '../InteractiveList.svelte'
-	import { exercises } from '$lib/Model'
-	import { autocompleteFilter } from '$lib/utils/autoCompleteFilter'
+	import { workoutPrograms } from '$lib/Model'
+	import DropMenu from '$lib/DropMenu.svelte'
+	import type { SvelteComponentTyped } from 'svelte'
+
+	let dropMenuOpened: boolean
+	type IconClass = (DropMenu extends SvelteComponentTyped<infer Props>
+		? Props
+		: never)['iconClass']
+	let iconClass: IconClass = {
+		default: 'w-16 transition-transform',
+		opened: 'rotate-90',
+	}
 </script>
 
-<Hidden>
-	<div slot="placeholderContent" class="text-6xl flex content-center">
+<div class="flex border-2">
+	<div class="text-6xl mr-1">
 		{$selectedDay}
-		<Icon class="rotate-90 w-16" type="arrowRight" />
 	</div>
-</Hidden>
-
-<!-- Test Interactive List -->
-<InteractiveList
-	on:selected={(event) => console.log(event.detail)}
-	listItems={[...$exercises.keys()]}
-	listFilter={autocompleteFilter}
-	filterKey={''}
-	class="absolute z-10 inset-x-0"
-/>
-<!-- Test interactive list with Selectable Input rewrite -->
+	<DropMenu bind:opened={dropMenuOpened} iconType="expand_more" {iconClass}>
+		<svelte:fragment slot="dropMenuWindow">
+			<InteractiveList
+				autofocus
+				on:selected={(event) => {
+					$selectedDay = event.detail
+					dropMenuOpened = false
+				}}
+				listItems={[...$workoutPrograms.keys()]}
+				filterKey=""
+			/>
+		</svelte:fragment>
+	</DropMenu>
+</div>
