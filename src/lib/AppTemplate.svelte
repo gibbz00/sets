@@ -1,6 +1,5 @@
+<!-- Using template instead of __layout to make use of props -->
 <script lang="ts">
-	import { afterNavigate, beforeNavigate, goto } from '$app/navigation'
-
 	import Controller from '$lib/Controller.svelte'
 	import Icon from '$lib/Icon.svelte'
 	import { onMount } from 'svelte'

@@ -29,7 +29,6 @@
 		{dynamicWidth}
 		slot="hiddenContent"
 		on:selected={() => (hidden = true)}
-		on:canceled={() => (hidden = true)}
 		on:selected
 		{placeholderText}
 		{listItems}

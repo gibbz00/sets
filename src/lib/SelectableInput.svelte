@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte'
+	import InteractiveList from './InteractiveList.svelte'
 
 	/*
         Add a clickable arrow beside input element for mouse/tap driven users
@@ -26,15 +27,17 @@
         * Option to have automatic width based on current input,
     */
 
-	import { afterUpdate, createEventDispatcher } from 'svelte'
-	import { onMount } from 'svelte'
-	import { getInputWidthInPixels } from '$lib/utils/dynamicInputWidth'
+	import { afterUpdate, createEventDispatcher, onMount, SvelteComponentTyped } from 'svelte'
+	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
 
 	export let placeholderText: string = ''
-	export let listItems: string[] = []
-	export let listFilter:
-		| ((textFieldValue: string, items: typeof listItems) => typeof listItems)
-		| undefined = undefined
+	export let listItems: (InteractiveList extends SvelteComponentTyped<infer Props>
+		? Props
+		: never)['listItems'] = []
+	export let listFilter: (InteractiveList extends SvelteComponentTyped<infer Props>
+		? Props
+		: never)['listFilter'] = undefined
+
 	export let autofocus: boolean = false
 	export let dynamicWidth: boolean = false
 	type ElementClasses = {
@@ -44,31 +47,20 @@
 	}
 	export let elementClasses: ElementClasses = {}
 
-	let listMatches: string[] = []
 	let textFieldValue: string = ''
+	let input: HTMLInputElement
 	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
 		createEventDispatcher()
-	let canceledDispatcher: (type: 'canceled') => boolean = createEventDispatcher()
-
-	/* 
-		TODO: Would be nice to have integer types 
-			Possible solutions:
-				* Uint16Array with only one element
-				* BigInt
-				* Typescript type using modulo == 0
-	*/
-	let selectedListItemIndex: number | undefined = undefined
+	let activatedInteractiveList: boolean = false
+	let listFilterKey: string = textFieldValue
 
 	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
-	let list: HTMLUListElement
+	let listWrapper: HTMLDivElement
 	onMount(() => {
-		if (listItems.length > 0) {
-			list.style.top = `${inputContainer.getBoundingClientRect().height}px`
-		}
+		listWrapper.style.top = `${inputContainer.getBoundingClientRect().height}px`
 	})
 
-	let input: HTMLInputElement
 	afterUpdate(() => {
 		// Null scenario can occur when component is destroyed
 		// Throws error unless checked for
@@ -79,40 +71,7 @@
 
 	function listItemSelected(listItem: string) {
 		textFieldValue = listItem
-		listMatches = []
-	}
-
-	function handleKeyDown(event: KeyboardEvent) {
-		if (event.key == 'Enter') selectHandler()
-		else if (listItems.length > 0 || listFilter != undefined) {
-			switch (event.key) {
-				case 'ArrowDown':
-					if (selectedListItemIndex == undefined) {
-						if (listMatches.length > 0) {
-							selectedListItemIndex = 0
-							textFieldValue = listMatches[selectedListItemIndex]
-						} else findListMatches()
-					} else if (selectedListItemIndex + 1 != listMatches.length) {
-						textFieldValue = listMatches[++selectedListItemIndex]
-					} else {
-						selectedListItemIndex = 0
-						textFieldValue = listMatches[selectedListItemIndex]
-					}
-					break
-				case 'ArrowUp':
-					// event.preventDefault() called to prevent cursor jump to input beginning
-					event.preventDefault()
-					if (selectedListItemIndex != undefined) {
-						if (selectedListItemIndex == 0) {
-							selectedListItemIndex = listMatches.length - 1
-							textFieldValue = listMatches[selectedListItemIndex]
-						} else {
-							textFieldValue = listMatches[--selectedListItemIndex]
-						}
-					}
-					break
-			}
-		}
+		activatedInteractiveList = false
 	}
 
 	// Empty selections are regarded as invalid
@@ -120,16 +79,18 @@
 		if (textFieldValue != '') {
 			selectedDispatcher('selected', textFieldValue)
 			textFieldValue = ''
-		} else {
-			canceledDispatcher('canceled')
 		}
 	}
 
-	function findListMatches() {
-		if (listFilter != undefined) {
-			listMatches = listFilter(textFieldValue, listItems)
-		} else if (listItems.length > 0) listMatches = listItems
-		selectedListItemIndex = undefined
+	// <!-- TODO: for interactivally showing list on down arrow: list items to undefined at first and then defined on ArrowDown, same goes for autocomplete indicator click -->
+	function keyEventHandler(event: KeyboardEvent) {
+		switch (event.key) {
+			case 'Enter':
+				selectHandler()
+				break
+			default:
+				activatedInteractiveList = true
+		}
 	}
 </script>
 
@@ -145,10 +106,10 @@
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}
+			on:keydown={(event) => keyEventHandler(event)}
 			bind:value={textFieldValue}
+			on:input={() => (listFilterKey = textFieldValue)}
 			bind:this={input}
-			on:input={findListMatches}
-			on:keydown={(event) => handleKeyDown(event)}
 		/>
 		<button
 			on:click={() => {
@@ -159,36 +120,14 @@
 			<Icon class={elementClasses.icon} type="arrowRightAlt" />
 		</button>
 	</div>
-	<!-- Conditional required since an empty ul still renders its borders -->
-	<!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
-	<ul
-		bind:this={list}
-		class={`
-				${listMatches.length == 0 ? 'hidden' : ''}
-				absolute
-				z-10
-				inset-x-0 
-				min-w-max 
-				max-w-sm
-				text-left 
-				bg-white 
-				border-2 
-				rounded-sm 
-				shadow-sm 
-				border-gray 
-				divide-y-2 
-				divide-slate-100
-			${elementClasses.list}`}
-	>
-		{#each listMatches as match, index}
-			<li
-				on:click={() => listItemSelected(match)}
-				class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${
-					selectedListItemIndex == index ? 'bg-gray-100' : ''
-				}`}
-			>
-				{match}
-			</li>
-		{/each}
-	</ul>
+	<div bind:this={listWrapper}>
+		<InteractiveList
+			on:selected={(event) => listItemSelected(event.detail)}
+			keyHandlingActivated={activatedInteractiveList}
+			{listItems}
+			{listFilter}
+			filterKey={listFilterKey}
+		/>
+		<!-- class="absolute z-10 inset-x-0" -->
+	</div>
 </div>

@@ -3,7 +3,7 @@
 
 	import Icon from '$lib/Icon.svelte'
 	import { selectedDay } from '$lib/Model'
-	import InteractiveList from './InteractiveList.svelte'
+	import InteractiveList from '../InteractiveList.svelte'
 	import { exercises } from '$lib/Model'
 	import { autocompleteFilter } from '$lib/utils/autoCompleteFilter'
 </script>
