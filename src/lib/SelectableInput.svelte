@@ -122,6 +122,7 @@
 		<InteractiveList
 			on:selected={(event) => listItemSelected(event.detail)}
 			keyHandlingActivated={activatedInteractiveList}
+			class={elementClasses.list}
 			{listItems}
 			{listFilter}
 			filterKey={listFilterKey}
