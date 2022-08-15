@@ -65,9 +65,9 @@
 			</a>
 		</header>
 
-		<main class="shadow-md pb-5 rounded-md">
+		<main class="shadow-md pb-5 bg-white rounded-md">
 			<slot name="nav" />
-			<section class="mx-4 mt-5">
+			<section class="px-4 pt-5">
 				<slot name="main-section" />
 			</section>
 		</main>

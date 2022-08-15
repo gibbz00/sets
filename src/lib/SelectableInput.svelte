@@ -62,8 +62,6 @@
 	})
 
 	afterUpdate(() => {
-		// Null scenario can occur when component is destroyed
-		// Throws error unless checked for
 		if (dynamicWidth && input != null) {
 			input.style.width = getInputWidthInPixels(input)
 		}

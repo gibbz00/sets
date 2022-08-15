@@ -5,16 +5,18 @@
 		Usage:
 			Bind input to input element and add this to component script tag:
 				let input: HTMLInputElement
+				// Null scenario can occur when component is destroyed
+				// Throws error unless checked for
 				afterUpdate(() => {
-					if (dynamicWidth) {
+					if(input != null)
 						input.style.width = getInputWidthInPixels(input)
-					}
+						}
 				})
 
 		This assures that the width is changed for those cases when no input event is emitted, 
 			which is the case for every time the property is set programatically.
 		Would be nice to have this as an action, but I could not find any way to listen to a property 
-			withouth adding more than the use:action directive in the svelte component.
+			withouth adding more than the use:action directive in the svelte component, for those aforementioned cases.
 		I tried using MutationOberver and listening to the value attribute, 
 				but it's not changed when using the bind:value directive.
 		Most minimal option I found was to have a MutationObserver placed in the action which listens to an added a placeholder attribute

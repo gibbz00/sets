@@ -57,3 +57,4 @@
 	<hr class="max-h-1 row-start-2 my-1 col-span-full" />
 	<slot name="body" />
 </div>
+<slot name="footer" />

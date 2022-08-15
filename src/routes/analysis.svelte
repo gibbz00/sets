@@ -194,15 +194,15 @@
 							</div>
 						{/each}
 					{/each}
-					<div class="col-start-1 pl-3 mt-2">
-						<HiddenSelectableInput
-							placeholderText="New tag name"
-							on:selected={(event) => controller.createTag(event.detail)}
-						>
-							<AddButton slot="placeholderContent" />
-						</HiddenSelectableInput>
-					</div>
 				</svelte:fragment>
+				<div slot="footer" class="col-start-1 pl-3 mt-2">
+					<HiddenSelectableInput
+						placeholderText="New tag name"
+						on:selected={(event) => controller.createTag(event.detail)}
+					>
+						<AddButton slot="placeholderContent" />
+					</HiddenSelectableInput>
+				</div>
 			</TableTemplate>
 		{/if}
 	</svelte:fragment>
