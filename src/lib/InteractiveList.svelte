@@ -119,8 +119,8 @@ import type { FilterFunction } from './utils/FilterFunction';
 	class={`
 				${matches.length == 0 ? 'hidden' : ''}
 				min-w-max 
-				max-w-sm
 				text-left 
+				text-black
 				bg-white 
 				border-2 
 				rounded-sm 

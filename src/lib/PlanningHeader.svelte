@@ -45,8 +45,7 @@
 						$selectedDay = event.detail
 						dropMenuOpened = false
 					}}
-					listItems={[...$workoutPrograms.keys()]}
-					filterKey=""
+					listOptions={ {items: [...$workoutPrograms.keys()]}}
 				/>
 			</svelte:fragment>
 		</DropMenu>

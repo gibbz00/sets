@@ -106,7 +106,6 @@
 			elementClasses={{
 				input: 'w-full text-center placeholder:text-gray-300 pl-2 text-white',
 				icon: 'fill-white',
-				list: "text-black"
 			}}
 			dynamicWidth={false}
 			listItems={[...$groups.keys()]}
@@ -122,7 +121,6 @@
 			elementClasses={{
 				input: 'w-full text-center placeholder:text-gray-300 pl-2 text-white',
 				icon: 'fill-white',
-				list: 'text-black',
 			}}
 			dynamicWidth={false}
 			listItems={[...$exercises.keys()]}
