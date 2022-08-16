@@ -32,12 +32,12 @@
 	<!-- Groups -->
 	<span class="space-y-2">
 		{#each [...$groups.keys()] as groupName}
-			<div class="text-2xl mb-1 w-fit">
-				{groupName}
-			</div>
-			<!-- Tags for given group  -->
-			<div class="flex items-center flex-wrap gap-2">
-				{#if $exercises.getDefined(exerciseName).has(groupName)}
+			{#if $exercises.getDefined(exerciseName).has(groupName)}
+				<div class="text-2xl mb-1 w-fit">
+					{groupName}
+				</div>
+				<!-- Tags for given group  -->
+				<div class="flex items-center flex-wrap gap-2">
 					{#each [...$exercises.getDefined(exerciseName).getDefined(groupName)] as tag}
 						<div
 							class="bg-green-800 p-2 rounded-sm font-medium grid place-content-center"
@@ -66,18 +66,18 @@
 							</EllipsisMenu>
 						</div>
 					{/each}
-				{/if}
-				<!-- Add tag button -->
-				<HiddenSelectableInput
-					placeholderText="Add tag"
-					listItems={[...$groups.getDefined(groupName).values()]}
-					listFilter={autocompleteFilter}
-					on:selected={(event) =>
-						controller.createExerciseTag(event.detail, groupName, exerciseName)}
-				>
-					<AddButton slot="placeholderContent" />
-				</HiddenSelectableInput>
-			</div>
+					<!-- Add tag button -->
+					<HiddenSelectableInput
+						placeholderText="Add tag"
+						listItems={ [...$groups.getDefined(groupName).values()]}
+						listFilter={ autocompleteFilter}
+						on:selected={(event) =>
+							controller.createExerciseTag(event.detail, groupName, exerciseName)}
+					>
+						<AddButton slot="placeholderContent" />
+					</HiddenSelectableInput>
+				</div>
+			{/if}
 		{/each}
 	</span>
 
@@ -106,8 +106,12 @@
 			elementClasses={{
 				input: 'w-full text-center placeholder:text-gray-300 pl-2 text-white',
 				icon: 'fill-white',
+				list: "text-black"
 			}}
 			dynamicWidth={false}
+			listItems={[...$groups.keys()]}
+			listFilter={autocompleteFilter}
+			listOmit={[...$exercises.getDefined(exerciseName).keys()]}
 			on:selected={(event) => controller.createGroup(event.detail)}
 		>
 			<button slot="placeholderContent">Add group</button>

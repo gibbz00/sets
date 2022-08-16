@@ -11,7 +11,6 @@
 	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'
-	import { onMount } from 'svelte'
 
 	let refresh = {}
 	let modal: Modal
@@ -163,7 +162,7 @@
 	export function deleteTag(tagName: string) {
 		deleteProcess = deleteTagGenerator()
 		confirmDeleteModal.show(
-			`Delete <b>${tagName}</b>? Tag will be removoed from all associated exercises.`
+			`Delete <b>${tagName}</b>? Tag will be removed from all associated exercises.`
 		)
 
 		function* deleteTagGenerator() {
@@ -196,11 +195,11 @@
 		} else {
 			$weekNames = $weekNames.add(weekName)
 			// numbers of sets in exercise plans must also be updated
-			for (let [weekDay, exercisePlans] of $workoutPrograms.entries()) {
-				for (let index = 0; index < exercisePlans.length; index++) {
-					exercisePlans[index].sets.push(0)
+			for (let [weekDay, workoutInfo] of $workoutPrograms.entries()) {
+				for (let index = 0; index < workoutInfo.exercises.length; index++) {
+					workoutInfo.exercises[index].sets.push(0)
 				}
-				$workoutPrograms = $workoutPrograms.update(weekDay, exercisePlans)
+				$workoutPrograms = $workoutPrograms.update(weekDay, workoutInfo)
 			}
 			resetUI()
 		}
@@ -225,8 +224,8 @@
 			$weekNames.delete(weekName)
 			$weekNames = $weekNames
 			// delete sets
-			for (let [, exercisePlans] of $workoutPrograms.entries()) {
-				for (let exercisePlan of exercisePlans) {
+			for (let [, workoutInfo] of $workoutPrograms.entries()) {
+				for (let exercisePlan of workoutInfo.exercises) {
 					exercisePlan.sets.splice(index, 1)
 				}
 			}
@@ -247,7 +246,7 @@
 			sets: new Array($weekNames.size).fill(0),
 		}
 		workoutPrograms.update((setmap) => {
-			setmap.get($selectedDay)!.push(newExercisePlan)
+			setmap.getDefined($selectedDay).exercises.push(newExercisePlan)
 			return setmap
 		})
 		resetUI()
@@ -260,7 +259,8 @@
 			createExercise(newExercisePlanName)
 		}
 
-		$workoutPrograms.getDefined($selectedDay)[index].exerciseName = newExercisePlanName
+		$workoutPrograms.getDefined($selectedDay).exercises[index].exerciseName =
+			newExercisePlanName
 		$workoutPrograms = $workoutPrograms
 		// has to also be updated,
 		$exercises = $exercises
@@ -275,7 +275,7 @@
 		}
 
 		function confirmedExercisePlanDelete() {
-			$workoutPrograms.getDefined(selectedDay).splice(index, 1)
+			$workoutPrograms.getDefined(selectedDay).exercises.splice(index, 1)
 			$workoutPrograms = $workoutPrograms
 		}
 	}

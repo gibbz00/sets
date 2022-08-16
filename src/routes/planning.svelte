@@ -68,6 +68,9 @@
 			<div slot="footer" class="col-start-1 pl-3 mt-2">
 				<HiddenSelectableInput
 					placeholderText="Add exercise plan"
+					elementClasses={{
+						list: 'w-min',
+					}}
 					listItems={[...$exercises.keys()]}
 					listFilter={autocompleteFilter}
 					on:selected={(event) => controller.createExercisePlan(event.detail)}

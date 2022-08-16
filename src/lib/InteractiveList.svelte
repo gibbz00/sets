@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-	import { onMount } from 'svelte'
+import type { FilterFunction } from './utils/FilterFunction';
 
 	/*
         Separated Intereracive list from Selectable Input
@@ -22,17 +22,24 @@
                 * Arrow up on first index moved index to last.
         * Option to have automatic width based on current input,
     */
-	export let filterKey: string
-	export let listItems: string[] = []
-	type ListFilter = undefined | ((filterKey: string, items: typeof listItems) => typeof listItems)
-	export let listFilter: ListFilter = undefined
+	type ListOptions = {
+		items: string[]
+		omit?: string[]
+		filter?: {
+			key: string
+			func: FilterFunction 
+		}
+	}
+	export let listOptions: ListOptions
+
 	let cls: string = ''
 	export { cls as class }
+
 	export let keyHandlingActivated: boolean = false
 	export let autofocus: boolean = false
 
 	let matches: string[] = []
-	$: matches = findMatches(filterKey)
+	$: matches = findMatches(listOptions.filter?.key)
 	/* 
 		TODO: Would be nice to have integer types 
 			Possible solutions:
@@ -50,7 +57,7 @@
 		if (keyHandlingActivated || document.activeElement == list) {
 			if (event.key == 'Enter' && selectedIndex != undefined)
 				selectedDispatcher('selected', matches[selectedIndex])
-			else if (listItems.length > 0) {
+			else if (listOptions.items.length > 0) {
 				switch (event.key) {
 					case 'ArrowDown':
 						if (selectedIndex == undefined) {
@@ -79,15 +86,24 @@
 		}
 	}
 
-	function findMatches(filterKey: string): string[] {
-		let matches: string[]
-		if (listFilter != undefined) {
-			matches = listFilter(filterKey, listItems)
-		} else {
-			matches = listItems
+	function findMatches(filterKey: string | undefined): string[] {
+		let potentialMatches: string[] = listOptions.items
+
+		if (listOptions.omit != undefined) {
+			listOptions.omit.forEach((element) => {
+			// Presuming that items are unique
+				let potentialOmitIndex = potentialMatches.indexOf(element)
+				if (potentialOmitIndex > -1) {
+					potentialMatches.splice(potentialOmitIndex, 1)
+				}
+			})
+		}
+
+		if (listOptions.filter != undefined) {
+			potentialMatches = listOptions.filter.func(filterKey as string, potentialMatches)
 		}
 		selectedIndex = undefined
-		return matches
+		return potentialMatches
 	}
 </script>
 

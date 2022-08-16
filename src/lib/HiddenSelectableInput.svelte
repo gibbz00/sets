@@ -3,6 +3,7 @@
 
 	import Hidden from './Hidden.svelte'
 	import SelectableInput from './SelectableInput.svelte'
+import type { FilterFunction } from './utils/FilterFunction';
 
 	/* 
 		Combines Hidden.svelte uses it with SelectableInput.svelte 
@@ -10,13 +11,13 @@
 			* Hides selectable input when it dispatches selected or canceled events
 	*/
 	export let placeholderText: string = ''
-	export let listItems: SelectableInput['listItems'] = undefined
-	export let listFilter: SelectableInput['listFilter'] = undefined
 	export let dynamicWidth: boolean = true
-	export let elementClasses: (SelectableInput extends SvelteComponentTyped<infer Prop>
-		? Prop
-		: never)['elementClasses'] = {}
 	export let fadeTransition: boolean = false
+	type SelectableInputProps = (SelectableInput extends SvelteComponentTyped<infer Prop> ? Prop : never)
+	export let listItems: SelectableInputProps['listItems'] = undefined
+	export let listOmit: SelectableInputProps['listOmit']  = undefined
+	export let listFilter: SelectableInputProps['listFilter'] = undefined
+	export let elementClasses: SelectableInputProps['elementClasses'] = {}
 
 	let hidden: boolean = true
 </script>
@@ -32,6 +33,7 @@
 		on:selected
 		{placeholderText}
 		{listItems}
+		{listOmit}
 		{listFilter}
 	/>
 </Hidden>

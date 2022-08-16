@@ -29,17 +29,13 @@
 
 	import { afterUpdate, createEventDispatcher, onMount, SvelteComponentTyped } from 'svelte'
 	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
+import type { FilterFunction } from './utils/FilterFunction';
+
 
 	export let placeholderText: string = ''
-	export let listItems: (InteractiveList extends SvelteComponentTyped<infer Props>
-		? Props
-		: never)['listItems'] = []
-	export let listFilter: (InteractiveList extends SvelteComponentTyped<infer Props>
-		? Props
-		: never)['listFilter'] = undefined
-
 	export let autofocus: boolean = false
 	export let dynamicWidth: boolean = false
+
 	type ElementClasses = {
 		input?: string
 		icon?: string
@@ -47,12 +43,24 @@
 	}
 	export let elementClasses: ElementClasses = {}
 
+
+	export let listItems: string[] = []
+	export let listOmit: string[] | undefined
+	export let listFilter: undefined | FilterFunction
+
 	let textFieldValue: string = ''
+	let listOptions: (InteractiveList extends SvelteComponentTyped<infer Props> ? Props : never)['listOptions']
+	let listFilterKey: string = textFieldValue
+	$: listOptions = {
+			items: listItems,
+			omit: listOmit,
+			filter: listFilter != undefined ?  { key: listFilterKey, func: listFilter } : undefined
+	}
+
 	let input: HTMLInputElement
 	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
 		createEventDispatcher()
 	let activatedInteractiveList: boolean = false
-	let listFilterKey: string = textFieldValue
 
 	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
@@ -123,9 +131,7 @@
 			on:selected={(event) => listItemSelected(event.detail)}
 			keyHandlingActivated={activatedInteractiveList}
 			class={elementClasses.list}
-			{listItems}
-			{listFilter}
-			filterKey={listFilterKey}
+			{listOptions}
 		/>
 		<!-- class="absolute z-10 inset-x-0" -->
 	</div>

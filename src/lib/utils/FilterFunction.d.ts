@@ -1,0 +1,1 @@
+export type FilterFunction = ( key: string, items: string[]) => string[]
