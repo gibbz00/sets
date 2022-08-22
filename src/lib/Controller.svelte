@@ -29,6 +29,17 @@
 			}
 		}
 
+		export function addGroupToExercise(exerciseName: string, groupName: string) {
+			// Error if exercise already has the group
+			if ($exercises.getDefined(exerciseName).has(groupName)) {
+				modal.show(`<b>${groupName}</b> already exists!`)
+			}
+			else {
+				$exercises.getDefined(exerciseName).set(groupName, new ThrowSet())
+				$exercises = $exercises
+			}
+		}
+
 	/*
         EXERCISE TAG
     */
@@ -258,7 +269,7 @@
 			// has to also be updated,
 			$exercises = $exercises
 		}
-
+		
 		export function deleteExercisePlan(selectedDay: string, exerciseName: string, index: number) {
 			deleteProcess = deleteExercisePlanGenerator()
 			confirmDeleteModal.show(`Remove <b>${exerciseName}</b> from <b>${selectedDay}</b>?`)

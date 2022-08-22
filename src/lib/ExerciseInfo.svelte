@@ -111,7 +111,7 @@
 			listItems={[...$groups.keys()]}
 			listFilter={autocompleteFilter}
 			listOmit={[...$exercises.getDefined(exerciseName).keys()]}
-			on:selected={(event) => controller.createGroup(event.detail)}
+			on:selected={(event) => controller.addGroupToExercise(exerciseName, event.detail)}
 		>
 			<button slot="placeholderContent">Add group</button>
 		</HiddenSelectableInput>
