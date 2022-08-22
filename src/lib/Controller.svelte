@@ -11,6 +11,7 @@
 	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'
+import { group_outros } from 'svelte/internal';
 
 	let modal: Modal
 	let confirmDeleteModal: Modal
@@ -30,14 +31,17 @@
 		}
 
 		export function addGroupToExercise(exerciseName: string, groupName: string) {
-			// Error if exercise already has the group
+			// Check if exercise already has the group
 			if ($exercises.getDefined(exerciseName).has(groupName)) {
 				modal.show(`<b>${groupName}</b> already exists!`)
+				return
 			}
-			else {
-				$exercises.getDefined(exerciseName).set(groupName, new ThrowSet())
-				$exercises = $exercises
-			}
+
+			// Check if group does not exist in groups list
+			if (!$groups.has(groupName)) $groups.set(groupName, new ThrowSet())
+
+			$exercises.getDefined(exerciseName).set(groupName, new ThrowSet())
+			$exercises = $exercises
 		}
 
 	/*

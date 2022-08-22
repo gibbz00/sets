@@ -29,6 +29,7 @@
 		cursor-default
 	"
 >
+<!-- TODO: iterate over exercise groups and remove if has clause instead of iterating over all the groups -->
 	<!-- Groups -->
 	<span class="space-y-2">
 		{#each [...$groups.keys()] as groupName}
