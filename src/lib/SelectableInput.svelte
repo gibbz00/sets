@@ -89,14 +89,11 @@ import type { FilterFunction } from './utils/FilterFunction';
 	}
 
 	// <!-- TODO: for interactivally showing list on down arrow: list items to undefined at first and then defined on ArrowDown, same goes for autocomplete indicator click -->
+	// Default case when attempting to type when interactivelist is in focus
 	function keyEventHandler(event: KeyboardEvent) {
-		switch (event.key) {
-			case 'Enter':
-				selectHandler()
-				break
-			default:
-				activatedInteractiveList = true
-		}
+		let key: KeyboardEvent['key'] = event.key
+		if (key == "Enter")  selectHandler() 
+		else if (key == "ArrowDown" || key == "ArrowUp") activatedInteractiveList = true
 	}
 </script>
 

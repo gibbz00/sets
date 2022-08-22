@@ -16,6 +16,7 @@
 	import PlanningHeader from '$lib/PlanningHeader.svelte'
 
 	let controller: Controller
+
 </script>
 
 <Controller bind:this={controller} />

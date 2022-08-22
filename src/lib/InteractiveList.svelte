@@ -60,24 +60,25 @@ import type { FilterFunction } from './utils/FilterFunction';
 			else if (listOptions.items.length > 0) {
 				switch (event.key) {
 					case 'ArrowDown':
-						if (selectedIndex == undefined) {
-							if (matches.length > 0) {
+						if (selectedIndex == undefined && matches.length > 0) {
 								selectedIndex = 0
-							}
-						} else if (selectedIndex + 1 != matches.length) {
-							selectedIndex++
-						} else {
+						} else if (selectedIndex! + 1 == matches.length) {
 							selectedIndex = 0
+						} else {
+							selectedIndex!++
 						}
 						break
 					case 'ArrowUp':
 						// event.preventDefault() called to prevent cursor jump to input beginning
 						event.preventDefault()
-						if (selectedIndex != undefined) {
+						if (selectedIndex == undefined && matches.length > 0) {
+							selectedIndex = matches.length - 1
+						}
+						else {
 							if (selectedIndex == 0) {
 								selectedIndex = matches.length - 1
 							} else {
-								selectedIndex--
+								selectedIndex!--
 							}
 						}
 						break
