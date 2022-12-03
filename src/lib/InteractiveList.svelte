@@ -42,13 +42,14 @@
 
 
 	let matches: string[] = []
+	let firstNotFilteredFlip = itemsInitiallyHidden
 	$: matches = (() => {
 		if (itemsInitiallyHidden) {
-			// load once statement
+			// equivalent to load once statement, even if naming isn't the best
 			itemsInitiallyHidden = false
 			return []
 		}
-		return findMatches(listOptions.filter?.key)
+		return findMatches()
 	})()
 	/* 
 		TODO: Would be nice to have integer types 
@@ -83,8 +84,14 @@
 				let pressedUpOrDown: boolean = false
 				switch (event.key) {
 					case 'ArrowDown':
+						if (firstNotFilteredFlip) {
+							matches = findMatches()
+							firstNotFilteredFlip = false
+						}
+
 						if (selectedIndex == undefined && matches.length > 0) {
-								selectedIndex = 0
+							itemsShown = true
+							selectedIndex = 0
 						} else if (selectedIndex! + 1 == matches.length) {
 							selectedIndex = 0
 						} else {
@@ -118,7 +125,7 @@
 		}
 	}
 
-	function findMatches(filterKey: string | undefined): string[] {
+	function findMatches(): string[] {
 		let potentialMatches: string[] = listOptions.items
 
 		if (listOptions.omit != undefined) {
@@ -132,7 +139,7 @@
 		}
 
 		if (listOptions.filter != undefined) {
-			potentialMatches = listOptions.filter.func(filterKey as string, potentialMatches)
+			potentialMatches = listOptions.filter.func(listOptions.filter.key, potentialMatches)
 		}
 		selectedIndex = undefined
 		return potentialMatches
