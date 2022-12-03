@@ -19,7 +19,9 @@
 		* ItemsIntiallyHiddem prop. If set to true:
             * Pressing down arrow before any input shows all options
             * Otherwise also shown after the first first input event 
+		* Option to hide list open item selection
 		* Reverting back to empty filterkey shows all options 
+		
     */
 	type ListOptions = {
 		items: string[]
@@ -35,15 +37,17 @@
 	export { cls as class }
 
 	export let keyHandlingActivated: boolean = false
-	export let autofocus: boolean = false
 	export let itemsInitiallyHidden: boolean = false
 	export let selectOnTraverse: boolean = false
-	export let itemsShown: boolean | undefined = undefined
+	export let itemsShown: boolean = true
+	export let hideOnSelection: boolean = false
 
 
 	let matches: string[] = []
 	let firstNotFilteredFlip = itemsInitiallyHidden
 	$: matches = (() => {
+		if (!itemsShown) return []
+
 		if (itemsInitiallyHidden) {
 			// equivalent to load once statement, even if naming isn't the best
 			itemsInitiallyHidden = false
@@ -73,7 +77,7 @@
 			selected,
 			method: 'selection'
 		})
-		itemsShown = false
+		if (hideOnSelection) itemsShown = false
 	}
 
 	let list: HTMLUListElement

@@ -105,7 +105,7 @@
                     * otherwise on:input will use old value
         -->
 		<!-- svelte-ignore a11y-autofocus -->
-		<!--  -->
+		<!-- Input often revealed from a hidden element-->
 		<input
 			class={`w-full bg-inherit focus-visible:outline-none ${elementClasses.input}`}
 			type="text"
