@@ -23,7 +23,7 @@
 	export let dynamicWidth: boolean = false
 	export let itemsInitiallyHidden: boolean = true
 	export let resetInputUponSelect: boolean = true
-	export let selectUponClick: boolean = false
+	export let instantSelection: boolean = false
 	export let selectOnTraverse: boolean = true
 	export let itemsShown: boolean | undefined = undefined
 
@@ -72,7 +72,10 @@
 	function listItemSelected(detail: SelectedEventDetail) {
 		textFieldValue = detail.selected
 		if (detail.method == 'selection') activatedInteractiveList = false
-		if (selectUponClick) selectHandler(detail.method)
+		if (instantSelection) selectHandler(detail.method)
+		// Otherwise focus is remained on list, making it hard to
+		// edit selection immediatedly without on the input again.
+		else input.focus()
 	}
 
 	function selectHandler(method: SelectedEventDetail['method']) {
