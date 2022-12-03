@@ -81,11 +81,10 @@
 	}
 
 	let list: HTMLUListElement
-	function handleKeyDown(event: KeyboardEvent) {
+	function handleKeyDown(event: KeyboardEvent): void {
 		if (keyHandlingActivated || document.activeElement == list) {
 			// Traversal check to avoid double selects
 			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse) {
-				console.log('rans');
 				itemSelected(matches[selectedIndex])
 			}
 				

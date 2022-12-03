@@ -56,12 +56,6 @@
 	let activatedInteractiveList: boolean = false
 
 	let inputContainer: HTMLDivElement
-	let listWrapper: HTMLDivElement
-	// TODO: Remove?
-	// List is rendered absolute and must be offset relative to the dynamic inputHeight
-	onMount(() => {
-		listWrapper.style.top = `${inputContainer.getBoundingClientRect().height}px`
-	})
 
 	afterUpdate(() => {
 		if (dynamicWidth && input != null) {
@@ -128,7 +122,7 @@
 			<Icon class={elementClasses.icon} type={iconType}/>
 		</button>
 	</div>
-	<div class="absolute inset-x-0" bind:this={listWrapper}>
+	<div class="absolute inset-x-0">
 		<InteractiveList
 			{selectOnTraverse}
 			{itemsInitiallyHidden}
