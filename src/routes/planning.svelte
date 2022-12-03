@@ -36,7 +36,7 @@
 		<TableTemplate>
 			<svelte:fragment slot="headerColumnOne">Exercise</svelte:fragment>
 			<svelte:fragment slot="body">
-				{#each $workoutPrograms.getDefined($selectedDay).exercises as { exerciseName, sets }, index}
+				{#each $workoutPrograms.getDefined($selectedDay).exercises as exerciseEntry, index (exerciseEntry)}
 					<div class="contents">
 						<div class="col-start-1">
 							<DropMenu
@@ -48,16 +48,16 @@
 								}}
 							>
 								<div slot="placeholderContent" class="max-w-[22rem] max-w truncate">
-									{exerciseName}
+									{exerciseEntry.exerciseName}
 								</div>
 								<ExerciseInfo
 									slot="dropMenuWindow"
-									{exerciseName}
+									exerciseName={exerciseEntry.exerciseName}
 									exercisePlanIndex={index}
 								/>
 							</DropMenu>
 						</div>
-						{#each sets as set}
+						{#each exerciseEntry.sets as set}
 							<div class="justify-self-center">
 								<SetNumberInput bind:set />
 							</div>
