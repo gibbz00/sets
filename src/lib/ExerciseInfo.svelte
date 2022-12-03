@@ -73,7 +73,7 @@
 						listItems={ [...$groups.getDefined(groupName).values()]}
 						listFilter={ autocompleteFilter}
 						on:selected={(event) =>
-							controller.createExerciseTag(event.detail, groupName, exerciseName)}
+							controller.createExerciseTag(event.detail.selected, groupName, exerciseName)}
 					>
 						<AddButton slot="placeholderContent" />
 					</HiddenSelectableInput>
@@ -112,7 +112,7 @@
 			listItems={[...$groups.keys()]}
 			listFilter={autocompleteFilter}
 			listOmit={[...$exercises.getDefined(exerciseName).keys()]}
-			on:selected={(event) => controller.addGroupToExercise(exerciseName, event.detail)}
+			on:selected={(event) => controller.addGroupToExercise(exerciseName, event.detail.selected)}
 		>
 			<button slot="placeholderContent">Add group</button>
 		</HiddenSelectableInput>
@@ -126,7 +126,7 @@
 			dynamicWidth={false}
 			listItems={[...$exercises.keys()]}
 			listFilter={autocompleteFilter}
-			on:selected={(event) => controller.updatePlanExercise(event.detail, exercisePlanIndex)}
+			on:selected={(event) => controller.updatePlanExercise(event.detail.selected, exercisePlanIndex)}
 			placeholderText="New exercise name"
 		>
 			<button slot="placeholderContent">Change exercise</button>

@@ -3,7 +3,6 @@
 
 	import Hidden from './Hidden.svelte'
 	import SelectableInput from './SelectableInput.svelte'
-import type { FilterFunction } from './utils/FilterFunction';
 
 	/* 
 		Combines Hidden.svelte uses it with SelectableInput.svelte 

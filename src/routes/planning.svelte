@@ -74,7 +74,7 @@
 					}}
 					listItems={[...$exercises.keys()]}
 					listFilter={autocompleteFilter}
-					on:selected={(event) => controller.createExercisePlan(event.detail)}
+					on:selected={(event) => controller.createExercisePlan(event.detail.selected)}
 				>
 					<AddButton slot="placeholderContent" />
 				</HiddenSelectableInput>

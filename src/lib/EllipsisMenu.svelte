@@ -24,7 +24,7 @@
 		: never)['iconClass'] = {}
 	export let fadeTransition: boolean = false
 
-	let updateDispatcher: (type: 'update', textFieldValue: string) => boolean =
+	let updateDispatcher: (type: 'update', detail: string) => boolean =
 		createEventDispatcher()
 	let deleteDispatcher: (type: 'delete') => boolean = createEventDispatcher()
 
@@ -43,7 +43,7 @@
 </script>
 
 <HiddenSelectableInput
-	on:selected={(event) => updateDispatcher('update', event.detail)}
+	on:selected={(event) => updateDispatcher('update', event.detail.selected)}
 	placeholderText={inputPlaceholderText}
 	elementClasses={inputElementClasses}
 	{dynamicWidth}

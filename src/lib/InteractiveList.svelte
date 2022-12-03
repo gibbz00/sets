@@ -1,26 +1,25 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte'
-import type { FilterFunction } from './utils/FilterFunction';
+	import type { FilterFunction } from './utils/TypeStub';
 
 	/*
         Separated Intereracive list from Selectable Input
 
-        TODO:
-		* List traversal with keyboard only possible when list is focused. 
-		* Selection sends selected event
         * List items is supplied by the data prop 
-        * List items can be filterered with the filterFunction 
-        * Showing list items
-            * Pressing down arrow before any input shows all options 
-            * They're otherwise just shown after the first first input event 
-            * Reverting back to empty input shows all options 
-        * List to textFieldValue does not trigger selection immediatedly 
-                User might want to edit text before selecting (submitting)
-            * Done by:
-                * Clicking on list-item 
-                * Arrow up or down 
-                * Arrow up on first index moved index to last.
-        * Option to have automatic width based on current input,
+        * List items can be filterered with the filterFunction, used for features such as autocomplete
+		* List traversal with keyboard only possible when list is focused. 
+			* Keyboard traversal done with up or down arrows.
+			* List regarded as cyclic.
+		* Selection sends selected event
+		* Option to hade select event be triggered upon traversal
+        	User might sometimes want to edit selection text before submitting
+		* Explicit selection that is not done by traversal is achieved by:
+			* Clicking on list-item 
+			* Pressing enter key on focused item (only work when selectUponTraversal set to false to avoid double selects)
+		* ItemsIntiallyHiddem prop. If set to true:
+            * Pressing down arrow before any input shows all options
+            * Otherwise also shown after the first first input event 
+		* Reverting back to empty filterkey shows all options 
     */
 	type ListOptions = {
 		items: string[]
@@ -37,27 +36,51 @@ import type { FilterFunction } from './utils/FilterFunction';
 
 	export let keyHandlingActivated: boolean = false
 	export let autofocus: boolean = false
+	export let itemsInitiallyHidden: boolean = false
+	export let selectOnTraverse: boolean = false
+	export let itemsShown: boolean | undefined
+
 
 	let matches: string[] = []
-	$: matches = findMatches(listOptions.filter?.key)
+	$: matches = (() => {
+		if (itemsInitiallyHidden) {
+			// load once statement
+			itemsInitiallyHidden = false
+			return []
+		}
+		return findMatches(listOptions.filter?.key)
+	})()
 	/* 
 		TODO: Would be nice to have integer types 
-			Possible solutions:
+			Possible Hacks:
 				* Uint16Array with only one element
 				* BigInt
 				* Typescript type using modulo == 0
 	*/
 	let selectedIndex: number | undefined = undefined
-	//IMPROVEMENT: Would be nice to make this into a monad or something that hides the 'selected' argument
-	let selectedDispatcher: (type: 'selected', selected: string) => boolean =
+	type InteractiveListSelectedDetail = {
+		selected: string,
+		method: 'selection' | 'traversal'
+	}
+	let selectedDispatcher: (type: 'selected', detail: InteractiveListSelectedDetail) => boolean =
 		createEventDispatcher()
+	
+	function itemSelected(selected: string) {
+		selectedDispatcher('selected', {
+			selected,
+			method: 'selection'
+		})
+		itemsShown = false
+	}
 
 	let list: HTMLUListElement
 	function handleKeyDown(event: KeyboardEvent) {
 		if (keyHandlingActivated || document.activeElement == list) {
-			if (event.key == 'Enter' && selectedIndex != undefined)
-				selectedDispatcher('selected', matches[selectedIndex])
+			// Traversal check to avoid double selects
+			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse)
+				itemSelected(matches[selectedIndex])
 			else if (listOptions.items.length > 0) {
+				let pressedUpOrDown: boolean = false
 				switch (event.key) {
 					case 'ArrowDown':
 						if (selectedIndex == undefined && matches.length > 0) {
@@ -67,6 +90,7 @@ import type { FilterFunction } from './utils/FilterFunction';
 						} else {
 							selectedIndex!++
 						}
+						pressedUpOrDown = true
 						break
 					case 'ArrowUp':
 						// event.preventDefault() called to prevent cursor jump to input beginning
@@ -81,7 +105,14 @@ import type { FilterFunction } from './utils/FilterFunction';
 								selectedIndex!--
 							}
 						}
+						pressedUpOrDown = true
 						break
+				}
+				if (pressedUpOrDown && selectOnTraverse) {
+					selectedDispatcher('selected', {
+						selected: matches[selectedIndex!],
+						method: 'traversal'
+					})
 				}
 			}
 		}
@@ -133,13 +164,15 @@ import type { FilterFunction } from './utils/FilterFunction';
 >
 	{#each matches as match, index}
 		<li
-			on:click={() => selectedDispatcher('selected', match)}
+			on:click={() => itemSelected(match)}
 			on:mouseenter={() => (selectedIndex = index)}
 			class={`cursor-pointer hover:bg-gray-200 px-3 py-2 ${
 				selectedIndex == index ? 'bg-gray-100' : ''
 			}`}
 		>
-			{match}
+			<slot listItemString={match}>
+				{match}
+			</slot>
 		</li>
 	{/each}
 </ul>

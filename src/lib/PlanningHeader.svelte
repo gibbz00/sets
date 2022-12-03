@@ -41,7 +41,7 @@
 				<InteractiveList
 					autofocus
 					on:selected={(event) => {
-						$selectedDay = event.detail
+						$selectedDay = event.detail.selected
 						dropMenuOpened = false
 					}}
 					listOptions={ {items: [...$workoutPrograms.keys()]}}

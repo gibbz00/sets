@@ -141,7 +141,7 @@
 			<span class="px-4 w-min my-auto justify-self-center">
 				<HiddenSelectableInput
 					placeholderText="New group name"
-					on:selected={(event) => controller.createGroup(event.detail)}
+					on:selected={(event) => controller.createGroup(event.detail.selected)}
 				>
 					<AddButton slot="placeholderContent" />
 				</HiddenSelectableInput>
@@ -198,7 +198,7 @@
 				<div slot="footer" class="col-start-1 pl-3 mt-2">
 					<HiddenSelectableInput
 						placeholderText="New tag name"
-						on:selected={(event) => controller.createTag(event.detail)}
+						on:selected={(event) => controller.createTag(event.detail.selected)}
 					>
 						<AddButton slot="placeholderContent" />
 					</HiddenSelectableInput>

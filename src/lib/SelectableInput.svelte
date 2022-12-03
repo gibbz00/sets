@@ -1,52 +1,46 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte'
-	import InteractiveList from './InteractiveList.svelte'
+	import InteractiveList from '$lib/InteractiveList.svelte'
 
 	/*
-        Add a clickable arrow beside input element for mouse/tap driven users
-
-		* Selection
-			* On input:
-				* Pressing enter (done)
-				* Clicking arrow icon (done)
-		* Selection resets textfield (done)
-		* Enterering a empty input sends a canceled event and not a selected event (done)
-        * Option to add a selectable list, used for things such as autocomplete
-			* List items is supplied by the data prop (done)
-			* List items can be filterered with the filterFunction (done)
-			* Showing list items
-				* Pressing down arrow before any input shows all options (done)
-				* They're otherwise just shown after the first first input event (done)
-				* Reverting back to empty input shows all options (done)
-			* List to textFieldValue does not trigger selection immediatedly (done)
-					User might want to edit text before selecting (submitting)
-				* Done by:
-					* Clicking on list-item (done)
-					* Arrow up or down (done)
-					* Arrow up on first index moved index to last.
+		Selection:
+        * Clickable arrow beside input element for mouse/tap driven users
+		* Keyboard driven selection by pressing enter key
+		* Selection resets textfield by default, optionally turned off
+        * Option to add a selectable list
+			* See InterActiveList.svelte for more info on behaviour
+		* Optionally set list selction to trigger immediate event forwarding
+			* Feature not needed when there is no use in editing list selection 
         * Option to have automatic width based on current input,
     */
 
 	import { afterUpdate, createEventDispatcher, onMount, SvelteComponentTyped } from 'svelte'
 	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
-import type { FilterFunction } from './utils/FilterFunction';
-
+	import type { FilterFunction, SelectedEvent, SelectedEventDetail } from './utils/TypeStub';
 
 	export let placeholderText: string = ''
 	export let autofocus: boolean = false
 	export let dynamicWidth: boolean = false
+	export let itemsInitiallyHidden: boolean = true
+	export let resetInputUponSelect: boolean = true
+	export let selectUponClick: boolean = false
+	export let selectOnTraverse: boolean = false
+	export let itemsShown: boolean | undefined = undefined
 
 	type ElementClasses = {
 		input?: string
 		icon?: string
 		list?: string
 	}
-	export let elementClasses: ElementClasses = {}
+	export let elementClasses: ElementClasses = {
+		input: "w-full"
+	}
+	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type'] = "arrowRightAlt"
 
 
 	export let listItems: string[] = []
-	export let listOmit: string[] | undefined
-	export let listFilter: undefined | FilterFunction
+	export let listOmit: string[] | undefined = undefined
+	export let listFilter: undefined | FilterFunction = undefined
 
 	let textFieldValue: string = ''
 	let listOptions: (InteractiveList extends SvelteComponentTyped<infer Props> ? Props : never)['listOptions']
@@ -58,13 +52,13 @@ import type { FilterFunction } from './utils/FilterFunction';
 	}
 
 	let input: HTMLInputElement
-	let selectedDispatcher: (type: 'selected', textFieldValue: string) => boolean =
-		createEventDispatcher()
+	let selectedDispatcher: SelectedEvent = createEventDispatcher()
 	let activatedInteractiveList: boolean = false
 
-	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	let inputContainer: HTMLDivElement
 	let listWrapper: HTMLDivElement
+	// TODO: Remove?
+	// List is rendered absolute and must be offset relative to the dynamic inputHeight
 	onMount(() => {
 		listWrapper.style.top = `${inputContainer.getBoundingClientRect().height}px`
 	})
@@ -75,24 +69,30 @@ import type { FilterFunction } from './utils/FilterFunction';
 		}
 	})
 
-	function listItemSelected(listItem: string) {
-		textFieldValue = listItem
-		activatedInteractiveList = false
+	function listItemSelected(detail: SelectedEventDetail) {
+		textFieldValue = detail.selected
+		if (detail.method == 'selection') activatedInteractiveList = false
+		if (selectUponClick) selectHandler(detail.method)
 	}
 
-	// Empty selections are regarded as invalid
-	function selectHandler() {
+	function selectHandler(method: SelectedEventDetail['method']) {
 		if (textFieldValue != '') {
-			selectedDispatcher('selected', textFieldValue)
-			textFieldValue = ''
+			selectedDispatcher('selected', {
+				selected: textFieldValue,
+				method
+			})
+			if (resetInputUponSelect) {
+				textFieldValue = ''
+			}
 		}
 	}
 
-	// <!-- TODO: for interactivally showing list on down arrow: list items to undefined at first and then defined on ArrowDown, same goes for autocomplete indicator click -->
-	// Default case when attempting to type when interactivelist is in focus
 	function keyEventHandler(event: KeyboardEvent) {
 		let key: KeyboardEvent['key'] = event.key
-		if (key == "Enter")  selectHandler() 
+		if (key == "Enter") {
+			selectHandler('selection') 
+			input.blur()
+		} 
 		else if (key == "ArrowDown" || key == "ArrowUp") activatedInteractiveList = true
 	}
 </script>
@@ -105,7 +105,7 @@ import type { FilterFunction } from './utils/FilterFunction';
                     * otherwise on:input will use old value
         -->
 		<input
-			class={`bg-inherit focus-visible:outline-none ${elementClasses.input}`}
+			class={`w-full bg-inherit focus-visible:outline-none ${elementClasses.input}`}
 			type="text"
 			{autofocus}
 			placeholder={placeholderText}
@@ -116,20 +116,27 @@ import type { FilterFunction } from './utils/FilterFunction';
 		/>
 		<button
 			on:click={() => {
-				selectHandler()
+				selectHandler('selection')
 			}}
 			class="max-w-min"
 		>
-			<Icon class={elementClasses.icon} type="arrowRightAlt" />
+			<Icon class={elementClasses.icon} type={iconType}/>
 		</button>
 	</div>
-	<div bind:this={listWrapper}>
+	<div class="absolute inset-x-0" bind:this={listWrapper}>
 		<InteractiveList
-			on:selected={(event) => listItemSelected(event.detail)}
-			keyHandlingActivated={activatedInteractiveList}
-			class={elementClasses.list}
+			{selectOnTraverse}
+			{itemsInitiallyHidden}
+			{itemsShown}
 			{listOptions}
-		/>
-		<!-- class="absolute z-10 inset-x-0" -->
+			class={elementClasses.list}
+			keyHandlingActivated={activatedInteractiveList}
+			on:selected={(event) => listItemSelected(event.detail.selected)}
+			let:listItemString={listItemString}
+		>
+			<slot {listItemString}>
+				{listItemString}
+			</slot>
+		</InteractiveList>
 	</div>
 </div>

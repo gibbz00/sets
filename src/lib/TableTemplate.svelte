@@ -47,7 +47,7 @@
 		<div class="pr-3">
 			<HiddenSelectableInput
 				placeholderText="Add week"
-				on:selected={(event) => controller.createWeek(event.detail)}
+				on:selected={(event) => controller.createWeek(event.detail.selected)}
 			>
 				<AddButton slot="placeholderContent" />
 			</HiddenSelectableInput>

@@ -11,7 +11,6 @@
 	import { ThrowSet } from '$lib/ADTs/ThowSet'
 	import Modal from '$lib/Modal.svelte'
 	import { SetMap } from './ADTs/SetMap'
-import { group_outros } from 'svelte/internal';
 
 	let modal: Modal
 	let confirmDeleteModal: Modal
