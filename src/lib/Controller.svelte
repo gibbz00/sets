@@ -214,8 +214,13 @@
 		}
 
 		export function updateWeek(oldWeekName: string, newWeekName: string) {
-			$weekNames.update(oldWeekName, newWeekName)
-			$weekNames = $weekNames
+			if ($weekNames.has(newWeekName)) {
+				modal.show(`<b>${newWeekName}</b> already exists!`)
+			}
+			else {
+				$weekNames.update(oldWeekName, newWeekName)
+				$weekNames = $weekNames
+			}
 		}
 
 		export function deleteWeek(weekName: string, index: number) {

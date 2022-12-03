@@ -38,7 +38,7 @@
 	export let autofocus: boolean = false
 	export let itemsInitiallyHidden: boolean = false
 	export let selectOnTraverse: boolean = false
-	export let itemsShown: boolean | undefined
+	export let itemsShown: boolean | undefined = undefined
 
 
 	let matches: string[] = []
