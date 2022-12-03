@@ -5,7 +5,6 @@
 	import DropMenu from '$lib/DropMenu.svelte'
 	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
 	import type { SvelteComponentTyped } from 'svelte'
-	import { onMount } from 'svelte'
 	import { afterUpdate } from 'svelte'
 
 	let dropMenuOpened: boolean

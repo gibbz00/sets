@@ -17,9 +17,9 @@
 		
 		Description:
 
+		* Menu is opened on mouse location
 		* Icon of choice next to placeholderContent with iconType prop
         * Pressing inside dropRightContainer opens menu
-		* Menu is opened on mouse location
         * Clicking outisde of menu hides it
 		* Pressing escape hides menu
 
