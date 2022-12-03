@@ -24,7 +24,7 @@
 	export let itemsInitiallyHidden: boolean = true
 	export let resetInputUponSelect: boolean = true
 	export let selectUponClick: boolean = false
-	export let selectOnTraverse: boolean = false
+	export let selectOnTraverse: boolean = true
 	export let itemsShown: boolean | undefined = undefined
 
 	type ElementClasses = {
@@ -131,7 +131,7 @@
 			{listOptions}
 			class={elementClasses.list}
 			keyHandlingActivated={activatedInteractiveList}
-			on:selected={(event) => listItemSelected(event.detail.selected)}
+			on:selected={(event) => listItemSelected(event.detail)}
 			let:listItemString={listItemString}
 		>
 			<slot {listItemString}>

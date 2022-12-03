@@ -49,7 +49,9 @@
 			itemsInitiallyHidden = false
 			return []
 		}
-		return findMatches()
+		// including the argument as its change is the trigger to finding new matches
+		// needed to trigger the reactive statement
+		return findMatches(listOptions.filter?.key)
 	})()
 	/* 
 		TODO: Would be nice to have integer types 
@@ -78,8 +80,10 @@
 	function handleKeyDown(event: KeyboardEvent) {
 		if (keyHandlingActivated || document.activeElement == list) {
 			// Traversal check to avoid double selects
-			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse)
+			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse) {
 				itemSelected(matches[selectedIndex])
+			}
+				
 			else if (listOptions.items.length > 0) {
 				let pressedUpOrDown: boolean = false
 				switch (event.key) {
@@ -125,7 +129,7 @@
 		}
 	}
 
-	function findMatches(): string[] {
+	function findMatches(key?: string): string[] {
 		let potentialMatches: string[] = listOptions.items
 
 		if (listOptions.omit != undefined) {
@@ -139,7 +143,7 @@
 		}
 
 		if (listOptions.filter != undefined) {
-			potentialMatches = listOptions.filter.func(listOptions.filter.key, potentialMatches)
+			potentialMatches = listOptions.filter.func(key || listOptions.filter.key, potentialMatches)
 		}
 		selectedIndex = undefined
 		return potentialMatches
