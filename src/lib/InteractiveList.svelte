@@ -81,6 +81,7 @@
 		if (keyHandlingActivated || document.activeElement == list) {
 			// Traversal check to avoid double selects
 			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse) {
+				console.log('rans');
 				itemSelected(matches[selectedIndex])
 			}
 				
@@ -152,12 +153,10 @@
 
 <svelte:window on:keydown={handleKeyDown} />
 
-<!-- Conditional required since an empty ul still renders its borders -->
+<!-- Conditional class required since an empty ul still renders its borders -->
 <!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
 <ul
-	{autofocus}
 	bind:this={list}
-	on:mouseenter={() => list.focus()}
 	tabindex="0"
 	class={`
 				${matches.length == 0 ? 'hidden' : ''}

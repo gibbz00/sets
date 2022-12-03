@@ -104,6 +104,8 @@
                 * bind:value must come before on:input
                     * otherwise on:input will use old value
         -->
+		<!-- svelte-ignore a11y-autofocus -->
+		<!--  -->
 		<input
 			class={`w-full bg-inherit focus-visible:outline-none ${elementClasses.input}`}
 			type="text"
