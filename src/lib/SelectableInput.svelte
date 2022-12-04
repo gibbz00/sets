@@ -14,7 +14,7 @@
         * Option to have automatic width based on current input,
     */
 
-	import { afterUpdate, createEventDispatcher, onMount, SvelteComponentTyped } from 'svelte'
+	import { afterUpdate, createEventDispatcher, SvelteComponentTyped } from 'svelte'
 	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
 	import type { FilterFunction, SelectedEvent, SelectedEventDetail } from './utils/TypeStub';
 
@@ -122,7 +122,7 @@
 			<Icon class={elementClasses.icon} type={iconType}/>
 		</button>
 	</div>
-	<div class="absolute inset-x-0">
+	<div class="absolute inset-x-0 z-20">
 		<InteractiveList
 			{selectOnTraverse}
 			{itemsInitiallyHidden}

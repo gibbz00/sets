@@ -1,8 +1,16 @@
 <script lang="ts">
 	import SelectableInput from "$lib/SelectableInput.svelte"
 	import type Icon from "$lib/Icon.svelte"
-	import { beforeUpdate, createEventDispatcher, SvelteComponentTyped } from "svelte"
     import type { SelectedEvent, SelectedEventDetail } from "$lib/utils/TypeStub";
+	import { beforeUpdate, createEventDispatcher, SvelteComponentTyped } from "svelte"
+	import { fade, type FadeParams } from 'svelte/transition'
+	import {
+		fadeInDelay,
+		fadeInDuration,
+		fadeOutDelay,
+		fadeOutDuration,
+	} from '$lib/transitionConstants'
+	import { autocompleteFilter } from '$lib/utils/autoCompleteFilter'
 
     /*
         * Makes use of SelectableInput with defaults set in a way to mimic the HTMLSelectElement 
@@ -14,15 +22,37 @@
         * Option to allow entries not present in list
     */
     export let disallowNonOptionSelection: boolean = true
-
     type SelectableInputProps = (SelectableInput extends SvelteComponentTyped<infer Props> ? Props : never)
     export let optionStringItems: SelectableInputProps['listItems'] = []
-	export let optionStringFilter: SelectableInputProps['listFilter']
+	export let optionStringFilter: SelectableInputProps['listFilter'] = autocompleteFilter
 	export let placeholderText: SelectableInputProps['placeholderText']
+	let selectedDispatcher: SelectedEvent = createEventDispatcher()
+    let elementClasses: SelectableInputProps['elementClasses'] = {
+        input: 'p-2',
+		icon: ''
+    }
+    function handleSelected(detail: SelectedEventDetail) {
+        if (disallowNonOptionSelection && !optionStringItems!.includes(detail.selected)) {
+            throw new Error(`disallowNonOptionSelection: ${detail.selected} not present in option list`)
+        }
+        if (detail.method == 'selection') {
+            opened = false
+            renderIcon()
+        }
+        selectedDispatcher('selected', detail)
+    }
+
+    export let opened: boolean = false
+
+	export let fadeTransition: boolean = false
+	function emptyTransition(node: Element, emptyParameter: FadeParams): Object {
+		return {}
+	}
+	let chosenTransition = fadeTransition ? fade : emptyTransition
 
 	export let iconType: (Icon extends SvelteComponentTyped<infer Props> ? Props : never)['type'] = 'expand_more'
 	type IconState = {
-		default?: string
+		base?: string
 		opened?: string
 		enabled?: string
 		disabled?: string
@@ -30,7 +60,7 @@
 	}
 	export let iconClass: IconState = {}
     export let defaultIconClass: IconState = {
-		default: 'fill-gray-400 w-8 transition',
+		base: 'fill-gray-400 w-8 transition',
 		opened: '-rotate-90',
 		enabled: 'fill-black',
 		disabled: 'fill-gray-400',
@@ -51,57 +81,40 @@
 		}
 	})
 
-    let itemsShown: boolean
-	let mouseOverOptionsElement: boolean = false
-	let optionElement: HTMLDivElement
-    let elementClasses: SelectableInputProps['elementClasses'] = {
-        input: 'p-2'
-    }
+	let overPopMenu: boolean = false
+	let thisComponent: HTMLDivElement
     renderIcon()
 	beforeUpdate(() => {
         renderIcon()
 	})
 
-	let selectedDispatcher: SelectedEvent = createEventDispatcher()
-
-
 	function renderIcon() {
-        let classString: string = `${iconClass.default} ${iconClass.groupHover}`
-        if (itemsShown) classString += ` ${iconClass.opened}`
-        if (mouseOverOptionsElement) classString += ` ${iconClass.enabled}`
+        let classString: string = `${iconClass.base} ${iconClass.groupHover}`
+        if (opened) classString += ` ${iconClass.opened}`
+        if (overPopMenu) classString += ` ${iconClass.enabled}`
         else classString += ` ${iconClass.disabled}`
         elementClasses!.icon = classString
 	}
 
 	function checkOpenToggle(event: MouseEvent) {
-		if (!itemsShown && optionElement.contains(event.target as Node)) {
-            itemsShown = true
+		if (!opened && thisComponent.contains(event.target as Node)) {
+            opened = true
 			return
 		}
 
-		if (itemsShown) {
-			if (!optionElement.contains(event.target as Node)) {
-				itemsShown = false
+		if (opened) {
+			if (!thisComponent.contains(event.target as Node)) {
+				opened = false
 			}
 		}
 	}
 
 	function checkClose(event: KeyboardEvent) {
-		if (itemsShown == true && event.key == 'Escape') {
-			itemsShown = false
+		if (opened == true && event.key == 'Escape') {
+			opened = false
 		}
 	}
 
-    function handleSelected(detail: SelectedEventDetail) {
-        if (disallowNonOptionSelection && !optionStringItems!.includes(detail.selected)) {
-            throw new Error(`disallowNonOptionSelection: ${detail.selected} not present in option list`)
-        }
-        if (detail.method == 'selection') {
-            itemsShown = false
-            renderIcon()
-        }
-        selectedDispatcher('selected', detail)
-    }
 </script>
 
 <!-- Capture here in case component or component child was removed further down the event stack -->
@@ -110,23 +123,31 @@
 	on:keydown|capture={(event) => checkClose(event)}
 />
 <div
-    on:mouseenter={() => {mouseOverOptionsElement = true; renderIcon()}}
-    on:mouseleave={() => {mouseOverOptionsElement = false; renderIcon()}}
-    bind:this={optionElement}
+    bind:this={thisComponent}
     class="group rounded-md hover:bg-zinc-300/20"
+    on:mouseenter={() => {overPopMenu = true; renderIcon()}}
+    on:mouseleave={() => {overPopMenu = false; renderIcon()}}
+	in:chosenTransition|local={{
+		delay: fadeInDelay,
+		duration: fadeInDuration,
+	}}
+	out:chosenTransition|local={{
+		delay: fadeOutDelay,
+		duration: fadeOutDuration,
+	}}
 >
     <SelectableInput
         {placeholderText}
         {elementClasses}
         {iconType}
-        {itemsShown}
+        itemsShown={opened}
         resetInputUponSelect={false}
-        selectUponClick={true}
-        itemsInitiallyHidden={true}
+        instantSelection={true}
+        itemsInitiallyHidden={false}
         selectOnTraverse={true}
         listItems={optionStringItems}
         listFilter={optionStringFilter}
-        on:selected={(event) => handleSelected(event.detail.selected)}
+        on:selected={(event) => handleSelected(event.detail)}
         let:listItemString={option}
     >
         <slot {option}>

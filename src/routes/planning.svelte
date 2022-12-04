@@ -6,7 +6,7 @@
 	import AddButton from '$lib/AddButton.svelte'
 	import AppTemplate from '$lib/AppTemplate.svelte'
 	import Controller from '$lib/Controller.svelte'
-	import DropMenu from '$lib/DropMenu.svelte'
+	import PopMenu from '$lib/PopMenu.svelte'
 	import ExerciseInfo from '$lib/ExerciseInfo.svelte'
 	import HiddenSelectableInput from '$lib/HiddenSelectableInput.svelte'
 	import SetNumberInput from '$lib/SetNumberInput.svelte'
@@ -39,23 +39,24 @@
 				{#each $workoutPrograms.getDefined($selectedDay).exercises as exerciseEntry, index (exerciseEntry)}
 					<div class="contents">
 						<div class="col-start-1">
-							<DropMenu
-								fadeTransition
-								iconType="arrowRight"
-								iconClass={{
-									default: 'transition-transform',
-									opened: 'rotate-180',
-								}}
-							>
-								<div slot="placeholderContent" class="max-w-[22rem] max-w truncate">
-									{exerciseEntry.exerciseName}
-								</div>
-								<ExerciseInfo
-									slot="dropMenuWindow"
-									exerciseName={exerciseEntry.exerciseName}
-									exercisePlanIndex={index}
-								/>
-							</DropMenu>
+							<div class="max-w-max">
+								<PopMenu
+									fadeTransition
+									iconType="arrowRight"
+									iconClass={{
+										opened: 'rotate-180',
+									}}
+								>
+									<div slot="placeholderContent" class="max-w-[22rem] ml-3 my-1 truncate">
+										{exerciseEntry.exerciseName}
+									</div>
+									<ExerciseInfo
+										slot="popMenuWindow"
+										exerciseName={exerciseEntry.exerciseName}
+										exercisePlanIndex={index}
+									/>
+								</PopMenu>
+							</div>
 						</div>
 						{#each exerciseEntry.sets as set}
 							<div class="justify-self-center">

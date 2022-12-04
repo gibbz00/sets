@@ -1,18 +1,17 @@
 <script lang="ts">
-	import { selectedDay } from '$lib/Model'
+	import { selectedDay, workoutPrograms} from '$lib/Model'
 	import InteractiveList from './InteractiveList.svelte'
-	import { workoutPrograms } from '$lib/Model'
-	import DropMenu from '$lib/DropMenu.svelte'
+	import PopMenu from '$lib/PopMenu.svelte'
 	import { getInputWidthInPixels } from './utils/dynamicInputWidth'
 	import type { SvelteComponentTyped } from 'svelte'
 	import { afterUpdate } from 'svelte'
 
-	let dropMenuOpened: boolean
-	type IconClass = (DropMenu extends SvelteComponentTyped<infer Props>
+	let popMenuOpened: boolean
+	type IconClass = (PopMenu extends SvelteComponentTyped<infer Props>
 		? Props
 		: never)['iconClass']
 	let iconClass: IconClass = {
-		default: 'w-16 transition-transform',
+		base: 'w-16',
 		opened: 'rotate-90',
 	}
 
@@ -36,18 +35,17 @@
 		<div class="text-6xl mr-1">
 			{$selectedDay}
 		</div>
-		<DropMenu bind:opened={dropMenuOpened} iconType="expand_more" {iconClass}>
-			<svelte:fragment slot="dropMenuWindow">
+		<PopMenu bind:opened={popMenuOpened} iconType="expand_more" {iconClass}>
+			<svelte:fragment slot="popMenuWindow">
 				<InteractiveList
-					autofocus
 					on:selected={(event) => {
 						$selectedDay = event.detail.selected
-						dropMenuOpened = false
+						popMenuOpened = false
 					}}
 					listOptions={ {items: [...$workoutPrograms.keys()]}}
 				/>
 			</svelte:fragment>
-		</DropMenu>
+		</PopMenu>
 	</div>
 
 	<!-- <textarea can't verical allign text -->

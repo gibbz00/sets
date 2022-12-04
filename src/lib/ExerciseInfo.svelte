@@ -50,8 +50,8 @@
 									icon: 'fill-white',
 								}}
 								iconClass={{
-									disabled: 'fill-gray-300',
-									enabled: 'fill-white',
+									base: 'fill-gray-300',
+									opened: 'fill-white',
 									groupHover: 'group-hover:fill-white',
 								}}
 								dynamicWidth

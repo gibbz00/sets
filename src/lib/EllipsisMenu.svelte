@@ -10,7 +10,7 @@
 	import HiddenSelectableInput from './HiddenSelectableInput.svelte'
 	import { createEventDispatcher } from 'svelte'
 	import { onMount } from 'svelte'
-	import DropMenu from './DropMenu.svelte'
+	import PopMenu from './PopMenu.svelte'
 	import type { SvelteComponentTyped } from 'svelte'
 
 	export let inputPlaceholderText: string = ''
@@ -19,7 +19,7 @@
 	export let inputElementClasses: (HiddenSelectableInput extends SvelteComponentTyped<infer Prop>
 		? Prop
 		: never)['elementClasses'] = {}
-	export let iconClass: (DropMenu extends SvelteComponentTyped<infer Prop>
+	export let iconClass: (PopMenu extends SvelteComponentTyped<infer Prop>
 		? Prop
 		: never)['iconClass'] = {}
 	export let fadeTransition: boolean = false
@@ -35,10 +35,10 @@
 	})
 
 	// TODO: hidden = true might not be needed since the item itself is removed
-	let dropMenuOpened: boolean
+	let popMenuOpened: boolean
 	function deleteHandler() {
 		deleteDispatcher('delete')
-		dropMenuOpened = false
+		popMenuOpened = false
 	}
 </script>
 
@@ -58,9 +58,9 @@
 					absoluteEllipsisPositioning ? 'absolute left-full inset-y-0' : ''
 				} grid place-content-center`}
 			>
-				<DropMenu opened={dropMenuOpened} iconType="more_vert" {iconClass}>
+				<PopMenu opened={popMenuOpened} iconType="more_vert" {iconClass}>
 					<div
-						slot="dropMenuWindow"
+						slot="popMenuWindow"
 						class="font-normal 
 										text-black 
 										bg-white 
@@ -84,7 +84,7 @@
 							Remove
 						</button>
 					</div>
-				</DropMenu>
+				</PopMenu>
 			</div>
 		</div>
 	</div>

@@ -42,7 +42,6 @@
 	export let itemsShown: boolean = true
 	export let hideOnSelection: boolean = false
 
-
 	let matches: string[] = []
 	let firstNotFilteredFlip = itemsInitiallyHidden
 	$: matches = (() => {
@@ -77,15 +76,23 @@
 			selected,
 			method: 'selection'
 		})
-		if (hideOnSelection) itemsShown = false
+		if (hideOnSelection) {
+			itemsShown = false
+		}
 	}
 
 	let list: HTMLUListElement
+	let traversalSelectedIndex: number
 	function handleKeyDown(event: KeyboardEvent): void {
 		if (keyHandlingActivated || document.activeElement == list) {
-			// Traversal check to avoid double selects
-			if (event.key == 'Enter' && selectedIndex != undefined && !selectOnTraverse) {
-				itemSelected(matches[selectedIndex])
+			if (event.key == 'Enter' && selectedIndex != undefined) {
+				// second check for mouse hover selection
+				if (traversalSelectedIndex == undefined || traversalSelectedIndex != selectedIndex) {
+					itemSelected(matches[selectedIndex])
+				}
+				else if (hideOnSelection) {
+					itemsShown = false
+				}
 			}
 				
 			else if (listOptions.items.length > 0) {
@@ -128,6 +135,7 @@
 						selected: matches[selectedIndex!],
 						method: 'traversal'
 					})
+					traversalSelectedIndex = selectedIndex
 				}
 			}
 		}
@@ -158,7 +166,13 @@
 
 <!-- Conditional class required since an empty ul still renders its borders -->
 <!-- IMPROVEMENT?: Event listener might be added to just ul in order to avoid having one for each list-item -->
+<!-- svelte-ignore a11y-autofocus -->
+<!-- 
+	Autofocus is required for the many scenarios when list i shown by the inititive of other components, 
+	not having autofocus denies the user immediate keyboard inputs
+ -->
 <ul
+	autofocus
 	bind:this={list}
 	tabindex="0"
 	class={`
