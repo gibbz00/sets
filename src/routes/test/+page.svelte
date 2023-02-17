@@ -1,10 +1,10 @@
 <script lang="ts">
-    import PopMenu from "../lib/PopMenu.svelte"
+    import PopMenu from "../../lib/PopMenu.svelte"
     import ExerciseInfo from '$lib/ExerciseInfo.svelte'
-    import SelectElementReplacement from "../lib/SelectElementReplacement.svelte"
+    import SelectElementReplacement from "../../lib/SelectElementReplacement.svelte"
     import { selectedDay, workoutPrograms} from '$lib/Model'
-    import InteractiveList from "../lib/InteractiveList.svelte"
-	import Select from "../lib/Select.svelte"
+    import InteractiveList from "../../lib/InteractiveList.svelte"
+	import Select from "../../lib/Select.svelte"
 </script>
 
 <div class="max-w-max">
