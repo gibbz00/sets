@@ -45,6 +45,7 @@
 
 	export let fadeTransition: boolean = false
 	function emptyTransition(node: Element, emptyParameter: FadeParams): Object {
+		// TODO
 		return {}
 	}
 	let chosenTransition = fadeTransition ? fade : emptyTransition
