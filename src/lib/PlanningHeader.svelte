@@ -11,7 +11,7 @@
 		? Props
 		: never)['iconClass']
 	let iconClass: IconClass = {
-		base: 'w-16',
+		base: 'w-[4.5rem]',
 		opened: 'rotate-90',
 	}
 

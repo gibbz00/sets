@@ -9,6 +9,8 @@
 			* Autofocuses input when revealed
 			* Hides selectable input when it dispatches selected or canceled events
 	*/
+	let cls: string = "";
+	export {cls as class}
 	export let placeholderText: string = ''
 	export let dynamicWidth: boolean = true
 	export let fadeTransition: boolean = false
@@ -21,7 +23,7 @@
 	let hidden: boolean = true
 </script>
 
-<Hidden {fadeTransition} bind:hidden>
+<Hidden {fadeTransition} bind:hidden class={cls}>
 	<slot slot="placeholderContent" name="placeholderContent" />
 	<SelectableInput
 		autofocus

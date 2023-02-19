@@ -13,6 +13,8 @@
 	import PopMenu from './PopMenu.svelte'
 	import type { SvelteComponentTyped } from 'svelte'
 
+	let cls: string = "";
+	export {cls as class};
 	export let inputPlaceholderText: string = ''
 	export let dynamicWidth: boolean = false
 	export let absoluteEllipsisPositioning: boolean = true
@@ -48,6 +50,7 @@
 	elementClasses={inputElementClasses}
 	{dynamicWidth}
 	{fadeTransition}
+	class={cls}
 >
 	<!-- stopPropagation because of the nested Hidden component -->
 	<div on:click|stopPropagation slot="placeholderContent" class="flex content-center min-w-max">

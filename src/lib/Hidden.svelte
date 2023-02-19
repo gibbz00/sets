@@ -33,6 +33,8 @@
 		fadeOutDuration,
 	} from './transitionConstants'
 
+	let cls: string = "";
+	export {cls as class}
 	export let hidden: boolean = true
 	export let preservePlaceholderHeight: boolean = true
 	export let fadeTransition: boolean = false
@@ -94,6 +96,7 @@
 />
 
 <div
+	class={cls}
 	bind:this={container}
 	in:chosenTransition|local={{
 		delay: fadeInDelay,
