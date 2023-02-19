@@ -66,6 +66,7 @@
 		</header>
 
 		<main class="shadow-md pb-5 bg-white rounded-md">
+			<!--> TODO: purpose of nav? if it is removed, combine padding in main with section to p-5 </!-->
 			<slot name="nav" />
 			<section class="px-4 pt-5">
 				<slot name="main-section" />
