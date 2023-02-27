@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from '$app/paths';
 	import AddButton from '$lib/AddButton.svelte'
 	import { SetMap } from '$lib/ADTs/SetMap'
 	import Controller from '$lib/Controller.svelte'
@@ -81,7 +82,7 @@
 <AppTemplate
 	content={{
 		redirectPlaceholder: 'Set Planner',
-		redirectRef: '/planning',
+		redirectRef: `${base}/`,
 		heightTransitionMultiplier: $selectedGroup
 			? $groups.getDefined($selectedGroup).size + 1
 			: 1,
