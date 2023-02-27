@@ -1,7 +1,7 @@
 <script lang="ts">
   export let elements: any[] | undefined;
-  let cls: string = ""
-  export {cls as class}
+  let cls: string = "";
+  export { cls as class };
   let dragNode: Node;
 
   function isBefore(first_node: Node, second_node: Node) {
@@ -12,13 +12,13 @@
         before_node = before_node.previousSibling
       )
         if (before_node == second_node) return true;
-    return false
+    return false;
   }
 
   function dragStart(dragEvent: DragEvent) {
-    dragEvent.dataTransfer!.effectAllowed = "move"
-    dragEvent.dataTransfer!.setData("text/plain", "")
-    dragNode = dragEvent.target as Node
+    dragEvent.dataTransfer!.effectAllowed = "move";
+    dragEvent.dataTransfer!.setData("text/plain", "");
+    dragNode = dragEvent.target as Node;
   }
 
   function dragOver(dragEvent: DragEvent) {
@@ -70,4 +70,5 @@
     >
       <slot {element} {index} />
     </div>
-  {/each}{/if}
+  {/each}
+{/if}
